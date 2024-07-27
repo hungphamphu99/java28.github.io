@@ -5,7 +5,8 @@
 }
 
 body {
-  background-color: #061123;
+  background: url('/asset/images/maxresdefault.jpg') no-repeat center center fixed;;
+  background-size: cover;
   margin: 0;
   overflow: hidden;
   color: white;
