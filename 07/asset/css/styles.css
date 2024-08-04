@@ -1,0 +1,58 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.banner{
+    background-color: rgb(250, 26, 131);
+    width: 100%;
+}
+
+.img-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.picture-wrapper{
+    height: 80px;
+}
+
+
+.Lazada-header {
+    background-color: #fff;
+    min-width: 1188px;
+    position: relative;
+    font-family: "Roboto", sans-serif;
+    width: 100%;
+}
+    
+.link-bar{
+    background: rgba(0, 0, 0, .03);
+    height: 25px;
+    min-width: 1006px;
+    position: relative;
+    text-align: right;
+    transition: height .25s linear, zIndex 0s linear .25s;
+    z-index: 310;
+}
+.top-link-item{
+   
+    margin: 0 auto;
+    min-width: 1188px;
+    width: 1188px;
+    
+
+}
+
+.C0f1568,.Cgrey ,.Cf0f{
+    display: inline-block;
+    font-size: 12px;
+    height: 25px;
+    line-height: 25px;
+    padding: 0 17px;
+    position: relative;
+    white-space: nowrap;
+    
+}
