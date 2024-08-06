@@ -6,7 +6,7 @@
 
 .container {
   width: 1920px;
-  height: 6110px;
+  height: 100%;
   background: #fff;
 }
 
@@ -45,6 +45,7 @@
   padding: 0px;
   width: 25px;
   height: 25px;
+  cursor: pointer;
 }
 .top-header .v6-icon .search-icon {
   position: absolute;
@@ -229,9 +230,18 @@
 
   color: #000000;
 }
-
-.product .content .description {
+.product .content .description
+{
   margin: 0px 0px 0px 4px;
+
+  width: 682px;
+  height: 199px;
+  position: relative;
+}
+.product .content .description span {
+  position: absolute;
+  top: -1.2px;
+  left: 0px;
   font-family: "Roboto";
   font-style: normal;
   font-weight: 400;
@@ -390,6 +400,7 @@
   position: absolute;
   top: 0px;
   left: 672px;
+
 }
 
 .card-3 {
@@ -449,6 +460,7 @@
   border: 1px solid var(--Black, #1e2832);
   background: var(--Black, #1e2832);
   display: none;
+  
 }
 
 .card-1 .bottom h6 {
@@ -465,8 +477,6 @@
 
 .card-1:hover .bottom {
   display: flex;
-  transition: 0.7s;
-
 }
 
 .card-2 img,
@@ -512,7 +522,7 @@
 .card-4:hover .bottom,
 .card-5:hover .bottom {
   display: flex;
-    transition: 0.7s;
+  transition: 0.7s;
 
 }
 
@@ -907,19 +917,16 @@
 .slider .owl-carousel .sale-card:hover .bottom-product .cost {
   
   display: flex;
-  transition: 0.7s;
 
 }
 .products .sale-card:hover .bottom-product .sale-price .right,
 .slider .owl-carousel .sale-card:hover .bottom-product .sale-price .right {
   display: none;
-  transition: 0.7s;
 
 }
 .products .sale-card:hover .bottom-product .sale-price .left,
 .owl-carousel .sale-card:hover .bottom-product .sale-price .left {
   display: none;
-  transition: 0.7s;
 
 }
 
@@ -1160,12 +1167,13 @@
   align-items: center;
   flex-shrink: 0;
   background: var(--Dark-50, rgba(0, 0, 0, 0.5));
+
+
 }
 
 .newletter-instagram .instagram .photo ul li:hover .showdow-layer {
   display: flex;
-  transition: 0.7s;
-
+ 
 }
 
 .newletter-instagram .newletter {
@@ -1378,7 +1386,6 @@ button:hover {
   background-color: #ff6f61;
   transition: 0.7s;
 
-
 }
 
 
@@ -1393,5 +1400,4 @@ button:hover {
   line-height: normal;
   text-transform: capitalize;
 }
-
 
