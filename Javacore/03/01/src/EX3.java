@@ -1,5 +1,11 @@
 import java.util.Scanner;
 
+
+//Cho người dùng nhập vào một số nguyên
+//Mỗi khi người dùng nhập xong, hỏi người dùng có muốn tiếp tục nhập hay k (Do you want to continue? (Y/N) )
+//Nếu người dùng chọn Y -> tiếp tục cho nhập
+//Nếu k thì in ra tổng các số người dung vừa nhập vào
+
 public class EX3 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
