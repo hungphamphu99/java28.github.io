@@ -68,8 +68,21 @@ public class EX4 {
     }
     
     private static void withdrawMoney(Scanner scanner) {
-        System.out.print("Enter the amount to withdraw: ");
-        double amount = Double.parseDouble(scanner.next());
+        double amount = 0;
+        while (true) {
+            System.out.print("Enter the amount to withdraw: ");
+            String input = scanner.nextLine().trim();
+            try {
+                amount = Double.parseDouble(input);
+                if (amount > 0) {
+                    break;
+                } else {
+                    System.out.println("The amount must be greater than zero.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+            }
+        }
     
         if (amount <= balance) {
             balance -= amount;
@@ -82,18 +95,28 @@ public class EX4 {
     }
     
     private static void depositMoney(Scanner scanner) {
-        System.out.print("Enter the amount to deposit: ");
-        double amount = Double.parseDouble(scanner.next());
-    
-        if (amount > 0) {
-            balance += amount;
-            String receipt = String.format("You have deposited %,.2f VND at %s", amount, Time());
-            System.out.println(receipt);
-            System.out.println("New balance: " + String.format("%,.2f", balance) + " VND");
-        } else {
-            System.out.println("Invalid deposit amount!");
+        double amount = 0;
+        while (true) {
+            System.out.print("Enter the amount to deposit: ");
+            String input = scanner.nextLine().trim();
+            try {
+                amount = Double.parseDouble(input);
+                if (amount > 0) {
+                    break;
+                } else {
+                    System.out.println("The amount must be greater than zero.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+            }
         }
+    
+        balance += amount;
+        String receipt = String.format("You have deposited %,.2f VND at %s", amount, Time());
+        System.out.println(receipt);
+        System.out.println("New balance: " + String.format("%,.2f", balance) + " VND");
     }
+    
     
 
     private static String Time() {
