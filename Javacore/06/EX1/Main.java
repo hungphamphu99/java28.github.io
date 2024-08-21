@@ -7,6 +7,8 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Input input = new Input();
         input.input(scanner);
+        input.displayEmployees();
+
 
 
 

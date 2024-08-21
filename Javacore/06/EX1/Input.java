@@ -4,12 +4,15 @@ import java.util.Scanner;
 
 
 public class Input {
+    public Employee[] employees;
 
     Scanner scanner = new Scanner(System.in);
+    private int numberOfEmployees;
+
     private int getValidNumber(String tag) {
         int number = -1;
         while (number <= 0) {
-            System.out.println("Enter the number of "+ tag);
+            System.out.println(tag);
             try {
                 number = Integer.parseInt(scanner.nextLine());
                 if (number <= 0) {
@@ -25,7 +28,8 @@ public class Input {
     public void input(Scanner scanner) {
         int numberOfEmployees = getValidNumber("Enter the number of employees: ");
 
-        Employee[] employees = new Employee[numberOfEmployees];
+        employees = new Employee[numberOfEmployees];
+
         for (int i = 0; i < numberOfEmployees; i++) {
             int employeeId = -1;
             while (employeeId <= 0) {
@@ -45,13 +49,25 @@ public class Input {
             }
 
             System.out.println("Enter the employee  name-" + (i + 1) + ":");
-            String employeeName = this.scanner.next();
-            System.out.println("Enter the employee age-" + (i + 1));
+            String employeeName = scanner.next();
+
             int employeeAge = getValidNumber("Enter the employee age-" + (i + 1));
             System.out.println("Enter the employee address-" + (i + 1) + ":");
-            String employeeAddress = this.scanner.next();
+            String employeeAddress = scanner.next();
             employees[i] = new Employee(employeeId, employeeName, employeeAge, employeeAddress);
         }
 
+    }
+    public void displayEmployees() {
+        System.out.println("Employee Information:");
+
+        for (Employee employee : employees) {
+
+            System.out.println("ID: " + employee.getId());
+            System.out.println("Name: " + employee.getName());
+            System.out.println("Age: " + employee.getAge());
+            System.out.println("Address: " + employee.getAdress());
+            System.out.println("-------------------------");
+        }
     }
 }
