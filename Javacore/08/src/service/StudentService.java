@@ -4,6 +4,9 @@ import entities.Student;
 
 import java.util.Scanner;
 
+import static entities.Student.studentList;
+
+
 public class StudentService {
     Scanner sc = new Scanner(System.in);
 
@@ -67,7 +70,7 @@ public class StudentService {
         }
 
         Student student = new Student(name, age, gender);
-
+        studentList.add(student);
 
         return student;
     }
