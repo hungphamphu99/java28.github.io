@@ -12,22 +12,26 @@ public class Student extends Person {
         addStudent(this);
     }
 
-
     @Override
     public void getInformtion() {
-        System.out.println("Student Information" +" "+this.getID() + this.getName() + " " + this.getAge() + " " + this.getGender());
-
+        System.out.println("id: " + getID() + "name"+ getName()+"age"+ getAge()+"gender"+ getGender());
     }
+    @Override
+    public String toString() {
+        return "ID: " + id + ", Name: " + getName() + ", Age: " + getAge() + ", Gender: " + getGender();
+    }
+
+
 
     public static void addStudent(Student student){
         studentList.add(student);
     }
-    public static void removeStudent(Student student){
-        studentList.remove(student);
-    }
+
     public static ArrayList <Student> getStudentList(){
         return studentList;
     }
+
+
 
     public int getID() {
         return id;

@@ -67,12 +67,14 @@ public class StudentService {
         }
 
         Student student = new Student(name, age, gender);
+
+
         return student;
     }
     public void printStudents() {
         System.out.println("List of students:");
         for (Student student : Student.getStudentList()) {
-            student.getInformtion();
+            System.out.println(student);
         }
     }
 

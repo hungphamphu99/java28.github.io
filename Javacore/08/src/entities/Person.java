@@ -13,6 +13,7 @@ public abstract class Person {
 
     }
 
+
     public abstract void getInformtion();
 
 
