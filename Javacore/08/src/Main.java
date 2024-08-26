@@ -1,31 +1,30 @@
-import entities.Student;
-import service.StudentService;
+import entities.BizStudent;
+import entities.IctStudent;
+import service.BizStudentService;
+import service.IctStudentService;
 
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        StudentService studentService = new StudentService();
-        int num = 0;
+        IctStudentService ictService = new IctStudentService();
+        BizStudentService bizService = new BizStudentService();
 
-        while (num < 1) {
-            try {
-                System.out.println("Enter the number of students: ");
-                num = Integer.parseInt(scanner.nextLine());
-                if (num < 1) {
-                    System.out.println("Please, enter a positive integer.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input, please enter a valid number.");
-            }
+        ictService.inputIctStudents();
+        bizService.inputBizStudents();
+
+        ArrayList<IctStudent> ictStudents = ictService.getIctStudents();
+        ArrayList<BizStudent> bizStudents = bizService.getBizStudents();
+
+
+
+
+        for (IctStudent student : ictStudents) {
+            System.out.println("Name " + student.getName() + " - " + "Overall"+ student.getPoint() + " - " + student.getMajor());
         }
 
-        for (int i = 1; i <= num; i++) {
-            System.out.println("Student " + i + ":");
-            studentService.inputStudent();
+        for (BizStudent student : bizStudents) {
+            System.out.println("Name " +student.getName() + " - " + "Overall"+ student.getPoint() + " - " + student.getMajor());
         }
-
-        studentService.printStudents();
     }
 }

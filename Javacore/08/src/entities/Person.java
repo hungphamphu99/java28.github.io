@@ -1,34 +1,21 @@
 package entities;
 
-public abstract class Person {
-
-    private String name;
-    private int age;
-    private String gender;
-    public Person( String name, int age, String gender) {
-
-        this.name = name;
-        this.age = age;
-        this.gender = gender;
-
-    }
-
-
-    public abstract void getInformtion();
-
-
+class Person {
+     private String name;
+     private String major;
+     public Person(String name, String major) {
+            this.name = name;
+            this.major = major;
+     }
+    public Double getPoint(){
+        return 0.0;
+    };
 
     public String getName() {
         return name;
     }
 
-    public int getAge() {
-        return age;
+    public String getMajor() {
+        return major;
     }
-
-    public String getGender() {
-        return gender;
-    }
-
-
 }
