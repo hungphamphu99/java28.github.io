@@ -9,11 +9,11 @@ public class Main {
         StudentService studentService = new StudentService();
         int num = 0;
 
-        while (num <= 0) {
+        while (num < 1) {
             try {
                 System.out.println("Enter the number of students: ");
                 num = Integer.parseInt(scanner.nextLine());
-                if (num <= 0) {
+                if (num < 1) {
                     System.out.println("Please, enter a positive integer.");
                 }
             } catch (NumberFormatException e) {
