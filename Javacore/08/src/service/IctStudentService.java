@@ -1,12 +1,12 @@
 package service;
 
 import entities.IctStudent;
+import entities.TechMasterStudent;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class IctStudentService {
     private Scanner sc = new Scanner(System.in);
-    private ArrayList<IctStudent> ictStudents = new ArrayList<>();
     private String name;
     private String major;
     private Double javaPoint;
@@ -14,7 +14,9 @@ public class IctStudentService {
     private Double htmlPoint;
     private int numStudents;
 
-    public void inputIctStudents() {
+    public ArrayList<TechMasterStudent> inputIctStudents() {
+        ArrayList<TechMasterStudent> students = new ArrayList<>();
+
         while (true) {
             try {
                 System.out.print("Enter the number of ICT students: ");
@@ -109,11 +111,9 @@ public class IctStudentService {
             }
 
             IctStudent student = new IctStudent(name, major, javaPoint, cssPoint, htmlPoint);
-            ictStudents.add(student);
+            students.add(student);
         }
-    }
 
-    public ArrayList<IctStudent> getIctStudents() {
-        return ictStudents;
+        return students;
     }
 }

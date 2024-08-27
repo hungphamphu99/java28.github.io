@@ -1,30 +1,20 @@
-import entities.BizStudent;
-import entities.IctStudent;
+import entities.TechMasterStudent;
 import service.BizStudentService;
 import service.IctStudentService;
-
 import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        IctStudentService ictService = new IctStudentService();
+        ArrayList<TechMasterStudent> allStudents = new ArrayList<>();
+
         BizStudentService bizService = new BizStudentService();
+        IctStudentService ictService = new IctStudentService();
 
-        ictService.inputIctStudents();
-        bizService.inputBizStudents();
+        allStudents.addAll(bizService.inputBizStudents());
+        allStudents.addAll(ictService.inputIctStudents());
 
-        ArrayList<IctStudent> ictStudents = ictService.getIctStudents();
-        ArrayList<BizStudent> bizStudents = bizService.getBizStudents();
-
-
-
-
-        for (IctStudent student : ictStudents) {
-            System.out.println("Name " + student.getName() + " - " + "Overall"+ student.getPoint() + " - " + student.getMajor());
-        }
-
-        for (BizStudent student : bizStudents) {
-            System.out.println("Name " +student.getName() + " - " + "Overall"+ student.getPoint() + " - " + student.getMajor());
+        for (TechMasterStudent student : allStudents) {
+            System.out.println("Name: " + student.getName()+" - " + "Major: " + student.getMajor()+" - "+"Overall :"+ student.getPoint());
         }
     }
 }

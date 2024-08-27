@@ -1,8 +1,6 @@
 package entities;
 
-import java.util.ArrayList;
-
-public class BizStudent extends Person {
+public class BizStudent extends TechMasterStudent {
     private Double markingPoint;
     private Double salesPoint;
 

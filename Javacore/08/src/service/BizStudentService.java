@@ -1,19 +1,21 @@
 package service;
 
 import entities.BizStudent;
+import entities.TechMasterStudent;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BizStudentService {
     private Scanner sc = new Scanner(System.in);
-    private ArrayList<BizStudent> bizStudents = new ArrayList<>();
     private String name;
     private String major;
     private Double marketingPoint;
     private Double salesPoint;
     private int numStudents;
 
-    public void inputBizStudents() {
+    public ArrayList<TechMasterStudent> inputBizStudents() {
+        ArrayList<TechMasterStudent> students = new ArrayList<>();
+
         while (true) {
             try {
                 System.out.print("Enter the number of Biz students: ");
@@ -92,11 +94,9 @@ public class BizStudentService {
             }
 
             BizStudent student = new BizStudent(name, major, marketingPoint, salesPoint);
-            bizStudents.add(student);
+            students.add(student);
         }
-    }
 
-    public ArrayList<BizStudent> getBizStudents() {
-        return bizStudents;
+        return students;
     }
 }

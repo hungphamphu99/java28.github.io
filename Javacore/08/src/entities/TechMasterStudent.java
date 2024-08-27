@@ -1,9 +1,9 @@
 package entities;
 
-class Person {
+public class TechMasterStudent {
      private String name;
      private String major;
-     public Person(String name, String major) {
+     public TechMasterStudent(String name, String major) {
             this.name = name;
             this.major = major;
      }
