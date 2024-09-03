@@ -64,7 +64,7 @@ public class Menu {
 
                             switch (loginChoice) {
                                 case 1:
-                                    forgotPassword();
+                                    login();
                                     break;
                                 case 2:
                                     forgotPassword();
