@@ -4,11 +4,13 @@ import entities.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class UserService {
     private List<User> users = new ArrayList<>();
     private User loggedInUser = null;
+    Scanner scanner = new Scanner(System.in);
 
     public boolean registerUser(String username, String email, String password) {
         boolean usernameExists = isUsernameTaken(username);
@@ -82,9 +84,12 @@ public class UserService {
         }
     }
 
-    public boolean forgotPassword(String username, String email, String newPassword) {
+    public boolean forgotPassword(String username, String email) {
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getEmail().equals(email)) {
+                System.out.print("Enter your new password: ");
+                String newPassword = scanner.nextLine();
+
                 if (isValidPassword(newPassword)) {
                     user.setPassword(newPassword);
                     System.out.println("Password reset successful. You can log in again.");
@@ -98,6 +103,7 @@ public class UserService {
         System.out.println("Username or email is incorrect.");
         return false;
     }
+
 
     public void logout() {
         loggedInUser = null;

@@ -142,17 +142,14 @@ public class Menu {
     }
 
     private void forgotPassword() {
-        System.out.println("Enter your username: ");
+        System.out.print("Enter your username: ");
         String username = scanner.nextLine();
         System.out.print("Enter your email: ");
         String email = scanner.nextLine();
-        System.out.print("Enter your new password: ");
-        String newPassword = scanner.nextLine();
 
-        if (userService.forgotPassword(username, email, newPassword)) {
-            System.out.println("Password reset successful. You can log in again.");
-        } else {
-            System.out.println("Username or email is incorrect.");
+        if (!userService.forgotPassword(username, email)) {
+            System.out.println("Password reset failed. Please try again.");
         }
     }
+
 }
