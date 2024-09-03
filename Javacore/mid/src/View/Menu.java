@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Menu {
     private UserService userService;
-    private Scanner scanner;
+     Scanner scanner;
 
     public Menu(UserService userService) {
         this.userService = userService;
