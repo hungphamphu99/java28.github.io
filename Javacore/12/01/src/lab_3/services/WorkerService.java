@@ -9,10 +9,26 @@ import java.util.Scanner;
 public class WorkerService {
    Scanner scanner = new Scanner(System.in);
 
+    public Worker findWorkerByID(String id) {
+        for (Worker worker: data.getWorkers()){
+            if(worker.getId().equals(id)){
+                return worker;
+            }
+            System.out.println("Worker not found");
+        }
+        return null;
+    }
     // Add a new worker
+
+
     public void addWorker() {
         System.out.print("Enter Worker ID: ");
         String id = scanner.nextLine();
+        Worker workerId = findWorkerByID(id);
+        if (workerId == null) {
+            System.out.println("Worker not found");
+            return;
+        }
         System.out.print("Enter Name: ");
         String name = scanner.nextLine();
         System.out.print("Enter Age: ");
