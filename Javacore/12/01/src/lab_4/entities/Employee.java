@@ -17,7 +17,7 @@ public abstract class Employee {
         this.id = id;
         this.name = name;
         this.salary = salary;
-        data.getEmployees(this);
+
 
     }
 

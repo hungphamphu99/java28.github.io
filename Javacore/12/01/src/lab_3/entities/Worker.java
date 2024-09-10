@@ -18,7 +18,7 @@ public class Worker {
         this.age = age;
         this.salary = salary;
         this.workPlace = workPlace;
-        data.addWorker(this);
+
     }
 
 
