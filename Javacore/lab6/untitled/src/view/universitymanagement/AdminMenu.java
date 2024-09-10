@@ -1,5 +1,6 @@
 package view.universitymanagement;
 
+import data.UniversityData;
 import service.login.UserService;
 import service.salesmanagement.StaffService;
 import service.universitymanagement.ClassService;
@@ -73,7 +74,8 @@ public class AdminMenu {
                     "4. Delete Student \n"+
                     "5. Search Student By Id \n"+
                     "6. Update Student \n"+
-                    "7. Back Main Menu"
+                    "7. Display All Student \n"+
+                    "8. Back Main Menu"
             );
                 System.out.println("Please choose one of the following options:");
                 int choice = Integer.parseInt(scanner.nextLine());
@@ -103,6 +105,11 @@ public class AdminMenu {
                         studentService.updateInformationStudent();
                         break;
                     case 7:
+                        System.out.println("7. Display All Student ");
+                        System.out.println(UniversityData.getStudents());
+                        break;
+
+                    case 8:
                         System.out.println("7. Back Main Menu");
                         System.out.println("----- Admin Menu -----");
                         return;

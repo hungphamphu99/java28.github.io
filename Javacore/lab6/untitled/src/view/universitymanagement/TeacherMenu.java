@@ -27,7 +27,7 @@ public class TeacherMenu {
 
             switch (choice) {
                 case 1:
-                    viewAssignedSubjects();
+                    viewAssignedSubjects(teacher);
                     break;
                 case 2:
                     studentService.inputScore();
@@ -35,6 +35,7 @@ public class TeacherMenu {
                 case 3:
                     System.out.println("3. Display Classes");
                     teacherService.displayClassesAndStudents(teacher);
+                    break;
                 case 4:
                     System.out.println("Edit Score");
                     studentService.editScore();
@@ -48,9 +49,9 @@ public class TeacherMenu {
         }
     }
 
-    private void viewAssignedSubjects() {
-        // Logic to display the subjects assigned to the teacher
+    private void viewAssignedSubjects(Teacher teacher) {
         System.out.println("Displaying assigned subjects...");
+        System.out.println(teacher.getSubjects());
     }
 
     private void editStudentGrades() {
