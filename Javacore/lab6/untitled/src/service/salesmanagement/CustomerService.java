@@ -116,8 +116,8 @@ public class CustomerService {
 
 
     public void openCartToBuyByCustomer(Customer customer) {
-        Cart cart = customer.getCart();
-        cart.showCart();
+        Cart cart = customer.getCart();  // Get the customer's cart
+        cart.showCart();  // Display the cart contents
 
         if (cart.getProducts().isEmpty()) {
             System.out.println("Your cart is empty. Add products to your cart first.");
@@ -132,8 +132,16 @@ public class CustomerService {
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
-            System.out.println(i + ". " + product.getName() + " - Quantity: " + quantity + " - Price: " + product.getPrice());
-            i++;
+
+            // Check if the product is either Deleted or Out of Stock
+            if (product.getStatus() == Enum.statusProduct.Deleted) {
+                System.out.println(i + ". " + product.getName() + " - This product has been deleted and cannot be purchased.");
+            } else if (product.getStatus() == Enum.statusProduct.Out_Stock) {
+                System.out.println(i + ". " + product.getName() + " - This product is out of stock and cannot be purchased.");
+            } else {
+                System.out.println(i + ". " + product.getName() + " - Quantity: " + quantity + " - Price: " + product.getPrice());
+                i++;
+            }
         }
 
         int choice = scanner.nextInt();
@@ -143,6 +151,7 @@ public class CustomerService {
             return;
         }
 
+        // Validate the selected product
         if (choice < 1 || choice > products.size()) {
             System.out.println("Invalid choice.");
             return;
@@ -150,6 +159,16 @@ public class CustomerService {
 
         // Get the selected product
         Product selectedProduct = (Product) products.keySet().toArray()[choice - 1];
+
+        // Check if the product is deleted or out of stock
+        if (selectedProduct.getStatus() == Enum.statusProduct.Deleted) {
+            System.out.println("The selected product has been deleted and cannot be purchased.");
+            return;
+        } else if (selectedProduct.getStatus() == Enum.statusProduct.Out_Stock) {
+            System.out.println("The selected product is out of stock and cannot be purchased.");
+            return;
+        }
+
         int selectedQuantity = products.get(selectedProduct);
         double totalCost = selectedProduct.getPrice() * selectedQuantity;
 
@@ -157,6 +176,7 @@ public class CustomerService {
         String confirm = scanner.next();
 
         if (confirm.equalsIgnoreCase("yes")) {
+            // Check if the customer has sufficient balance
             if (totalCost > customer.getBalance()) {
                 System.out.println("Insufficient balance to complete the purchase.");
                 return;
@@ -168,12 +188,13 @@ public class CustomerService {
 
             selectedProduct.setQuantity(selectedProduct.getQuantity() - selectedQuantity);
 
-            cart.removeProduct(selectedProduct);
+            cart.removeProduct(selectedProduct);  // Remove the product after purchase
             System.out.println("Purchase successful. Total cost: " + totalCost);
         } else {
             System.out.println("Purchase cancelled.");
         }
     }
+
 
 
 

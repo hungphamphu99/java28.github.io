@@ -26,7 +26,7 @@ public class CustomerMenu {
                System.out.println("6. Deposit and Withdraw Balance");
                System.out.println("7. Cancel Oder");
                System.out.println("0. Login");
-               int option = scanner.nextInt();
+               int option = Integer.parseInt(scanner.nextLine());
                switch (option) {
                    case 1:
                        System.out.println("1. Display  Customer Information");
