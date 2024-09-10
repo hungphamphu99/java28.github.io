@@ -49,6 +49,7 @@ public class AdminMenu {
                         break;
                     case 5:
                         System.out.println("----- Edit Staff Menu -----");
+                        editStaff();
                         break;
                     case 7:
                         System.out.println("Logout");
