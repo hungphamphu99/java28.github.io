@@ -11,8 +11,8 @@ public class Menu {
         while (true) {
             System.out.println("======== Worker Management ========");
             System.out.println("1. Add Worker");
-            System.out.println("2. Increase Salary");
-            System.out.println("3. Decrease Salary");
+            System.out.println("2. UP Salary");
+            System.out.println("3. Down Salary");
             System.out.println("4. Display Worker Information");
             System.out.println("5. Exit");
             System.out.print("Choose an option: ");
