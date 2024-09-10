@@ -1,5 +1,6 @@
 package lab_3.services;
 
+import lab_3.data.data;
 import lab_3.entities.Worker;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class WorkerService {
         String workPlace = scanner.nextLine();
 
         Worker worker = new Worker(id, name, age, salary, workPlace);
-        Worker.addWorker(worker);
+        data.addWorker(worker);
         System.out.println("Worker added successfully!");
     }
 
@@ -44,7 +45,7 @@ public class WorkerService {
 
     // Display worker information
     public void displayWorkers() {
-        ArrayList<Worker> workers = Worker.getWorkers();
+        ArrayList<Worker> workers = data.getWorkers();
         if (workers.isEmpty()) {
             System.out.println("No workers to display!");
         } else {

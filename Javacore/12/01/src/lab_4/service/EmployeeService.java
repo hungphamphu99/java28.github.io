@@ -69,10 +69,8 @@ public class EmployeeService {
 
         switch (type) {
             case 1:
-                // Nhân viên hành chính (Admin Staff)
-                return new AdminStaff(id, name, salary);  // Kết thúc tại đây với return
+                return new AdminStaff(id, name, salary);
             case 2:
-                // Nhân viên tiếp thị (Marketing Staff)
                 double sales;
                 while (true) {
                     try {

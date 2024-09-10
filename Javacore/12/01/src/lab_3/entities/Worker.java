@@ -1,5 +1,7 @@
 package lab_3.entities;
 
+import lab_3.data.data;
+
 import java.util.ArrayList;
 
 public class Worker {
@@ -9,8 +11,6 @@ public class Worker {
     private double salary;
     private String workPlace;
 
-    // Static list to hold all workers
-    private static ArrayList<Worker> workers = new ArrayList<>();
 
     public Worker(String id, String name, int age, double salary, String workPlace) {
         this.id = id;
@@ -18,17 +18,10 @@ public class Worker {
         this.age = age;
         this.salary = salary;
         this.workPlace = workPlace;
+        data.addWorker(this);
     }
 
-    // Static method to add a worker to the list
-    public static void addWorker(Worker worker) {
-        workers.add(worker);
-    }
 
-    // Static method to get all workers
-    public static ArrayList<Worker> getWorkers() {
-        return workers;
-    }
 
     public String getId() {
         return id;
@@ -61,7 +54,7 @@ public class Worker {
 
     // Static method to find a worker by ID
     public static Worker findWorkerById(String id) {
-        for (Worker worker : workers) {
+        for (Worker worker : data.getWorkers()) {
             if (worker.getId().equals(id)) {
                 return worker;
             }

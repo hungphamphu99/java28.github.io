@@ -1,10 +1,14 @@
 package lab_4.entities;
 
+import lab_4.data.data;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import static lab_4.data.data.employees;
+
 public abstract class Employee {
-    private static List<Employee> employees = new ArrayList<>();
+
     private String id;
     private String name;
     protected double salary;
@@ -13,11 +17,10 @@ public abstract class Employee {
         this.id = id;
         this.name = name;
         this.salary = salary;
+        data.getEmployees(this);
 
     }
-    public void add(Employee employee) {
-        employees.add(employee);
-    }
+
 
     public String getId() {
         return id;
