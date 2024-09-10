@@ -237,10 +237,25 @@ public class CustomerService {
 
         System.out.println("Enter Product ID to edit in cart:");
         int productId = scanner.nextInt();
-        Product product = productService.findProduct(productId);
 
-        if (product == null || !cart.getProducts().containsKey(product)) {
+        Product productInCart = null;
+        for (Product product : cart.getProducts().keySet()) {
+            if (product.getId() == productId) {
+                productInCart = product;
+                break;
+            }
+        }
+
+        if (productInCart == null) {
             System.out.println("Product not found in the cart.");
+            return;
+        }
+
+        if (productInCart.getStatus() == Enum.statusProduct.Deleted) {
+            System.out.println("The product " + productInCart.getName() + " has been deleted and cannot be edited.");
+            return;
+        } else if (productInCart.getStatus() == Enum.statusProduct.Out_Stock) {
+            System.out.println("The product " + productInCart.getName() + " is out of stock and cannot be edited.");
             return;
         }
 
@@ -252,13 +267,13 @@ public class CustomerService {
             return;
         }
 
-        if (newQuantity > product.getQuantity()) {
-            System.out.println("Not enough stock for product: " + product.getName());
+        if (newQuantity > productInCart.getQuantity()) {
+            System.out.println("Not enough stock for product: " + productInCart.getName());
             return;
         }
 
-        cart.getProducts().put(product, newQuantity);
-        System.out.println("Updated the quantity of " + product.getName() + " to " + newQuantity + " in your cart.");
+        cart.getProducts().put(productInCart, newQuantity);
+        System.out.println("Updated the quantity of " + productInCart.getName() + " to " + newQuantity + " in your cart.");
 
         System.out.println("Do you want to proceed to payment? (yes/no)");
         String choice = scanner.next();
@@ -269,6 +284,7 @@ public class CustomerService {
             System.out.println("You can review your cart later.");
         }
     }
+
 
     public void buyAllProductsToCart(Customer customer) {
         Cart cart = customer.getCart();
