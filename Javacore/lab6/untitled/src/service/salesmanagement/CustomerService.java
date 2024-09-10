@@ -427,7 +427,7 @@ public class CustomerService {
         Customer customer = findCustomerById(customerId);
 
         if (customer == null) {
-            System.out.println("staff with ID " + customerId + " not found.");
+            System.out.println("customer with ID " + customerId + " not found.");
             return;
         }
 

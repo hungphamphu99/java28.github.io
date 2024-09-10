@@ -1,5 +1,6 @@
 package view.universitymanagement;
 
+import data.UniversityData;
 import entities.login.User;
 import service.login.UserService;
 import service.universitymanagement.ClassService;
@@ -16,18 +17,24 @@ public class StudentMenu {
                 System.out.println("----- Student Menu -----");
                 System.out.println("1. Information");
                 System.out.println("2. Check Class ");
-                System.out.println("3. Change Password");
+                System.out.println("3. Check Subject");
+                System.out.println("4. Change Password");
                 System.out.println("7. Log In");
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
                     case 1:
                         System.out.println("1. Information");
                         System.out.println(user.toString());
+                        break;
                     case 2:
                         System.out.println("2. Check Class");
                         classService.displayStudentClassesAndTeachers(user);
                         break;
                     case 3:
+                        System.out.println("3. Check Subject");
+                        System.out.println(UniversityData.getSubjects());
+                        break;
+                    case 4:
                         System.out.println("3. Change Password");
                         System.out.println("Enter your new password");
                         String newPassword = scanner.nextLine();
