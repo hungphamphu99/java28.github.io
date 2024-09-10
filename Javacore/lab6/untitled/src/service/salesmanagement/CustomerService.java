@@ -279,9 +279,28 @@ public class CustomerService {
             return;
         }
 
-        double totalCost = cart.getTotalCost();
+        double totalCost = 0.0;
 
-        // Check if the customer has sufficient balance
+        for (Map.Entry<Product, Integer> entry : cart.getProducts().entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+
+            if (product.getStatus() == Enum.statusProduct.Deleted) {
+                System.out.println("Product " + product.getName() + " has been deleted and cannot be purchased.");
+                return;
+            } else if (product.getStatus() == Enum.statusProduct.Out_Stock) {
+                System.out.println("Product " + product.getName() + " is out of stock and cannot be purchased.");
+                return;
+            }
+
+            if (product.getQuantity() < quantity) {
+                System.out.println("Not enough stock for product: " + product.getName());
+                return;
+            }
+
+            totalCost += product.getPrice() * quantity;
+        }
+
         if (totalCost > customer.getBalance()) {
             System.out.println("Insufficient balance to complete the purchase. Total cost is: " + totalCost);
             return;
@@ -291,27 +310,25 @@ public class CustomerService {
         String choice = scanner.next();
 
         if (choice.equalsIgnoreCase("yes")) {
-            // Deduct the total cost from the customer's balance
             customer.setBalance(customer.getBalance() - totalCost);
 
             Orders order = new Orders(customer, cart.getProducts(), statusOder.Pending, totalCost);
             customer.addOrder(order);
 
-
-            // Adjust the stock of each product in the cart
             for (Map.Entry<Product, Integer> entry : cart.getProducts().entrySet()) {
                 Product product = entry.getKey();
                 int quantity = entry.getValue();
+
                 product.setQuantity(product.getQuantity() - quantity);
             }
 
-            // Clear the cart after successful purchase
             cart.clearCart();
             System.out.println("Purchase successful! Total cost: " + totalCost);
         } else {
             System.out.println("Purchase cancelled.");
         }
     }
+
 
     public void depositByCustomer(Customer customer) {
         System.out.print("Enter the amount you want to deposit: ");
