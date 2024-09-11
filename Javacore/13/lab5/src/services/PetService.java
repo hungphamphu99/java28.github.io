@@ -1,5 +1,6 @@
 package services;
 
+import data.Data;
 import entities.Pet;
 import utils.Enum;
 
@@ -83,7 +84,7 @@ public class PetService {
         while (keepMatching) {
             ArrayList<Pet> matchedPets = new ArrayList<>();
 
-            for (Pet pet : data.data.getPets()) {
+            for (Pet pet : Data.getPets()) {
                 if (pet.getType() == userPet.getType() && !pet.getSex().equalsIgnoreCase(userPet.getSex())) {
                     matchedPets.add(pet);
                 }
@@ -112,6 +113,6 @@ public class PetService {
     }
 
     public void displayAllPets(){
-        System.out.println(data.data.getPets());
+        System.out.println(Data.getPets());
     }
 }
