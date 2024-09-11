@@ -1,12 +1,12 @@
 package lab_3;
 
-import lab_3.data.data;
+import lab_3.data.Data;
 import lab_3.view.Menu;
 
 public class Main {
     public static void main(String[] args) {
         Menu menu = new Menu();
-        data.data();
+        Data.data();
         menu.displayMenu();
     }
 }

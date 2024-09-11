@@ -1,6 +1,6 @@
 package lab_3.entities;
 
-import lab_3.data.data;
+import lab_3.data.Data;
 import lab_3.utils.Enum;
 import java.util.Date;
 
@@ -21,7 +21,7 @@ public class Worker {
         this.workPlace = workPlace;
         this.status = Enum.Type.None;
         this.date = new Date();
-        data.addWorker(this);
+        Data.addWorker(this);
     }
 
     // Getters and setters...
@@ -44,7 +44,7 @@ public class Worker {
     }
 
     public static Worker findWorkerById(String id) {
-        for (Worker worker : data.getWorkers()) {
+        for (Worker worker : Data.getWorkers()) {
             if (worker.getId().equals(id)) {
                 return worker;
             }

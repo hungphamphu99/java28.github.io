@@ -4,7 +4,7 @@ import lab_3.entities.Worker;
 
 import java.util.ArrayList;
 
-public class data {
+public class Data {
     private static ArrayList<Worker> workers = new ArrayList<>();
 
     public static ArrayList<Worker> getWorkers() {

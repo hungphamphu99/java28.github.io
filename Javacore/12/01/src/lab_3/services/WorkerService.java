@@ -1,6 +1,6 @@
 package lab_3.services;
 
-import lab_3.data.data;
+import lab_3.data.Data;
 import lab_3.entities.Worker;
 import lab_3.utils.Enum;
 
@@ -31,7 +31,7 @@ public class WorkerService {
         String workPlace = scanner.nextLine();
 
         Worker worker = new Worker(id, name, age, salary, workPlace);
-        data.addWorker(worker);
+        Data.addWorker(worker);
         System.out.println("Worker added successfully!");
     }
 
@@ -64,7 +64,7 @@ public class WorkerService {
     }
 
     public void displayWorkers() {
-        ArrayList<Worker> workers = data.getWorkers();
+        ArrayList<Worker> workers = Data.getWorkers();
         if (workers.isEmpty()) {
             System.out.println("No workers to display!");
         } else {
