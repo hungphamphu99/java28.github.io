@@ -22,4 +22,8 @@ public class UsersData {
     public static void addUser(User user) {
         users.add(user);
     }
+
+    public static void  initialize(){
+        User admin = new User("admin", "admin", "admin", "Admin Name", "admin@example.com", "123 Admin Street", "555-1234");
+    }
 }

@@ -1,9 +1,8 @@
 package data;
 
+import entities.universitymanagement.*;
 import entities.universitymanagement.Class;
-import entities.universitymanagement.Student;
-import entities.universitymanagement.Subject;
-import entities.universitymanagement.Teacher;
+import utils.Enum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +74,31 @@ public class UniversityData {
 
     public static void removeSubject(Subject subjectToRemove) {
         subjects.remove(subjectToRemove);
+    }
+
+    public static void initialize() {
+        Teacher teacher = new Teacher("teacher", "teacher", "teacher", "Teacher 1", "teacher@example.com", "123 Teacher Street", "555-1234", Enum.Type.TECH);
+        Teacher teacher2 = new Teacher("teacher2", "teacher2", "teacher", "Teacher 2", "teacher2@example.com", "123 Teacher Street", "555-1234", Enum.Type.TECH);
+        Teacher teacher3 = new Teacher("teacher3", "teacher3", "teacher", "Teacher 3", "teacher3@example.com", "123 Teacher Street", "555-1234", Enum.Type.TECH);
+        Teacher teacher4 = new Teacher("teacher4", "teacher4", "teacher", "Teacher 4", "teacher4@example.com", "123 Teacher Street", "555-1234", Enum.Type.LANGUAGE);
+
+
+        Subject subject1 = new Subject("Math", 4, Enum.Type.TECH);
+        Subject subject2 = new Subject("Eng", 4, Enum.Type.LANGUAGE);
+
+
+        Class class1 = new Class("1", teacher2, subject1);
+        Class class2 = new Class("2", teacher3, subject1);
+        Class class3 = new Class("3", teacher4, subject2);
+
+
+
+        Student student = new Student("student", "student", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
+        student.getSubjectScores().put(subject1, new Score(7.0, 7.0, 5.6));
+        student.getSubjectScores().put(subject2, new Score(7.0, 8.0, 7.6));
+        student.calculateAvgScore();
+
+
     }
 
 }

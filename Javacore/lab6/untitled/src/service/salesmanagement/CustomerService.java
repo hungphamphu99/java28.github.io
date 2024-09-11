@@ -420,7 +420,6 @@ public class CustomerService {
 
 
 
-
     public void updateInformationCustomer() {
         System.out.print("Enter customer ID: ");
         int customerId = Integer.parseInt(scanner.nextLine());
