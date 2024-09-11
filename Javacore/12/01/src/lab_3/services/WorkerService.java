@@ -7,6 +7,8 @@ import lab_3.utils.Enum;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static lab_3.data.Data.workers;
+
 public class WorkerService {
     Scanner scanner = new Scanner(System.in);
 
@@ -31,7 +33,7 @@ public class WorkerService {
         String workPlace = scanner.nextLine();
 
         Worker worker = new Worker(id, name, age, salary, workPlace);
-        Data.addWorker(worker);
+        workers.add(worker);
         System.out.println("Worker added successfully!");
     }
 
@@ -64,7 +66,7 @@ public class WorkerService {
     }
 
     public void displayWorkers() {
-        ArrayList<Worker> workers = Data.getWorkers();
+        ArrayList<Worker> workers = Data.workers;
         if (workers.isEmpty()) {
             System.out.println("No workers to display!");
         } else {

@@ -4,6 +4,8 @@ import lab_3.data.Data;
 import lab_3.utils.Enum;
 import java.util.Date;
 
+import static lab_3.data.Data.workers;
+
 public class Worker {
     private String id;
     private String name;
@@ -21,7 +23,7 @@ public class Worker {
         this.workPlace = workPlace;
         this.status = Enum.Type.None;
         this.date = new Date();
-        Data.addWorker(this);
+
     }
 
     // Getters and setters...
@@ -44,7 +46,7 @@ public class Worker {
     }
 
     public static Worker findWorkerById(String id) {
-        for (Worker worker : Data.getWorkers()) {
+        for (Worker worker : workers) {
             if (worker.getId().equals(id)) {
                 return worker;
             }
