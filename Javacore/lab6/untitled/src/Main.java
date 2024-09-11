@@ -12,17 +12,13 @@ import utils.Enum;
 
 public class Main {
     public static void main(String[] args) {
+        UniversityData.initialize();
+        ShopData.initialize();
+        UsersData.initialize();
 
-
-
-       UniversityData.initialize();
-       ShopData.initialize();
-       UsersData.initialize();
 
 
         LoginMenu loginMenu = new LoginMenu();
-
         loginMenu.mainMenu();
-
     }
 }
