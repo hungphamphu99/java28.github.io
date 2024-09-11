@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class PetService {
     Scanner scanner = new Scanner(System.in);
+    private Pet userPet;
 
     private String getNonEmptyInput(String prompt) {
         String input;
@@ -63,9 +64,8 @@ public class PetService {
         return sex;
     }
 
-    public void match() {
+    public void inputPetInfo() {
         System.out.println("Enter your pet's information:");
-
         String name = getNonEmptyInput("Enter pet's name: ");
         String species = getNonEmptyInput("Enter pet's species : ");
         int age = getValidAge("Enter pet's age: ");
@@ -74,36 +74,40 @@ public class PetService {
         Enum.TYPE type = getValidType("Enter pet's type (DOG/CAT): ");
         String images = getNonEmptyInput("Enter pet's image (image URL or file path): ");
 
-        Pet userPet = new Pet( name, species, age, sex, description, type, images);
+        userPet = new Pet( name, species, age, sex, description, type, images);
+    }
 
-        ArrayList<Pet> matchedPets = new ArrayList<>();
-        for (Pet pet : data.data.getPets()) {
-            if (pet.getType() == userPet.getType() && !pet.getSex().equalsIgnoreCase(userPet.getSex())) {
-                matchedPets.add(pet);
-            }
-        }
+    public void match() {
+        inputPetInfo();
+        boolean keepMatching = true;
+        while (keepMatching) {
+            ArrayList<Pet> matchedPets = new ArrayList<>();
 
-        if (!matchedPets.isEmpty()) {
-            Random random = new Random();
-            Pet matchedPet = matchedPets.get(random.nextInt(matchedPets.size()));
-
-            System.out.println("We found a match for your pet:");
-            System.out.println(matchedPet);
-
-            String choice;
-            do {
-                choice = getNonEmptyInput("Do you want to find another pet match? (Y/N): ").toUpperCase();
-                if (choice.equals("Y")) {
-                    match();
-                } else if (choice.equals("N")) {
-                    System.out.println("Thank you for using our pet matching service!");
-                } else {
-                    System.out.println("Invalid input! Please enter 'Y' or 'N'.");
-                    choice = "";
+            for (Pet pet : data.data.getPets()) {
+                if (pet.getType() == userPet.getType() && !pet.getSex().equalsIgnoreCase(userPet.getSex())) {
+                    matchedPets.add(pet);
                 }
-            } while (choice.isEmpty());
-        } else {
-            System.out.println("Sorry, no matches found for your pet.");
+            }
+
+            if (!matchedPets.isEmpty()) {
+                Random random = new Random();
+                Pet matchedPet = matchedPets.get(random.nextInt(matchedPets.size()));
+
+                System.out.println("We found a match for your pet:");
+                System.out.println(matchedPet);
+                matchedPets.remove(matchedPet);
+
+                System.out.print("Do you want to find another pet match? (Y/N): ");
+                String choice = scanner.nextLine().toUpperCase();
+
+                if (choice.equals("N")) {
+                    keepMatching = false;
+                    System.out.println("Thank you for using our pet matching service!");
+                }
+            } else {
+                System.out.println("Sorry, no matches found for your pet.");
+                keepMatching = false;
+            }
         }
     }
 

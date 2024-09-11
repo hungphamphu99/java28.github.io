@@ -20,6 +20,7 @@ public class Menu {
 
             switch (choice) {
                 case 1:
+
                     petService.match();
                     break;
                 case 2:
