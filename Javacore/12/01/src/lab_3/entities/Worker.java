@@ -1,8 +1,8 @@
 package lab_3.entities;
 
 import lab_3.data.data;
-
-import java.util.ArrayList;
+import lab_3.utils.Enum;
+import java.util.Date;
 
 public class Worker {
     private String id;
@@ -10,7 +10,8 @@ public class Worker {
     private int age;
     private double salary;
     private String workPlace;
-
+    private Enum.Type status;
+    private Date date;
 
     public Worker(String id, String name, int age, double salary, String workPlace) {
         this.id = id;
@@ -18,41 +19,29 @@ public class Worker {
         this.age = age;
         this.salary = salary;
         this.workPlace = workPlace;
-
+        this.status = Enum.Type.None;
+        this.date = new Date();
     }
 
+    // Getters and setters...
 
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public int getAge() { return age; }
+    public double getSalary() { return salary; }
+    public void setSalary(double salary) { this.salary = salary; }
+    public String getWorkPlace() { return workPlace; }
+    public Enum.Type getStatus() { return status; }
+    public void setStatus(Enum.Type status) { this.status = status; }
+    public Date getDate() { return date; }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public double getSalary() {
-        return salary;
-    }
-
-    public void setSalary(double salary) {
-        this.salary = salary;
-    }
-
-    public String getWorkPlace() {
-        return workPlace;
-    }
-
+    public void setDate(Date date) { this.date = date; }
     @Override
     public String toString() {
-        return String.format("Code: %s, Name: %s, Age: %d, Salary: %.2f, Workplace: %s", id, name, age, salary, workPlace);
+        return String.format("%-5s %-10s %-3d %-7.2f %-6s %-12s",
+                id, name, age, salary, status.name(), date.toString());
     }
 
-    // Static method to find a worker by ID
     public static Worker findWorkerById(String id) {
         for (Worker worker : data.getWorkers()) {
             if (worker.getId().equals(id)) {
