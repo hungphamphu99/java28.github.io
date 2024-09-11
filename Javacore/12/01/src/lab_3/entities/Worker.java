@@ -21,6 +21,7 @@ public class Worker {
         this.workPlace = workPlace;
         this.status = Enum.Type.None;
         this.date = new Date();
+        data.addWorker(this);
     }
 
     // Getters and setters...

@@ -14,4 +14,8 @@ public class data {
         workers.add(worker);
     }
 
+    public static void data(){
+        Worker worker = new Worker("1","hung",18, 100.0,"c");
+    }
+
 }
