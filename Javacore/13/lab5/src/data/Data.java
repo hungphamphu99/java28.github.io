@@ -7,7 +7,7 @@ import utils.Enum;
 import java.util.ArrayList;
 
 public class Data {
-    private static ArrayList<Pet> pets = new ArrayList<>();
+    public static ArrayList<Pet> pets = new ArrayList<>();
     static {
         pets.add(new Pet( "Buddy1", "Golden Retriever", 3, "Male", "Friendly and playful", Enum.TYPE.DOG, "image1.jpg"));
         pets.add(new Pet( "Buddy2", "Golden Retriever", 4, "Male", "Friendly and playful", Enum.TYPE.DOG, "image1.jpg"));
@@ -30,7 +30,5 @@ public class Data {
 
     }
 
-   public static ArrayList<Pet> getPets() {
-        return pets;
-   }
+
 }

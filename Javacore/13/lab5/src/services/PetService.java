@@ -84,7 +84,7 @@ public class PetService {
         while (keepMatching) {
             ArrayList<Pet> matchedPets = new ArrayList<>();
 
-            for (Pet pet : Data.getPets()) {
+            for (Pet pet : Data.pets) {
                 if (pet.getType() == userPet.getType() && !pet.getSex().equalsIgnoreCase(userPet.getSex())) {
                     matchedPets.add(pet);
                 }
@@ -113,6 +113,6 @@ public class PetService {
     }
 
     public void displayAllPets(){
-        System.out.println(Data.getPets());
+        System.out.println(Data.pets);
     }
 }
