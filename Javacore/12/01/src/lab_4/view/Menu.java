@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
-    private EmployeeService employeeService = new EmployeeService();
-     Scanner scanner = new Scanner(System.in);
+    EmployeeService employeeService = new EmployeeService();
+    Scanner scanner = new Scanner(System.in);
 
     public void displayMenu() {
-
 
         while (true) {
             try {
@@ -29,50 +28,46 @@ public class Menu {
 
                 switch (choice) {
                     case 1:
-                        Employee employee = employeeService.inputEmployee();
-                        if (employee != null) {
-                            Employee.getEmployees().add(employee);
-                            System.out.println("Employee added successfully!");
-                        }
+                        employeeService.inputEmployee();
                         break;
                     case 2:
                         System.out.println("Enter the ID of the employee to update: ");
-                        String updateId = scanner.nextLine();
+                        int updateId = Integer.parseInt(scanner.nextLine());
                         employeeService.updateEmployee(updateId);
                         break;
                     case 3:
                         System.out.println("Enter the ID of the employee to remove: ");
-                        String removeId = scanner.nextLine();
+                        int removeId = Integer.parseInt(scanner.nextLine());
                         employeeService.removeEmployee(removeId);
                         break;
                     case 4:
                         System.out.println("Enter the minimum income to search: ");
                         double minSalary = getValidDouble();
                         List<Employee> results = employeeService.searchBySalary(minSalary);
-                        results.forEach(System.out::println);
+                        if (results.isEmpty()) {
+                            System.out.println("No employees found with a salary greater than " + minSalary);
+                        } else {
+                            results.forEach(System.out::println);
+                        }
                         break;
                     case 5:
                         employeeService.sortByNameAndIncome();
-                        System.out.println("Employees sorted by name and income:");
-                        employeeService.printAllEmployees();
                         break;
                     case 6:
-                        List<Employee> top5 = employeeService.getTop5HighestIncome();
-                        top5.forEach(System.out::println);
+                        employeeService.getTop5HighestIncome();
                         break;
                     case 7:
                         employeeService.printAllEmployees();
                         break;
                     case 8:
-
                         System.out.println("Exiting the program.");
                         System.exit(0);
                         break;
                     default:
                         System.out.println("Invalid choice, please try again.");
                 }
-            }catch (Exception e) {
-                System.out.println("Invalid choice, please try again.");
+            } catch (Exception e) {
+                System.out.println("Invalid input, please try again.");
             }
         }
     }
@@ -89,7 +84,3 @@ public class Menu {
         }
     }
 }
-
-
-
-

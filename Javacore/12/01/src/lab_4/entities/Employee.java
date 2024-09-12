@@ -1,28 +1,22 @@
 package lab_4.entities;
 
-import lab_4.data.data;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import static lab_4.data.data.employees;
+import static lab_4.data.Database.employees;
 
 public abstract class Employee {
 
-    private String id;
+    private int id;
+    private static int nextId = 0;
     private String name;
     protected double salary;
 
-    public Employee(String id, String name, double salary) {
-        this.id = id;
+    public Employee(String name, double salary) {
+        this.id = ++nextId;
         this.name = name;
         this.salary = salary;
-
-
     }
 
-
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -38,14 +32,6 @@ public abstract class Employee {
         return employees;
     }
 
-    public static void removeEmployee(String id) {
-        employees.removeIf(employee -> employee.getId().equals(id));
-    }
-
-    public static Employee findEmployeeById(String id) {
-        return employees.stream().filter(e -> e.getId().equals(id)).findFirst().orElse(null);  // Tìm nhân viên theo ID
-    }
-
     public abstract double calculateIncome();
 
     public double calculateTax() {
@@ -58,6 +44,7 @@ public abstract class Employee {
 
     @Override
     public String toString() {
-        return "ID: " + id + ", Name: " + name + ", Salary: " + salary + ", Income: " + calculateIncome() + ", Tax: " + calculateTax();
+        return String.format("ID: %d, Name: %s, Salary: %.2f, Income: %.2f, Tax: %.2f",
+                getId(), getName(), getSalary(), calculateIncome(), calculateTax());
     }
 }

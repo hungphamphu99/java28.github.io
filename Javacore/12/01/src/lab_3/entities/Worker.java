@@ -1,10 +1,9 @@
 package lab_3.entities;
 
-import lab_3.data.Data;
 import lab_3.utils.Enum;
 import java.util.Date;
 
-import static lab_3.data.Data.workers;
+import static lab_3.data.Database.workers;
 
 public class Worker {
     private String id;

@@ -1,13 +1,13 @@
 package lab_3.services;
 
-import lab_3.data.Data;
+import lab_3.data.Database;
 import lab_3.entities.Worker;
 import lab_3.utils.Enum;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static lab_3.data.Data.workers;
+import static lab_3.data.Database.workers;
 
 public class WorkerService {
     Scanner scanner = new Scanner(System.in);
@@ -66,7 +66,7 @@ public class WorkerService {
     }
 
     public void displayWorkers() {
-        ArrayList<Worker> workers = Data.workers;
+        ArrayList<Worker> workers = Database.workers;
         if (workers.isEmpty()) {
             System.out.println("No workers to display!");
         } else {

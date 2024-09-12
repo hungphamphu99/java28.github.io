@@ -2,8 +2,8 @@ package lab_4.entities;
 
 public class AdminStaff extends Employee {
 
-    public AdminStaff(String id, String name, double salary) {
-        super(id, name, salary);
+    public AdminStaff( String name, double salary) {
+        super( name, salary);
     }
 
     @Override

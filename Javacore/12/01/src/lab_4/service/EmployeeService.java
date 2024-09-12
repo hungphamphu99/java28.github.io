@@ -1,18 +1,18 @@
 package lab_4.service;
 
-import lab_4.entities.AdminStaff;
-import lab_4.entities.DepartmentHead;
+import lab_4.data.Database;
 import lab_4.entities.Employee;
-import lab_4.entities.MarketingStaff;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class EmployeeService {
+    AdminStaffService adminStaffService = new AdminStaffService();
+    MarketingStaffService marketingStaffService = new MarketingStaffService();
+    DepartmentHeadService departmentHeadService = new DepartmentHeadService();
 
-    public Employee inputEmployee() {
+    public void inputEmployee() {
         Scanner scanner = new Scanner(System.in);
 
         int type;
@@ -30,140 +30,84 @@ public class EmployeeService {
             }
         }
 
-        String id;
-        while (true) {
-            System.out.println("Enter ID: ");
-            id = scanner.nextLine();
-            if (Employee.findEmployeeById(id) == null) {
-                break;
-            } else {
-                System.out.println("This ID already exists. Please enter a unique ID.");
-            }
-        }
-
-        String name;
-        while (true) {
-            System.out.println("Enter name: ");
-            name = scanner.nextLine();
-            if (name.matches("[a-zA-Z\\s]+")) {
-                break;
-            } else {
-                System.out.println("Invalid name. Please enter a valid name containing only letters.");
-            }
-        }
-
-        double salary;
-        while (true) {
-            try {
-                System.out.println("Enter base salary: ");
-                salary = Double.parseDouble(scanner.nextLine());
-                if (salary > 0) {
-                    break;
-                } else {
-                    System.out.println("Salary must be a positive number.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number for salary.");
-            }
-        }
-
+        Employee employee = null;
         switch (type) {
             case 1:
-                return new AdminStaff(id, name, salary);
+                employee = adminStaffService.inputAdminStaff();
+                break;
             case 2:
-                double sales;
-                while (true) {
-                    try {
-                        System.out.println("Enter sales: ");
-                        sales = Double.parseDouble(scanner.nextLine());
-                        if (sales >= 0) {
-                            break;
-                        } else {
-                            System.out.println("Sales must be non-negative.");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number for sales.");
-                    }
-                }
-
-                double commissionRate;
-                while (true) {
-                    try {
-                        System.out.println("Enter commission rate: ");
-                        commissionRate = Double.parseDouble(scanner.nextLine());
-                        if (commissionRate >= 0 && commissionRate <= 1) {
-                            break;
-                        } else {
-                            System.out.println("Commission rate must be between 0 and 1.");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number for commission rate.");
-                    }
-                }
-
-                return new MarketingStaff(id, name, salary, sales, commissionRate);
+                employee = marketingStaffService.inputMarketingStaff();
+                break;
             case 3:
-                double responsibilityAllowance;
-                while (true) {
-                    try {
-                        System.out.println("Enter responsibility allowance: ");
-                        responsibilityAllowance = Double.parseDouble(scanner.nextLine());
-                        if (responsibilityAllowance >= 0) {
-                            break;
-                        } else {
-                            System.out.println("Responsibility allowance must be non-negative.");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number for responsibility allowance.");
-                    }
-                }
-
-                return new DepartmentHead(id, name, salary, responsibilityAllowance);
+                employee = departmentHeadService.inputDepartmentHead();
+                break;
             default:
                 System.out.println("Invalid employee type.");
-                return null;
+        }
+
+        if (employee != null) {
+            Database.employees.add(employee);
+            System.out.println("Employee added successfully!");
         }
     }
 
-
-
-    public void removeEmployee(String id) {
-        Employee.removeEmployee(id);
+    public void printAllEmployees() {
+        if (Database.employees.isEmpty()) {
+            System.out.println("No employees to display.");
+        } else {
+            for (Employee employee : Database.employees) {
+                System.out.println(employee);
+            }
+        }
     }
 
-    public void updateEmployee(String id) {
-        Employee oldEmployee = Employee.findEmployeeById(id);
-        if (oldEmployee != null) {
+    public void removeEmployee(int id) {
+        Employee employeeToRemove = findEmployeeById(id);
+        if (employeeToRemove != null) {
+            Database.employees.remove(employeeToRemove);
+            System.out.println("Employee removed successfully.");
+        } else {
+            System.out.println("Employee not found.");
+        }
+    }
+
+    public void updateEmployee(int id) {
+        Employee employeeToUpdate = findEmployeeById(id);
+        if (employeeToUpdate != null) {
             removeEmployee(id);
             System.out.println("Enter new information:");
-            Employee newEmployee = inputEmployee();
-            Employee.getEmployees().add(newEmployee);
+            inputEmployee();
         } else {
-            System.out.println("Employee with ID: " + id + " not found.");
+            System.out.println("Employee not found.");
         }
     }
 
     public List<Employee> searchBySalary(double minSalary) {
-        return Employee.getEmployees().stream()
+        return Database.employees.stream()
                 .filter(employee -> employee.calculateIncome() >= minSalary)
                 .collect(Collectors.toList());
     }
 
     public void sortByNameAndIncome() {
-        Employee.getEmployees().sort(Comparator.comparing(Employee::getName)
+        Database.employees.sort(Comparator.comparing(Employee::getName)
                 .thenComparing(Employee::calculateIncome));
+        System.out.println("Employees sorted by name and income:");
+        printAllEmployees();
     }
 
-    public List<Employee> getTop5HighestIncome() {
-        return Employee.getEmployees().stream()
+    public void getTop5HighestIncome() {
+        List<Employee> top5 = Database.employees.stream()
                 .sorted(Comparator.comparing(Employee::calculateIncome).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
+
+        System.out.println("Top 5 employees with the highest income:");
+        for (Employee employee : top5) {
+            System.out.println(employee);
+        }
     }
 
-    public void printAllEmployees() {
-        for (Employee e : Employee.getEmployees()) {
-            System.out.println(e);
-        }
+    private Employee findEmployeeById(int id) {
+        return Database.employees.stream().filter(employee -> employee.getId() == id).findFirst().orElse(null);
     }
 }
