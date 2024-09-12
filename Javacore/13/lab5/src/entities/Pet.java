@@ -14,7 +14,6 @@ public class Pet {
     private Enum.TYPE type;
     private String images;
 
-    // Constructor
     public Pet( String name, String species, int age, String sex, String description, Enum.TYPE type, String images) {
         this.id = ++nextId;
         this.name = name;
