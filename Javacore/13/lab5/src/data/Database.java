@@ -6,7 +6,7 @@ import utils.Enum;
 
 import java.util.ArrayList;
 
-public class Data {
+public class Database {
     public static ArrayList<Pet> pets = new ArrayList<>();
     static {
         pets.add(new Pet( "Buddy1", "Golden Retriever", 3, "Male", "Friendly and playful", Enum.TYPE.DOG, "image1.jpg"));
