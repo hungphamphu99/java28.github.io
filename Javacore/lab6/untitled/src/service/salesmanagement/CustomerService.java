@@ -36,16 +36,8 @@ public class CustomerService {
         }
     }
 
-    public void addProductToCartByCustomer(Customer customer) {
-        System.out.println("Enter Product ID to add to cart:");
-        int productId = scanner.nextInt();
+    public void addProductToCartByCustomer(Customer customer, int productId) {
         Product product = productService.findProduct(productId);
-
-        if (product == null) {
-            System.out.println("Product not found.");
-            return;
-        }
-
         System.out.println("Enter quantity:");
         int quantity = scanner.nextInt();
 
@@ -57,31 +49,10 @@ public class CustomerService {
         }
     }
 
-    public void showProductsAndBuyImmediately(Customer customer) {
-        List<Product> products = ShopData.getProducts();
+    public void showProductsAndBuyImmediately(Customer customer, int productId) {
 
-        if (products.isEmpty()) {
-            System.out.println("No products available.");
-            return;
-        }
 
-        // Filter and display only products that are In_Stock
-        System.out.println("Available Products In Stock:");
-        boolean foundInStock = false;
-        for (Product product : products) {
-            if (product.getStatus() == Enum.statusProduct.In_Stock) {
-                System.out.println("Product ID: " + product.getId() + ", Name: " + product.getName() + ", Price: " + product.getPrice() + ", Quantity: " + product.getQuantity());
-                foundInStock = true;
-            }
-        }
 
-        if (!foundInStock) {
-            System.out.println("No products are currently in stock.");
-            return;
-        }
-
-        System.out.println("Enter Product ID to buy immediately:");
-        int productId = Integer.parseInt(scanner.nextLine());
         Product product = productService.findProduct(productId);
 
         if (product == null || product.getStatus() != Enum.statusProduct.In_Stock) {
@@ -90,7 +61,7 @@ public class CustomerService {
         }
 
         System.out.println("Enter quantity:");
-        int quantity = scanner.nextInt();
+        int quantity = Integer.parseInt(scanner.nextLine());
 
         if (product.getQuantity() >= quantity) {
             double totalCost = product.getPrice() * quantity;
@@ -135,16 +106,16 @@ public class CustomerService {
 
             // Check if the product is either Deleted or Out of Stock
             if (product.getStatus() == Enum.statusProduct.Deleted) {
-                System.out.println(i + ". " + product.getName() + " - This product has been deleted and cannot be purchased.");
+                System.out.println( product.getName() + " - This product has been deleted and cannot be purchased.");
             } else if (product.getStatus() == Enum.statusProduct.Out_Stock) {
-                System.out.println(i + ". " + product.getName() + " - This product is out of stock and cannot be purchased.");
+                System.out.println( product.getName() + " - This product is out of stock and cannot be purchased.");
             } else {
-                System.out.println(i + ". " + product.getName() + " - Quantity: " + quantity + " - Price: " + product.getPrice());
+                System.out.println( product.getName() + " - Quantity: " + quantity + " - Price: " + product.getPrice());
                 i++;
             }
         }
 
-        int choice = scanner.nextInt();
+        int choice = Integer.parseInt(scanner.nextLine());
 
         if (choice == 0) {
             System.out.println("Purchase cancelled.");
@@ -418,7 +389,37 @@ public class CustomerService {
         System.out.println("Order canceled successfully. Refunded amount: " + selectedOrder.getTotal());
     }
 
+   public void buyByCustomer(Customer customer) {
+        productService.displayInStockProducts();
+        while (true){
+            try {
+                System.out.println("Enter the product ID, you want to see more information about: ");
+                int productId = Integer.parseInt(scanner.nextLine());
+                productService.displayProduct(productId);
+                System.out.println("1. Buy product immediately");
+                System.out.println("2. Add product to the cart");
+                System.out.println("3. Back");
+                int choice = Integer.parseInt(scanner.nextLine());
+                switch (choice){
+                    case 1:
+                        System.out.println("1. Buy product immediately");
+                        showProductsAndBuyImmediately(customer, productId);
+                        return;
+                    case 2:
+                        System.out.println("2. Add product to the cart");
+                        addProductToCartByCustomer(customer, productId);
+                        return;
+                    case 3:
+                        return;
 
+                }
+
+
+            }catch (NumberFormatException e) {
+                System.out.println("Invalid input.");
+            }
+        }
+   }
 
     public void updateInformationCustomer() {
         System.out.print("Enter customer ID: ");

@@ -42,7 +42,7 @@ public class CustomerMenu {
                        break;
                    case 4:
                        System.out.println("4. Buy Product");
-                        customerService.showProductsAndBuyImmediately(customer);
+                        customerService.buyByCustomer(customer);
                        break;
                    case 5:
                        System.out.println("5. Cart");
@@ -74,37 +74,34 @@ public class CustomerMenu {
     public void cartMenu(Customer customer) {
         while (true) {
             try {
-                System.out.println("1. Add Product To Cart");
-                System.out.println("2. Open Cart");
-                System.out.println("3. Delete Product From Cart");
-                System.out.println("4. Edit Product From Cart");
-                System.out.println("5. Buy All Product From Cart");
-                System.out.println("6. Back Main Menu");
+
+                System.out.println("1. Open Cart");
+                System.out.println("2. Delete Product From Cart");
+                System.out.println("3. Edit Product From Cart");
+                System.out.println("4. Buy All Product From Cart");
+                System.out.println("5. Back Main Menu");
 
                 int option = Integer.parseInt(scanner.nextLine());
                 switch (option) {
+
                     case 1:
-                        System.out.println("1. Add Product To Cart");
-                        customerService.addProductToCartByCustomer(customer);
-                        break;
-                    case 2:
-                        System.out.println("2. Open Cart");
+                        System.out.println("1. Open Cart");
                         customerService.openCartToBuyByCustomer(customer);
                         break;
-                    case 3:
-                        System.out.println("3. Delete Product From Cart");
+                    case 2:
+                        System.out.println("2. Delete Product From Cart");
                         customerService.removeProductFromCartByCustomer(customer);
                         break;
-                    case 4:
-                        System.out.println("4. Edit Product From Cart");
+                    case 3:
+                        System.out.println("3. Edit Product From Cart");
                         customerService.editProductQuantityInCart(customer);
                         break;
-                    case 5:
-                        System.out.println("5. Buy All Product From Cart");
+                    case 4:
+                        System.out.println("4. Buy All Product From Cart");
                         customerService.buyAllProductsToCart(customer);
                         break;
-                    case 6:
-                        System.out.println("Back Menu");
+                    case 5:
+                        System.out.println("5. Back Menu");
                         return;
 
 

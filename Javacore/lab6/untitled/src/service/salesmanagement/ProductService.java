@@ -17,14 +17,13 @@ public class ProductService {
         }
         return null;
     }
-    public void displayProduct(){
-        System.out.println("Product ID");
-        int id = Integer.parseInt(scanner.nextLine());
+    public void displayProduct(int id){
         Product product = findProduct(id);
         if (product != null){
             System.out.println("Product Name: " + product);
         }else {
             System.out.println("Product ID not found");
+            return;
         }
     }
     public void displayAllProducts(){

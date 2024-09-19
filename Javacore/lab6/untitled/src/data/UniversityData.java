@@ -83,6 +83,10 @@ public class UniversityData {
         Teacher teacher4 = new Teacher("teacher4", "teacher4", "teacher", "Teacher 4", "teacher4@example.com", "123 Teacher Street", "555-1234", Enum.Type.LANGUAGE);
         Student student = new Student("student", "student", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
         Student student1 = new Student("student1", "student1", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
+        Student student2 = new Student("student2", "student2", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
+        Student student3 = new Student("student3", "student3", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
+        Student student4 = new Student("student4", "student4", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
+
 
         Subject subject1 = new Subject("Math", 4, Enum.Type.TECH);
         Subject subject2 = new Subject("Eng", 4, Enum.Type.LANGUAGE);
