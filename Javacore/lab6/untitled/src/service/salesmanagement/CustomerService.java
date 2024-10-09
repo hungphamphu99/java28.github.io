@@ -4,11 +4,10 @@ import entities.salesmanagement.*;
 import data.ShopData;
 import utils.Enum;
 import utils.Enum.statusOder;
+import utils.Validator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class CustomerService {
     Scanner scanner = new Scanner(System.in);
@@ -17,7 +16,7 @@ public class CustomerService {
 
 
     public Customer findCustomerById(int id) {
-        for (Customer customer : ShopData.getCustomers()) {
+        for (Customer customer : ShopData.customers) {
             if (customer.getId() == id) {
                 return customer;
             }
@@ -39,7 +38,7 @@ public class CustomerService {
     public void addProductToCartByCustomer(Customer customer, int productId) {
         Product product = productService.findProduct(productId);
         System.out.println("Enter quantity:");
-        int quantity = scanner.nextInt();
+        int quantity = Integer.parseInt(scanner.nextLine());
 
         boolean success = cartService.addProductToCart(customer, product, quantity);
         if (success) {
@@ -50,9 +49,6 @@ public class CustomerService {
     }
 
     public void showProductsAndBuyImmediately(Customer customer, int productId) {
-
-
-
         Product product = productService.findProduct(productId);
 
         if (product == null || product.getStatus() != Enum.statusProduct.In_Stock) {
@@ -65,21 +61,47 @@ public class CustomerService {
 
         if (product.getQuantity() >= quantity) {
             double totalCost = product.getPrice() * quantity;
+            PaymentStrategy paymentStrategy = null;
 
-            if (totalCost > customer.getBalance()) {
-                System.out.println("Insufficient balance to complete the purchase.");
-                return;
+            while (paymentStrategy == null) {
+                System.out.println("Choose payment method: \n1. E-Wallet \n2. Cash on Delivery");
+                int paymentChoice = Integer.parseInt(scanner.nextLine());
+
+                // Select payment strategy based on user's choice
+                if (paymentChoice == 1) {
+                    if (customer.getBalance() >= totalCost) {
+                        paymentStrategy = new EWalletPayment();
+                    } else {
+                        System.out.println("Insufficient balance in E-Wallet.");
+                    }
+                } else if (paymentChoice == 2) {
+                    paymentStrategy = new CashOnDeliveryPayment();
+                } else {
+                    System.out.println("Invalid payment method. Please choose again.");
+                }
             }
 
-            // Deduct balance and create an order
-            customer.setBalance(customer.getBalance() - totalCost);
-            Orders order = new Orders(customer, Map.of(product, quantity), statusOder.Pending, totalCost);
-            customer.addOrder(order);
+            // If we have a valid payment strategy, process the payment
+            if (paymentStrategy != null) {
+                customer.pay(totalCost, paymentStrategy);
 
-            // Adjust stock for the product
-            product.setQuantity(product.getQuantity() - quantity);
+                // Deduct balance if using E-Wallet
+                if (paymentStrategy instanceof EWalletPayment) {
+                    customer.setBalance(customer.getBalance() - totalCost);
+                    System.out.println("Payment successful via E-Wallet. Remaining balance: " + customer.getBalance());
+                } else {
+                    System.out.println("Payment will be processed upon delivery (Cash on Delivery).");
+                }
 
-            System.out.println("Purchase successful. Ordered " + quantity + " " + product.getName() + " for " + totalCost + ".");
+                // Create an order after successful payment
+                Orders order = new Orders(customer, Map.of(product, quantity), statusOder.Pending, totalCost, paymentStrategy);
+                customer.addOrder(order);
+
+                // Reduce the product's quantity in stock
+                product.setQuantity(product.getQuantity() - quantity);
+
+                System.out.println("Purchase successful. Ordered " + quantity + " " + product.getName() + " for " + totalCost + ".");
+            }
         } else {
             System.out.println("Not enough stock for product: " + product.getName());
         }
@@ -87,35 +109,97 @@ public class CustomerService {
 
 
     public void openCartToBuyByCustomer(Customer customer) {
-        Cart cart = customer.getCart();  // Get the customer's cart
-        cart.showCart();  // Display the cart contents
+        cartService.viewCart(customer);
 
-        if (cart.getProducts().isEmpty()) {
-            System.out.println("Your cart is empty. Add products to your cart first.");
+        Map<Product, Integer> products = customer.getCart().getProducts();
+        if (products.isEmpty()) {
             return;
         }
 
-        System.out.println("Select a product to purchase by its number (0 to cancel):");
-        int i = 1;
-        Map<Product, Integer> products = cart.getProducts();
-
         // Display the products in the cart
+        int i = 1;
+        Map<Integer, Product> productMap = new HashMap<>(); // Map product number to the product for selection
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
 
             // Check if the product is either Deleted or Out of Stock
             if (product.getStatus() == Enum.statusProduct.Deleted) {
-                System.out.println( product.getName() + " - This product has been deleted and cannot be purchased.");
+                System.out.println(i + ". " + product.getName() + " - This product has been deleted and cannot be purchased.");
             } else if (product.getStatus() == Enum.statusProduct.Out_Stock) {
-                System.out.println( product.getName() + " - This product is out of stock and cannot be purchased.");
+                System.out.println(i + ". " + product.getName() + " - This product is out of stock and cannot be purchased.");
             } else {
-                System.out.println( product.getName() + " - Quantity: " + quantity + " - Price: " + product.getPrice());
-                i++;
+                System.out.println(i + ". " + product.getName() + " - Quantity: " + quantity + " - Price: " + product.getPrice());
+                productMap.put(i, product); // Add valid products to the selection map
             }
+            i++;
         }
 
-        int choice = Integer.parseInt(scanner.nextLine());
+        while (true) {
+            try {
+                System.out.println("Select a product to purchase by its number (0 to cancel): ");
+                System.out.println("Buy all products(-1)");
+                int choice = Integer.parseInt(scanner.nextLine());// Attempt to parse the trimmed input
+
+                if (choice == 0) {
+                    System.out.println("Purchase cancelled.");
+                    return;
+                }else if (choice == -1) {
+                    System.out.println("Buy all products.");
+                    buyAllProductsToCart(customer);
+                    return;
+                }
+                // Validate the selected product
+                if (productMap.containsKey(choice)) {
+                    manageProductInCart(customer,productMap,products,choice);
+                }
+
+
+            }catch (Exception e) {
+                System.out.println("Invalid choice.");
+            }
+        }
+    }
+    public void manageProductInCart(Customer customer, Map<Integer, Product> productMap, Map<Product, Integer> products, Integer choice) {
+        while (true) {
+            System.out.println("1. Edit quantity");
+            System.out.println("2. Remove product");
+            System.out.println("3. Buy product");
+            System.out.println("0. Go back to product selection");
+
+            try {
+                int choice_2 = Integer.parseInt(scanner.nextLine());
+
+                switch (choice_2) {
+                    case 0:
+                        System.out.println("Going back to product selection.");
+                        return; // Exit the method to go back to the previous menu
+                    case 1:
+                        System.out.println("Editing quantity for: " + productMap.get(choice).getName());
+                        editProductQuantityInCart(customer, choice);
+                        break;
+                    case 2:
+                        System.out.println("Removing product: " + productMap.get(choice).getName());
+                        removeProductFromCartByCustomer(customer, choice);
+                        return; // Exit after removing the product
+                    case 3:
+                        System.out.println("Buying product: " + productMap.get(choice).getName());
+                        buyOneProduct(customer, productMap, products, choice);
+                        return; // Exit after buying the product
+                    default:
+                        System.out.println("Invalid input. Please try again.");
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            } catch (Exception e) {
+                System.out.println("An error occurred. Please try again.");
+            }
+        }
+    }
+
+
+    public void buyOneProduct(Customer customer, Map<Integer, Product> productMap, Map<Product, Integer> products, Integer choice) {
 
         if (choice == 0) {
             System.out.println("Purchase cancelled.");
@@ -123,73 +207,89 @@ public class CustomerService {
         }
 
         // Validate the selected product
-        if (choice < 1 || choice > products.size()) {
+        if (!productMap.containsKey(choice)) {
             System.out.println("Invalid choice.");
             return;
         }
 
         // Get the selected product
-        Product selectedProduct = (Product) products.keySet().toArray()[choice - 1];
-
-        // Check if the product is deleted or out of stock
-        if (selectedProduct.getStatus() == Enum.statusProduct.Deleted) {
-            System.out.println("The selected product has been deleted and cannot be purchased.");
-            return;
-        } else if (selectedProduct.getStatus() == Enum.statusProduct.Out_Stock) {
-            System.out.println("The selected product is out of stock and cannot be purchased.");
-            return;
-        }
-
+        Product selectedProduct = productMap.get(choice);
         int selectedQuantity = products.get(selectedProduct);
         double totalCost = selectedProduct.getPrice() * selectedQuantity;
 
         System.out.println("Proceed to purchase " + selectedProduct.getName() + "? (yes/no)");
-        String confirm = scanner.next();
+        String confirm = scanner.nextLine();
 
         if (confirm.equalsIgnoreCase("yes")) {
-            // Check if the customer has sufficient balance
-            if (totalCost > customer.getBalance()) {
-                System.out.println("Insufficient balance to complete the purchase.");
-                return;
+            // Choose a payment method
+            boolean validPaymentMethod = false;
+            boolean paymentSuccess = false;
+            PaymentStrategy paymentStrategy = null;
+
+            while (!validPaymentMethod) {
+                System.out.println("Choose payment method: \n1. E-Wallet \n2. Cash on Delivery");
+                int paymentChoice = Integer.parseInt(scanner.nextLine());
+
+                if (paymentChoice == 1) {
+                    // E-Wallet payment
+                    if (customer.getBalance() >= totalCost) {
+                        paymentStrategy = new EWalletPayment();
+                        customer.pay(totalCost, paymentStrategy);
+                        customer.setBalance(customer.getBalance() - totalCost); // Deduct the e-wallet balance
+                        paymentSuccess = true;
+                        validPaymentMethod = true;
+                        System.out.println("Payment successful via E-Wallet. Remaining balance: " + customer.getBalance());
+                    } else {
+                        System.out.println("Insufficient balance to complete the purchase.");
+                        validPaymentMethod = true; // Exit loop since there's no other option to pay
+                    }
+                } else if (paymentChoice == 2) {
+                    // Cash on Delivery payment
+                    paymentStrategy = new CashOnDeliveryPayment();
+                    customer.pay(totalCost, paymentStrategy);
+                    paymentSuccess = true;
+                    validPaymentMethod = true;
+                } else {
+                    System.out.println("Invalid payment method. Please choose again.");
+                }
             }
 
-            customer.setBalance(customer.getBalance() - totalCost);
-            Orders order = new Orders(customer, Map.of(selectedProduct, selectedQuantity), statusOder.Pending, totalCost);
-            customer.addOrder(order);
+            if (paymentSuccess) {
+                // Create an order after successful payment
+                Orders order = new Orders(customer, Map.of(selectedProduct, selectedQuantity), statusOder.Pending, totalCost, paymentStrategy);
+                customer.addOrder(order);
 
-            selectedProduct.setQuantity(selectedProduct.getQuantity() - selectedQuantity);
+                // Reduce the product's quantity after purchase
+                selectedProduct.setQuantity(selectedProduct.getQuantity() - selectedQuantity);
 
-            cart.removeProduct(selectedProduct);  // Remove the product after purchase
-            System.out.println("Purchase successful. Total cost: " + totalCost);
+                // Remove the product from the cart
+                cartService.removeProductFromCart(customer, selectedProduct);
+
+                System.out.println("Purchase successful. Total cost: " + totalCost);
+            }else {
+                System.out.println("Purchase cancelled.");
+            }
+
         } else {
             System.out.println("Purchase cancelled.");
         }
     }
 
 
+    public void removeProductFromCartByCustomer(Customer customer, Integer productId) {
 
-
-    public void removeProductFromCartByCustomer(Customer customer) {
-        Cart cart = customer.getCart();  // Get the customer's cart
-        cart.showCart();
-
-        if (cart.getProducts().isEmpty()) {
-            System.out.println("Your cart is empty. There are no products to remove.");
-            return;
-        }
 
         // Ask the customer to select a product to remove
-        System.out.println("Enter Product ID to remove from cart:");
-        int productId = scanner.nextInt();
+
         Product product = productService.findProduct(productId);
 
-        if (product == null || !cart.getProducts().containsKey(product)) {
+        if (product == null || !customer.getCart().getProducts().containsKey(product)) {
             System.out.println("Product not found in the cart.");
             return;
         }
 
         // Remove the product from the cart
-        boolean success = cart.removeProduct(product);
+        boolean success = cartService.removeProductFromCart(customer,product);
         if (success) {
             System.out.println("Product " + product.getName() + " removed from the cart.");
         } else {
@@ -197,17 +297,16 @@ public class CustomerService {
         }
     }
 
-    public void editProductQuantityInCart(Customer customer) {
+    public void editProductQuantityInCart(Customer customer, Integer productId) {
         Cart cart = customer.getCart();
-        cart.showCart();
+
 
         if (cart.getProducts().isEmpty()) {
             System.out.println("Your cart is empty. There are no products to edit.");
             return;
         }
 
-        System.out.println("Enter Product ID to edit in cart:");
-        int productId = scanner.nextInt();
+
 
         Product productInCart = null;
         for (Product product : cart.getProducts().keySet()) {
@@ -231,7 +330,7 @@ public class CustomerService {
         }
 
         System.out.println("Enter the new quantity:");
-        int newQuantity = scanner.nextInt();
+        int newQuantity = Validator.inputInteger(scanner);
 
         if (newQuantity <= 0) {
             System.out.println("Invalid quantity. It should be greater than 0.");
@@ -258,73 +357,114 @@ public class CustomerService {
 
 
     public void buyAllProductsToCart(Customer customer) {
-        Cart cart = customer.getCart();
-        cart.showCart();
-
-        if (cart.getProducts().isEmpty()) {
-            System.out.println("Your cart is empty. There are no products to buy.");
-            return;
-        }
 
         double totalCost = 0.0;
+        Map<Product, Integer> validProducts = new HashMap<>();
+        List<String> errorMessages = new ArrayList<>();
 
-        for (Map.Entry<Product, Integer> entry : cart.getProducts().entrySet()) {
+        // Check product availability and calculate the total cost
+        for (Map.Entry<Product, Integer> entry : customer.getCart().getProducts().entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
 
             if (product.getStatus() == Enum.statusProduct.Deleted) {
-                System.out.println("Product " + product.getName() + " has been deleted and cannot be purchased.");
-                return;
+                errorMessages.add("Product " + product.getName() + " has been deleted and cannot be purchased.");
             } else if (product.getStatus() == Enum.statusProduct.Out_Stock) {
-                System.out.println("Product " + product.getName() + " is out of stock and cannot be purchased.");
-                return;
+                errorMessages.add("Product " + product.getName() + " is out of stock and cannot be purchased.");
+            } else if (product.getQuantity() < quantity) {
+                errorMessages.add("Not enough stock for product: " + product.getName());
+            } else {
+                validProducts.put(product, quantity);
+                totalCost += product.getPrice() * quantity;
             }
-
-            if (product.getQuantity() < quantity) {
-                System.out.println("Not enough stock for product: " + product.getName());
-                return;
-            }
-
-            totalCost += product.getPrice() * quantity;
         }
 
-        if (totalCost > customer.getBalance()) {
-            System.out.println("Insufficient balance to complete the purchase. Total cost is: " + totalCost);
+        // If there are errors, display them and stop the process
+        if (!errorMessages.isEmpty()) {
+            for (String message : errorMessages) {
+                System.out.println(message);
+            }
             return;
         }
 
         System.out.println("The total cost is: " + totalCost + ". Do you want to proceed with the purchase? (yes/no)");
-        String choice = scanner.next();
+        String choice = scanner.nextLine();
 
-        if (choice.equalsIgnoreCase("yes")) {
-            customer.setBalance(customer.getBalance() - totalCost);
+        if (!choice.equalsIgnoreCase("yes")) {
+            System.out.println("Purchase cancelled.");
+            return;
+        }
 
-            Orders order = new Orders(customer, cart.getProducts(), statusOder.Pending, totalCost);
+        // Choose payment method
+        boolean validPaymentMethod = false;
+        boolean paymentSuccess = false;
+        PaymentStrategy paymentStrategy = null;
+
+        while (!validPaymentMethod) {
+            System.out.println("Choose payment method: \n1. E-Wallet \n2. Cash on Delivery \n3. Cancel");
+            int paymentChoice = Integer.parseInt(scanner.nextLine());
+
+            if (paymentChoice == 1) {
+                if (customer.getBalance() >= totalCost) {
+                    paymentStrategy = new EWalletPayment();
+                    customer.pay(totalCost, paymentStrategy);
+                    customer.setBalance(customer.getBalance() - totalCost); // Deduct balance
+                    paymentSuccess = true;
+                    validPaymentMethod = true;
+                    System.out.println("Payment successful via E-Wallet. Remaining balance: " + customer.getBalance());
+                } else {
+                    System.out.println("Insufficient balance to complete the purchase.");
+                    validPaymentMethod = true;
+                }
+            } else if (paymentChoice == 2) {
+                paymentStrategy = new CashOnDeliveryPayment();
+                customer.pay(totalCost, paymentStrategy);
+                paymentSuccess = true;
+                validPaymentMethod = true;
+            } else {
+                System.out.println("Invalid payment method. Please choose again.");
+                return;
+            }
+        }
+
+        if (paymentSuccess) {
+            // Create order after successful payment
+            Orders order = new Orders(customer, validProducts, statusOder.Pending, totalCost, paymentStrategy);
             customer.addOrder(order);
 
-            for (Map.Entry<Product, Integer> entry : cart.getProducts().entrySet()) {
+            // Update product stock and clear the cart
+            for (Map.Entry<Product, Integer> entry : validProducts.entrySet()) {
                 Product product = entry.getKey();
                 int quantity = entry.getValue();
-
                 product.setQuantity(product.getQuantity() - quantity);
             }
 
-            cart.clearCart();
+            customer.getCart().clearCart();
             System.out.println("Purchase successful! Total cost: " + totalCost);
         } else {
-            System.out.println("Purchase cancelled.");
+            System.out.println("Purchase failed due to insufficient funds.");
         }
     }
 
 
     public void depositByCustomer(Customer customer) {
-        System.out.print("Enter the amount you want to deposit: ");
-        double amount = scanner.nextDouble();
-        if (amount > 0) {
-            customer.deposit(amount);
-            System.out.println("You have deposited " + amount + " into your account. Current balance: " + customer.getBalance());
-        } else {
-            System.out.println("Invalid amount.");
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        while (true) {
+            try {
+                System.out.print("Enter the amount you want to deposit: ");
+                String input = scanner.nextLine();
+                double amount = Double.parseDouble(input);
+
+                if (amount > 0) {
+                    customer.deposit(amount);
+                    System.out.println("You have deposited " + df.format(amount) + " into your account. Current balance: " + df.format(customer.getBalance()));
+                    break;
+                } else {
+                    System.out.println("Invalid amount. Please enter a positive number.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a numeric value.");
+            }
         }
     }
 
@@ -363,7 +503,7 @@ public class CustomerService {
             return;
         }
 
-        int choice = scanner.nextInt();
+        int choice = Validator.inputInteger(scanner);
         if (choice == 0) {
             System.out.println("Cancelation aborted.");
             return;
@@ -389,41 +529,53 @@ public class CustomerService {
         System.out.println("Order canceled successfully. Refunded amount: " + selectedOrder.getTotal());
     }
 
-   public void buyByCustomer(Customer customer) {
+    public void buyByCustomer(Customer customer) {
         productService.displayInStockProducts();
-        while (true){
+        while (true) {
             try {
-                System.out.println("Enter the product ID, you want to see more information about: ");
+                System.out.println("Enter the product ID you want to see more information about: ");
                 int productId = Integer.parseInt(scanner.nextLine());
-                productService.displayProduct(productId);
-                System.out.println("1. Buy product immediately");
-                System.out.println("2. Add product to the cart");
-                System.out.println("3. Back");
-                int choice = Integer.parseInt(scanner.nextLine());
-                switch (choice){
-                    case 1:
-                        System.out.println("1. Buy product immediately");
-                        showProductsAndBuyImmediately(customer, productId);
-                        return;
-                    case 2:
-                        System.out.println("2. Add product to the cart");
-                        addProductToCartByCustomer(customer, productId);
-                        return;
-                    case 3:
-                        return;
+                boolean isValidProduct = productService.displayProduct_2(productId);
 
+                // If the product ID is not found, prompt the user again
+                if (!isValidProduct) {
+                    continue;
                 }
 
-
-            }catch (NumberFormatException e) {
-                System.out.println("Invalid input.");
+                while (true) {
+                    try {
+                        System.out.println("1. Buy product immediately");
+                        System.out.println("2. Add product to the cart");
+                        System.out.println("0. Back");
+                        int choice = Integer.parseInt(scanner.nextLine());
+                        switch (choice) {
+                            case 1:
+                                System.out.println("1. Buy product immediately");
+                                showProductsAndBuyImmediately(customer, productId);
+                                return;
+                            case 2:
+                                System.out.println("2. Add product to the cart");
+                                addProductToCartByCustomer(customer, productId);
+                                return;
+                            case 0:
+                                return;
+                            default:
+                                System.out.println("Invalid choice. Please enter 1, 2, or 0.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a number: 1, 2, or 0.");
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid product ID.");
             }
         }
-   }
+    }
+
 
     public void updateInformationCustomer() {
         System.out.print("Enter customer ID: ");
-        int customerId = Integer.parseInt(scanner.nextLine());
+        int customerId = Validator.inputInteger(scanner);
         Customer customer = findCustomerById(customerId);
 
         if (customer == null) {
@@ -470,5 +622,43 @@ public class CustomerService {
 
         System.out.println("Updated information: ");
         System.out.println(customer);
+    }
+
+    public void displayOrdersOfCustomerInformation(Customer customer){
+        System.out.println(customer.getOrders());
+        if (customer.getOrders().isEmpty()) {
+            return;
+        }
+        while (true){
+            try {
+                System.out.println("1. Canncel Oder"+
+                        "\n2. Back");
+                int choice = Integer.parseInt(scanner.nextLine());
+
+                switch (choice) {
+                    case 1:
+                        cancelOrderByCustomer(customer);
+                        break;
+                    case 2:
+                        return;
+                }
+            }catch (NumberFormatException e) {
+                System.out.println("Invalid input.");
+            }
+        }
+    }
+
+    public void displayCustomerInfo(Customer customer) {
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        String formattedBalance = df.format(customer.getBalance());
+        System.out.println("User{id=" + customer.getId() +
+                ", username='" + customer.getUsername() + '\'' +
+                ", role='" + customer.getRole() + '\'' +
+                ", name='" + customer.getName() + '\'' +
+                ", email='" + customer.getEmail() + '\'' +
+                ", address='" + customer.getAddress() + '\'' +
+                ", phone='" + customer.getPhone() + '\'' +
+                "}, Balance: " + formattedBalance +
+                ", Orders: " + customer.getOrders().size());
     }
 }

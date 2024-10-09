@@ -33,20 +33,20 @@ public class StaffMenu {
                 switch (choice) {
                     case 1:
                         System.out.println("----- Products Information -----");
-                        if (ShopData.getProducts().isEmpty()) {
+                        if (ShopData.products.isEmpty()) {
                             System.out.println("No products available.");
                         } else {
-                            ShopData.getProducts().forEach(System.out::println);
+                            ShopData.products.forEach(System.out::println);
                         }
                         break;
 
                     case 2:
                         System.out.println("2. Display Orders Information");
-                        ShopData.getOrders().forEach(System.out::println);
+                        ShopData.orders.forEach(System.out::println);
                         break;
                     case 3:
                         System.out.println("3. Display Customer Information");
-                        ShopData.getCustomers().forEach(System.out::println);
+                        ShopData.orders.forEach(System.out::println);
                         break;
                     case 4:
                         System.out.println("4. Edit Orders");

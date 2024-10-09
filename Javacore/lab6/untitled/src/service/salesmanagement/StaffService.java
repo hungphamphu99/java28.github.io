@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class StaffService {
     Scanner scanner = new Scanner(System.in);
     public Staff findStaffByID(int id){
-        for (Staff staff : ShopData.getStaffs()){
+        for (Staff staff : ShopData.staffs){
             if(staff.getId() == id){
                 return staff;
             }

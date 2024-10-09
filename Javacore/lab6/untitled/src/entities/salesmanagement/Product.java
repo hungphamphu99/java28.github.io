@@ -21,7 +21,7 @@ public class Product {
         this.quantity = quantity;
         this.price = price;
         this.description = description;
-        ShopData.addProduct(this);
+        ShopData.products.add(this);
 
     }
 

@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class OrdersService {
     Scanner scanner = new Scanner(System.in);
     public Orders findOrderById(int id){
-        for(Orders oder : ShopData.getOrders()){
+        for(Orders oder : ShopData.orders){
             if(oder.getId() == id){
                 return oder;
 
@@ -65,7 +65,7 @@ public class OrdersService {
 
     public void deliverPendingOrders() {
         boolean foundPending = false;
-        for (Orders order : ShopData.getOrders()) {
+        for (Orders order : ShopData.orders) {
             if (order.getStatus() == Enum.statusOder.Pending) {
                 order.setStatus(Enum.statusOder.Delivered);
                 System.out.println("Order ID: " + order.getId() + " has been delivered.");

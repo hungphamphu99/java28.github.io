@@ -9,7 +9,7 @@ public class Staff extends User {
     public Staff(String username, String password, String role, String name, String email, String address, String phone) {
         super(username, password, role, name, email, address, phone);
         this.balance = 0.0;
-        ShopData.addStaff(this);
+        ShopData.staffs.add(this);
     }
 
     public double getBalance() {

@@ -59,7 +59,7 @@ public class ClassService {
     }
 
     public Class findClassByID(String classID) {
-        for (Class classes : UniversityData.getClasses()) {
+        for (Class classes : UniversityData.classes) {
             if (classes.getId().equals(classID)) {
                 return classes;
             }
@@ -68,12 +68,12 @@ public class ClassService {
     }
 
     public void displayAllClasses() {
-        if (UniversityData.getClasses().isEmpty()) {
+        if (UniversityData.classes.isEmpty()) {
             System.out.println("No classes available.");
             return;
         }
 
-        for (Class cl : UniversityData.getClasses()) {
+        for (Class cl : UniversityData.classes) {
             System.out.println("Class ID: " + cl.getId());
             Teacher teacher = cl.getTeacher();
             System.out.println("Teacher: " + teacher.getName() + " (Major: " + teacher.getMajor() + ")");
@@ -159,7 +159,7 @@ public class ClassService {
             System.out.println("Class does not exist.");
             return;
         }
-        UniversityData.getClasses().remove(existingClass);
+        UniversityData.classes.remove(existingClass);
         System.out.println("Class with ID: " + classID + " has been deleted successfully.");
     }
 
@@ -248,7 +248,7 @@ public class ClassService {
             return;
         }
 
-        List<Class> classes = UniversityData.getClasses();
+        List<Class> classes = UniversityData.classes;
         boolean isEnrolled = false;
 
         System.out.println("Classes for Student: " + studentUser.getName() + " (ID: " + studentUser.getId() + ")");

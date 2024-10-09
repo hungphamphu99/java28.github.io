@@ -16,37 +16,7 @@ public class UniversityData {
 
     }
 
-    public static List<Student> getStudents() {
-        return students;
-    }
 
-    public static List<Teacher> getTeachers() {
-        return teachers;
-    }
-
-    public static List<Class> getClasses() {
-        return classes;
-    }
-
-    public static List<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public static void setStudents(List<Student> students) {
-        UniversityData.students = students;
-    }
-
-    public static void setTeachers(List<Teacher> teachers) {
-        UniversityData.teachers = teachers;
-    }
-
-    public static void setClasses(List<Class> classes) {
-        UniversityData.classes = classes;
-    }
-
-    public static void setSubjects(List<Subject> subjects) {
-        UniversityData.subjects = subjects;
-    }
 
 
     public static void removeStudent(Student studentToRemove) {

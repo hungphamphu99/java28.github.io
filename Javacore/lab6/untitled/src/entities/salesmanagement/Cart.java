@@ -51,7 +51,7 @@ public class Cart {
 
     public void showCart() {
         if (products.isEmpty()) {
-            System.out.println("Cart is empty.");
+            System.out.println();
         } else {
             for (Map.Entry<Product, Integer> entry : products.entrySet()) {
                 System.out.println("Product: " + entry.getKey().getName() + ", Quantity: " + entry.getValue());

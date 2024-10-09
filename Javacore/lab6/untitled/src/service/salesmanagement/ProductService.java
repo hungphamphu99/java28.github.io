@@ -10,7 +10,7 @@ public class ProductService {
 
     Scanner scanner = new Scanner(System.in);
     public Product findProduct(int id){
-        for (Product product : ShopData.getProducts()){
+        for (Product product : ShopData.products){
             if (product.getId() == id){
                 return product;
             }
@@ -23,11 +23,26 @@ public class ProductService {
             System.out.println("Product Name: " + product);
         }else {
             System.out.println("Product ID not found");
-            return;
+        }
+    }
+    public boolean displayProduct_2(int id) {
+        Product product = findProduct(id);
+        if (product != null) {
+            // Check if the product's status is In_Stock before displaying
+            if (product.getStatus() == Enum.statusProduct.In_Stock) {
+                System.out.println("Product Name: " + product);
+                return true;
+            } else {
+                System.out.println("Product ID not found.");
+                return false;
+            }
+        } else {
+            System.out.println("Product ID not found.");
+            return false;
         }
     }
     public void displayAllProducts(){
-        for (Product product : ShopData.getProducts()){
+        for (Product product : ShopData.products){
             System.out.println(product +"\n");
         }
     }
@@ -160,7 +175,7 @@ public class ProductService {
     public void displayInStockProducts() {
         System.out.println("Products In Stock:");
         boolean found = false;
-        for (Product product : ShopData.getProducts()) {
+        for (Product product : ShopData.products) {
             if (product.getStatus() == Enum.statusProduct.In_Stock) {
                 System.out.println(product + "\n");
                 found = true;
@@ -170,6 +185,7 @@ public class ProductService {
             System.out.println("No products are currently in stock.");
         }
     }
+
 
 
 }

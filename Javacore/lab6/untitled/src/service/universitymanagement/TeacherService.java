@@ -64,7 +64,7 @@ public class TeacherService {
     }
 
     public Teacher findTeacherById(int id){
-        for (Teacher teacher : UniversityData.getTeachers()){
+        for (Teacher teacher : UniversityData.teachers){
             if (teacher.getId() == id){
                 return teacher;
             }
@@ -233,14 +233,14 @@ public class TeacherService {
     }
 
     public void displayClassesAndStudents(Teacher teacher) {
-        if (UniversityData.getClasses().isEmpty()) {
+        if (UniversityData.classes.isEmpty()) {
             System.out.println("No classes available.");
             return;
         }
 
         boolean foundClasses = false;
 
-        for (Class cl : UniversityData.getClasses()) {
+        for (Class cl : UniversityData.classes) {
             if (cl.getTeacher() == teacher) {
                 foundClasses = true;
                 System.out.println("Class ID: " + cl.getId() );

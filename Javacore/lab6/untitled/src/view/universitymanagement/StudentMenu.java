@@ -32,7 +32,7 @@ public class StudentMenu {
                         break;
                     case 3:
                         System.out.println("3. Check Subject");
-                        System.out.println(UniversityData.getSubjects());
+                        System.out.println(UniversityData.subjects);
                         break;
                     case 4:
                         System.out.println("3. Change Password");

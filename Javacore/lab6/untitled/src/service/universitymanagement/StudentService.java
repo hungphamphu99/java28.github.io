@@ -38,7 +38,7 @@ public class StudentService {
     }
 
     public Student findStudentByID(int id) {
-        for (Student student : UniversityData.getStudents()) {
+        for (Student student : UniversityData.students) {
             if (student.getId() == id) {
                 return student;
             }
@@ -59,7 +59,7 @@ public class StudentService {
     }
 
     public void displayAllStudents() {
-        System.out.println(UniversityData.getStudents());
+        System.out.println(UniversityData.students);
     }
 
     public void addSubjectToStudent() {

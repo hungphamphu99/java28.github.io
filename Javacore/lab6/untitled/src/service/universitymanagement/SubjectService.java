@@ -15,7 +15,7 @@ public class SubjectService {
     Scanner scanner = new Scanner(System.in);
 
     public boolean isSubjectNameExists(String name) {
-        for (Subject subject : UniversityData.getSubjects()) {
+        for (Subject subject : UniversityData.subjects) {
             if (subject.getName().equalsIgnoreCase(name)) {
                 return true;
             }
@@ -70,7 +70,7 @@ public class SubjectService {
     }
 
     public Subject findSubjectByID(int id) {
-        for (Subject subject : UniversityData.getSubjects()) {
+        for (Subject subject : UniversityData.subjects) {
             if (subject.getId() == id) {
                 return subject;
             }
@@ -80,7 +80,7 @@ public class SubjectService {
 
     // Fix: Updated to handle Map<Subject, Score> for students
     private void removeSubjectFromStudents(Subject subject) {
-        List<Student> students = UniversityData.getStudents();
+        List<Student> students = UniversityData.students;
 
         for (Student student : students) {
             if (student.getSubjectScores().containsKey(subject)) {
@@ -91,7 +91,7 @@ public class SubjectService {
     }
 
     private void removeSubjectFromTeachers(Subject subject) {
-        List<Teacher> teachers = UniversityData.getTeachers();
+        List<Teacher> teachers = UniversityData.teachers;
 
         for (Teacher teacher : teachers) {
             if (teacher.getSubjects().contains(subject)) {
@@ -102,7 +102,7 @@ public class SubjectService {
     }
 
     private void removeSubjectFromClasses(Subject subject) {
-        List<Class> classes = UniversityData.getClasses();
+        List<Class> classes = UniversityData.classes;
         Iterator<Class> iterator = classes.iterator();
 
         while (iterator.hasNext()) {

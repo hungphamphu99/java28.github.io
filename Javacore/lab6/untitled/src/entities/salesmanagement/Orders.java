@@ -2,6 +2,7 @@ package entities.salesmanagement;
 
 import data.ShopData;
 import utils.Enum.statusOder;
+import service.salesmanagement.PaymentStrategy;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +15,18 @@ public class Orders {
     private double total;
     private Map<Product, Integer> products; // Product, Quantity
     private Customer customer;
+    private PaymentStrategy paymentMethod; // New field for payment method
 
-    // Constructor updated to include total
-    public Orders(Customer customer, Map<Product, Integer> products, statusOder status, double total) {
+    // Constructor updated to include payment method
+    public Orders(Customer customer, Map<Product, Integer> products, statusOder status, double total, PaymentStrategy paymentMethod) {
         this.id = ++nextId;
         this.customer = customer;
         this.orderTime = LocalDateTime.now();
         this.status = status;
         this.products = new HashMap<>(products);
         this.total = total;
-        ShopData.addOrder(this);
+        this.paymentMethod = paymentMethod; // Initialize payment method
+        ShopData.orders.add(this);
     }
 
     public double getTotal() {
@@ -54,6 +57,10 @@ public class Orders {
         return customer;
     }
 
+    public PaymentStrategy getPaymentMethod() {
+        return paymentMethod;
+    }
+
     @Override
     public String toString() {
         StringBuilder productDetails = new StringBuilder();
@@ -66,6 +73,8 @@ public class Orders {
         }
         return "Order [ID: " + id + ", Order Time: " + orderTime + ", Status: " + status +
                 ", Total Quantity: " + totalQuantity + ", Total Cost: " + total + "]\n" +
-                "Products: " + productDetails.toString() + "\n";
+                "Products: " + productDetails.toString() + "\n"+
+                "Customer: " + customer.getName() + ", email: " + customer.getAddress() + ", Phone: " + customer.getPhone() + "\n" +
+                "Payment Method: " + paymentMethod.getClass().getSimpleName(); // Include payment method
     }
 }

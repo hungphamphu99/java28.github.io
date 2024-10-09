@@ -23,31 +23,36 @@ public class TeacherMenu {
             System.out.println("5. Log Out");
             System.out.print("Enter your choice: ");
 
-            int choice = Integer.parseInt(scanner.nextLine());
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
 
-            switch (choice) {
-                case 1:
-                    viewAssignedSubjects(teacher);
-                    break;
-                case 2:
-                    studentService.inputScore();
-                    break;
-                case 3:
-                    System.out.println("3. Display Classes");
-                    teacherService.displayClassesAndStudents(teacher);
-                    break;
-                case 4:
-                    System.out.println("Edit Score");
-                    studentService.editScore();
-                    break;
-                case 5:
-                    System.out.println("Logging out...");
-                    return;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+                switch (choice) {
+                    case 1:
+                        viewAssignedSubjects(teacher);
+                        break;
+                    case 2:
+                        studentService.inputScore();
+                        break;
+                    case 3:
+                        System.out.println("3. Display Classes");
+                        teacherService.displayClassesAndStudents(teacher);
+                        break;
+                    case 4:
+                        System.out.println("Edit Score");
+                        studentService.editScore();
+                        break;
+                    case 5:
+                        System.out.println("Logging out...");
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
             }
         }
     }
+
 
     private void viewAssignedSubjects(Teacher teacher) {
         System.out.println("Displaying assigned subjects...");

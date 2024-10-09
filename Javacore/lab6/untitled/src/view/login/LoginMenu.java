@@ -52,7 +52,7 @@ public class LoginMenu {
 
         if (userService.loginUser(username, password)) {
             User loggedInUser = userService.getLoggedInUser();
-            System.out.println("Login successful! Welcome.");
+
             displayMenuForRole(loggedInUser);
         } else {
             System.out.println("Login failed. Invalid username or password.");

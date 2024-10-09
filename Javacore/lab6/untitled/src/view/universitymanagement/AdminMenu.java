@@ -106,7 +106,7 @@ public class AdminMenu {
                         break;
                     case 7:
                         System.out.println("7. Display All Student ");
-                        System.out.println(UniversityData.getStudents());
+                        System.out.println(UniversityData.students);
                         break;
 
                     case 8:
@@ -133,7 +133,8 @@ public class AdminMenu {
                         "2. Delete Subject \n" +
                         "3. Update Subject \n" +
                         "4. Search Subject  \n" +
-                        "5. Back Main Menu");
+                        "5. Display All Subject \n" +
+                        "6. Back Main Menu");
                 System.out.println("Please choose one of the following options:");
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice){
@@ -154,7 +155,11 @@ public class AdminMenu {
                         subjectService.searchSubjectByID();
                         break;
                     case 5:
+                        System.out.println("5. Disaplay All Subject");
+                        System.out.println(UniversityData.subjects);
+                    case 6:
                         System.out.println("5. Back Main Menu");
+
                         System.out.println("----- Admin Menu -----");
                         return;
 
@@ -173,7 +178,8 @@ public class AdminMenu {
                         "4. Delete Teacher \n"+
                         "5. Search Teacher By Id \n"+
                         "6. Update Teacher \n"+
-                        "7. Back Main Menu");
+                        "7. Display All Teacher \n" +
+                        "8. Back Main Menu");
 
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice){
@@ -201,8 +207,10 @@ public class AdminMenu {
                         System.out.println("6. Update Teacher ");
                         teacherService.updateTeacherById();
                         break;
-
                     case 7:
+                        System.out.println("7. Display All Teacher ");
+                        System.out.println(UniversityData.teachers);
+                    case 8:
                         System.out.println("7. Back Main Menu");
                         System.out.println("----- Admin Menu -----");
                         return;
