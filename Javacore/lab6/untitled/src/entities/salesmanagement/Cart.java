@@ -55,7 +55,7 @@ public class Cart {
 
     public void showCart() {
         if (products.isEmpty()) {
-            System.out.println("Your cart is empty.");
+            System.out.println("\n");
         } else {
             System.out.println("Your cart contains:");
             for (Map.Entry<Product, Integer> entry : products.entrySet()) {

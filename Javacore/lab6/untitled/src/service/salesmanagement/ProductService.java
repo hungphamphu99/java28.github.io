@@ -244,7 +244,7 @@ public class ProductService implements Edit<Product> {
                         cancelOrderWithRefund(order);
                     }
                 }
-
+                product.setStatus(Enum.statusProduct.Deleted);
             } else {
                 System.out.println("Product deletion canceled.");
             }

@@ -102,8 +102,6 @@ public class CustomerService implements Edit<Customer> {
 
                 // Reduce the product's quantity in stock
                 product.setQuantity(product.getQuantity() - quantity);
-
-                System.out.println("Purchase successful. Ordered " + quantity + " " + product.getName() + " for " + totalCost + ".");
             }
         } else {
             System.out.println("Not enough stock for product: " + product.getName());
@@ -112,6 +110,7 @@ public class CustomerService implements Edit<Customer> {
 
 
     public void openCartToBuyByCustomer(Customer customer) {
+        cartService.removeUnavailableProductsFromCart(customer);
         cartService.viewCart(customer);
 
         Map<Product, Integer> products = customer.getCart().getProducts();
@@ -203,6 +202,7 @@ public class CustomerService implements Edit<Customer> {
     }
 
 
+
     public void buyOneProduct(Customer customer, Map<Integer, Product> productMap, Map<Product, Integer> products, Integer choice) {
 
         if (choice == 0) {
@@ -225,7 +225,7 @@ public class CustomerService implements Edit<Customer> {
                 .multiply(BigDecimal.valueOf(selectedQuantity))
                 .setScale(2, RoundingMode.HALF_UP);
 
-        System.out.println("Proceed to purchase " + selectedProduct.getName() + "? (yes/no)");
+        System.out.println("Proceed to purchase " + selectedProduct.getName() + "? (yes/ any thing to cancel)");
         String confirm = scanner.nextLine();
 
         if (confirm.equalsIgnoreCase("yes")) {

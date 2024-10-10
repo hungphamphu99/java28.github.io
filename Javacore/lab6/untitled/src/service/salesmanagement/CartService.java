@@ -7,6 +7,7 @@ import utils.Enum.statusOder;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -126,6 +127,25 @@ public class CartService {
 
         if (cart.getProducts().isEmpty()) {
             System.out.println("Cart is empty. ");
+        }
+    }
+
+    public void removeUnavailableProductsFromCart(Customer customer) {
+        Map<Product, Integer> products = customer.getCart().getProducts();
+
+        // Iterate through the cart and remove products that are marked as Deleted or Out of Stock
+        Iterator<Map.Entry<Product, Integer>> iterator = products.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Product, Integer> entry = iterator.next();
+            Product product = entry.getKey();
+
+            if (product.getStatus() == Enum.statusProduct.Deleted) {
+                System.out.println("Product " + product.getName() + " has been deleted and will be removed from your cart.");
+                iterator.remove(); // Remove the product from the cart
+            } else if (product.getStatus() == Enum.statusProduct.Out_Stock) {
+                System.out.println("Product " + product.getName() + " is out of stock and will be removed from your cart.");
+                iterator.remove(); // Remove the product from the cart
+            }
         }
     }
 
