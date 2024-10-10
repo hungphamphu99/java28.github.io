@@ -149,33 +149,44 @@ public class StudentService implements Edit<Student> {
 
         System.out.print("Enter subject ID for the score to be edited: ");
         int subjectId = Integer.parseInt(scanner.nextLine());
-        Subject subject = subjectService.findById(subjectId);
 
+        // Check if the student is enrolled in the subject
+        Subject subject = student.getSubjectScores().keySet().stream()
+                .filter(s -> s.getId() == subjectId)
+                .findFirst()
+                .orElse(null);
 
         if (subject == null) {
-            System.out.println("Subject with ID " + subjectId + " not found for this student.");
+            System.out.println("Student is not enrolled in subject with ID " + subjectId + ".");
             return;
         }
 
+        // Get the existing score or initialize it if it doesn't exist
         Score existingScore = student.getSubjectScores().get(subject);
-
         if (existingScore == null) {
-            System.out.println("No scores available for this subject.");
-        } else {
-            System.out.println("Existing scores - Mid-term: " + existingScore.getMidScore() + ", Final: " + existingScore.getFinalScore());
+            System.out.println("No scores available for this subject. Initializing new score entry.");
+            existingScore = new Score(0, 0, 0); // Default values
+            student.getSubjectScores().put(subject, existingScore);
         }
+
+        System.out.println("Existing scores for subject " + subject.getName() +
+                " - Mid-term: " + existingScore.getMidScore() +
+                ", Final: " + existingScore.getFinalScore() +
+                ", Overall: " + existingScore.getOverallScore());
 
         // Input new scores
         System.out.print("Enter new mid-term score: ");
-        double newMidScore = Double.parseDouble(scanner.nextLine());
+        double newMidScore = Validator.inputPositiveInteger(scanner);
 
         System.out.print("Enter new final score: ");
-        double newFinalScore = Double.parseDouble(scanner.nextLine());
+        double newFinalScore = Validator.inputPositiveInteger(scanner);
 
         double newOverallScore = (newMidScore * 0.4) + (newFinalScore * 0.6);
 
+        // Update the score for the subject
         student.getSubjectScores().put(subject, new Score(newMidScore, newFinalScore, newOverallScore));
 
+        // Recalculate average score
         double totalOverallScore = 0;
         for (Score score : student.getSubjectScores().values()) {
             totalOverallScore += score.getOverallScore();
@@ -187,6 +198,9 @@ public class StudentService implements Edit<Student> {
         System.out.println("New scores - Mid-term: " + newMidScore + ", Final: " + newFinalScore + ", Overall: " + newOverallScore);
         System.out.println("New average score for student: " + avgScore);
     }
+
+
+
 
 
 

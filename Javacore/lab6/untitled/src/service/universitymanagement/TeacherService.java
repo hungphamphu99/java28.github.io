@@ -1,10 +1,8 @@
 package service.universitymanagement;
 
 import data.UniversityData;
+import entities.universitymanagement.*;
 import entities.universitymanagement.Class;
-import entities.universitymanagement.Student;
-import entities.universitymanagement.Subject;
-import entities.universitymanagement.Teacher;
 import service.Edit;
 import utils.Enum;
 
@@ -14,6 +12,7 @@ import java.util.Scanner;
 public class TeacherService implements Edit<Teacher> {
     Scanner scanner = new Scanner(System.in);
     SubjectService subjectService = new SubjectService();
+
 
 
     private String generateRandomPassword() {
@@ -133,6 +132,41 @@ public class TeacherService implements Edit<Teacher> {
         teacher.getSubjects().remove(subjectToRemove);
         System.out.println("Subject with ID " + subjectId + " has been successfully deleted.");
     }
+
+    public void displayScoresBySubject() {
+        System.out.print("Enter subject ID: ");
+        int subjectId = Integer.parseInt(scanner.nextLine());
+        Subject subject = subjectService.findById(subjectId);
+
+        if (subject == null) {
+            System.out.println("Subject with ID " + subjectId + " not found.");
+            return;
+        }
+
+        System.out.println("Students enrolled in " + subject.getName() + " (" + subject.getId() + "):");
+        System.out.printf("%-10s %-20s %-10s %-10s %-10s%n", "ID", "Name", "Mid-term", "Final", "Overall");
+        System.out.println("---------------------------------------------------------------");
+
+        boolean studentsFound = false;
+        for (Student student : UniversityData.students) {
+            Score score = student.getSubjectScores().get(subject);
+
+            if (score != null) {
+                studentsFound = true;
+                System.out.printf("%-10d %-20s %-10.2f %-10.2f %-10.2f%n",
+                        student.getId(),
+                        student.getName(),
+                        score.getMidScore(),
+                        score.getFinalScore(),
+                        score.getOverallScore());
+            }
+        }
+
+        if (!studentsFound) {
+            System.out.println("No students are currently enrolled in this subject.");
+        }
+    }
+
 
 
 

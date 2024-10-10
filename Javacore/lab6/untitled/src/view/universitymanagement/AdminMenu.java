@@ -153,7 +153,7 @@ public class AdminMenu {
                         break;
                     case 4:
                         System.out.println("4. Search Subject");
-                        subjectService.searchSubjectByID();
+                        subjectService.searchSubjectByName();
                         break;
                     case 5:
                         System.out.println("5. Display All Subject");

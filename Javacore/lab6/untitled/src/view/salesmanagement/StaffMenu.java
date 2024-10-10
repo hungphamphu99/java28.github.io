@@ -58,7 +58,7 @@ public class StaffMenu {
                         break;
                     case 7:
                         userService.logout();
-                        System.out.println("LOGOUT SUCCESSFULLY");
+
                         return;
 
                     default:

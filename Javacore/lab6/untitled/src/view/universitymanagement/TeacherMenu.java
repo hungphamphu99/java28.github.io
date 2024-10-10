@@ -2,6 +2,7 @@ package view.universitymanagement;
 
 import entities.login.User;
 import entities.universitymanagement.Teacher;
+import service.login.UserService;
 import service.universitymanagement.StudentService;
 import service.universitymanagement.TeacherService;
 
@@ -11,6 +12,7 @@ public class TeacherMenu {
     Scanner scanner = new Scanner(System.in);
     StudentService studentService = new StudentService();
     TeacherService teacherService = new TeacherService();
+    UserService userService = new UserService();
 
     public void display(User user) {
         Teacher teacher = (Teacher) user;
@@ -20,7 +22,8 @@ public class TeacherMenu {
             System.out.println("2. Edit Student Grades");
             System.out.println("3. Display Classes");
             System.out.println("4. Edit Score");
-            System.out.println("5. Log Out");
+            System.out.println("5. View Table Score");
+            System.out.println("6. Log Out");
             System.out.print("Enter your choice: ");
 
             try {
@@ -38,11 +41,15 @@ public class TeacherMenu {
                         teacherService.displayClassesAndStudents(teacher);
                         break;
                     case 4:
-                        System.out.println("Edit Score");
+                        System.out.println("4.Edit Score");
                         studentService.editScore();
                         break;
                     case 5:
-                        System.out.println("Logging out...");
+                        System.out.println("5.View Table Score");
+                        teacherService.displayScoresBySubject();
+                        break;
+                    case 6:
+                        userService.logout();
                         return;
                     default:
                         System.out.println("Invalid choice. Please try again.");

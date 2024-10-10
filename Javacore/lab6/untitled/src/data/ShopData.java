@@ -34,12 +34,10 @@ public class ShopData {
         Product product4 = new Product("android_v2", Enum.statusProduct.Out_Stock, 30, 10.0, "Android");
 
 
-
         Customer customer1 = new Customer("customer1", "customer1", "customer", "customer1", "customer1", "customer1", "customer1");
         Customer customer2 = new Customer("customer2", "customer2", "customer", "customer2", "customer1", "customer1", "customer1");
         customer1.setBalance(new BigDecimal("10000.10"));
         customer2.setBalance(new BigDecimal("10000.10"));
-
 
 
         Staff staff1 = new Staff("staff", "staff", "staff", "staff", "staff", "staff", "staff");

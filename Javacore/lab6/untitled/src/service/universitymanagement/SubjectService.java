@@ -9,6 +9,7 @@ import utils.Enum;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class SubjectService implements Edit<Subject> {
     Scanner scanner = new Scanner(System.in);
@@ -21,7 +22,6 @@ public class SubjectService implements Edit<Subject> {
         }
         return false;
     }
-
 
 
     private void removeSubjectFromStudents(Subject subject) {
@@ -90,6 +90,26 @@ public class SubjectService implements Edit<Subject> {
         }
     }
 
+    public void searchSubjectByName() {
+        System.out.print("Enter part of the subject name: ");
+        String searchQuery = scanner.nextLine().toLowerCase();
+
+        // Retrieve all subjects from UniversityData and filter by name
+        List<Subject> matchingSubjects = UniversityData.subjects.stream()
+                .filter(subject -> subject.getName().toLowerCase().contains(searchQuery))
+                .collect(Collectors.toList());
+
+        if (matchingSubjects.isEmpty()) {
+            System.out.println("No subjects found matching: " + searchQuery);
+        } else {
+            System.out.println("Matching subjects:");
+            System.out.printf("%-10s %-20s%n", "ID", "Name");
+            System.out.println("-----------------------------------");
+            for (Subject subject : matchingSubjects) {
+                System.out.printf("%-10d %-20s%n", subject.getId(), subject.getName());
+            }
+        }
+    }
 
 
     @Override
