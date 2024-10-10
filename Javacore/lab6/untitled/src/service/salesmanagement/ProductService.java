@@ -1,10 +1,13 @@
 package service.salesmanagement;
 
+import entities.salesmanagement.Customer;
+import entities.salesmanagement.Order;
 import entities.salesmanagement.Product;
 import data.ShopData;
 import service.Edit;
 import utils.Enum;
 
+import java.util.Map;
 import java.util.Scanner;
 
 public class ProductService implements Edit<Product> {
@@ -50,6 +53,27 @@ public class ProductService implements Edit<Product> {
         if (!found) {
             System.out.println("No products are currently in stock.");
         }
+    }
+    private void cancelOrderWithRefund(Order order) {
+        Customer customer = order.getCustomer();
+
+        // Check if the order was paid using an E-Wallet
+        if (order.getPaymentMethod() instanceof EWalletPayment) {
+            // Refund the amount to the customer's balance
+            customer.setBalance(customer.getBalance() + order.getTotal());
+            System.out.println("Refund of " + order.getTotal() + " issued to customer " + customer.getName() + "'s E-Wallet.");
+        }
+
+        // Restore product quantities to the inventory
+        for (Map.Entry<Product, Integer> entry : order.getProducts().entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            product.setQuantity(product.getQuantity() + quantity);
+        }
+
+        // Update the order status to Cancel
+        order.setStatus(Enum.statusOder.Canceled);
+        System.out.println("Order ID: " + order.getId() + " containing the deleted product has been canceled.");
     }
 
 
@@ -207,8 +231,18 @@ public class ProductService implements Edit<Product> {
             String confirmation = scanner.nextLine();
 
             if (confirmation.equalsIgnoreCase("yes")) {
+                // Mark the product as Deleted
                 product.setStatus(Enum.statusProduct.Deleted);
                 System.out.println("Product with ID " + id + " marked as Deleted.");
+
+                // Check all orders and cancel those that contain the deleted product
+                for (Order order : ShopData.orders) {
+                    // Check if the order is Pending and contains the deleted product
+                    if (order.getStatus() == Enum.statusOder.Pending && order.getProducts().containsKey(product)) {
+                        cancelOrderWithRefund(order);
+                    }
+                }
+
             } else {
                 System.out.println("Product deletion canceled.");
             }
