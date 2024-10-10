@@ -455,7 +455,7 @@ public class CustomerService implements Edit<Customer> {
             }
 
             customer.getCart().clearCart();
-            System.out.println("Purchase successful! Total cost: " + totalCost);
+
         } else {
             System.out.println("Purchase failed due to insufficient funds.");
         }
