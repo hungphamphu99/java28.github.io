@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Orders {
+public class Order {
     private int id;
     private static int nextId = 0;
     private LocalDateTime orderTime;
@@ -18,7 +18,7 @@ public class Orders {
     private PaymentStrategy paymentMethod; // New field for payment method
 
     // Constructor updated to include payment method
-    public Orders(Customer customer, Map<Product, Integer> products, statusOder status, double total, PaymentStrategy paymentMethod) {
+    public Order(Customer customer, Map<Product, Integer> products, statusOder status, double total, PaymentStrategy paymentMethod) {
         this.id = ++nextId;
         this.customer = customer;
         this.orderTime = LocalDateTime.now();
@@ -73,8 +73,8 @@ public class Orders {
         }
         return "Order [ID: " + id + ", Order Time: " + orderTime + ", Status: " + status +
                 ", Total Quantity: " + totalQuantity + ", Total Cost: " + total + "]\n" +
-                "Products: " + productDetails.toString() + "\n"+
+                "Products: " + productDetails + "\n"+
                 "Customer: " + customer.getName() + ", email: " + customer.getAddress() + ", Phone: " + customer.getPhone() + "\n" +
-                "Payment Method: " + paymentMethod.getClass().getSimpleName(); // Include payment method
+                "Payment Method: " + paymentMethod.getClass().getSimpleName() + "\n";  // Include payment method
     }
 }

@@ -51,11 +51,11 @@ public class UniversityData {
         Teacher teacher2 = new Teacher("teacher2", "teacher2", "teacher", "Teacher 2", "teacher2@example.com", "123 Teacher Street", "555-1234", Enum.Type.TECH);
         Teacher teacher3 = new Teacher("teacher3", "teacher3", "teacher", "Teacher 3", "teacher3@example.com", "123 Teacher Street", "555-1234", Enum.Type.TECH);
         Teacher teacher4 = new Teacher("teacher4", "teacher4", "teacher", "Teacher 4", "teacher4@example.com", "123 Teacher Street", "555-1234", Enum.Type.LANGUAGE);
-        Student student = new Student("student", "student", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
-        Student student1 = new Student("student1", "student1", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
-        Student student2 = new Student("student2", "student2", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
-        Student student3 = new Student("student3", "student3", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
-        Student student4 = new Student("student4", "student4", "student", "Student Name", "student@example.com", "456 Student Street", "555-5678");
+        Student student = new Student("student", "student", "student", "student", "student@example.com", "456 Student Street", "555-5678");
+        Student student1 = new Student("student1", "student1", "student", "student1", "student@example.com", "456 Student Street", "555-5678");
+        Student student2 = new Student("student2", "student2", "student", "student2", "student@example.com", "456 Student Street", "555-5678");
+        Student student3 = new Student("student3", "student3", "student", "student3", "student@example.com", "456 Student Street", "555-5678");
+        Student student4 = new Student("student4", "student4", "student", "student4", "student@example.com", "456 Student Street", "555-5678");
 
 
         Subject subject1 = new Subject("Math", 4, Enum.Type.TECH);
@@ -65,13 +65,14 @@ public class UniversityData {
         Subject subject5 = new Subject("Math04", 4, Enum.Type.TECH);
         Subject subject6 = new Subject("Math05", 4, Enum.Type.TECH);
 
-        Class class1 = new Class("1", teacher2, subject1);
-        Class class2 = new Class("2", teacher3, subject1);
-        Class class3 = new Class("3", teacher4, subject2);
-        Class class4 = new Class("4", teacher2, subject1);
+        Class class1 = new Class( teacher2, subject1);
+        Class class2 = new Class( teacher3, subject1);
+        Class class3 = new Class( teacher4, subject2);
+        Class class4 = new Class( teacher2, subject1);
 
 
 
+        student1.getSubjectScores().put(subject1,null);
 
         student.getSubjectScores().put(subject1, new Score(7.0,7.0, 5.6));
         student.getSubjectScores().put(subject2, new Score(7.0,8.0, 7.6));
@@ -88,6 +89,9 @@ public class UniversityData {
         teacher4.getSubjects().add(subject2);
 
         class1.addStudent(student);
+        class1.addStudent(student1);
+        class1.addStudent(student2);
+        class1.addStudent(student3);
 
 
     }

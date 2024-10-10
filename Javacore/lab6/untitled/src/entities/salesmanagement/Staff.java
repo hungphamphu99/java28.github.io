@@ -29,7 +29,6 @@ public class Staff extends User {
                 "email="+super.getEmail()+
                 "address="+super.getAddress()+
                 "phone="+super.getPhone()+
-                "balance=" + balance +
                 '}';
     }
 }

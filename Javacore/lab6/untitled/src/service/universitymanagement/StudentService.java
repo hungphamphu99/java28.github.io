@@ -4,32 +4,16 @@ import data.UniversityData;
 import entities.universitymanagement.Score;
 import entities.universitymanagement.Student;
 import entities.universitymanagement.Subject;
+import service.Edit;
+import utils.Validator;
 
 import java.util.Random;
 import java.util.Scanner;
 
-public class StudentService {
+public class StudentService implements Edit<Student> {
     Scanner scanner = new Scanner(System.in);
     SubjectService subjectService = new SubjectService();
 
-    public void addStudent() {
-        System.out.println("Enter student name:");
-        String name = scanner.nextLine();
-        System.out.println("Enter student email:");
-        String email = scanner.nextLine();
-        System.out.println("Enter student address:");
-        String address = scanner.nextLine();
-        System.out.println("Enter student phone:");
-        String phone = scanner.nextLine();
-        String role = "student";
-
-        String password = generateRandomPassword();
-        Student student = new Student(null, password, role, name, email, address, phone);
-        String username = student.getId() + "-" + name;
-        student.setUsername(username);
-
-        System.out.println("Student added successfully: " + student);
-    }
 
     private String generateRandomPassword() {
         Random random = new Random();
@@ -37,19 +21,11 @@ public class StudentService {
         return String.valueOf(randomPassword);
     }
 
-    public Student findStudentByID(int id) {
-        for (Student student : UniversityData.students) {
-            if (student.getId() == id) {
-                return student;
-            }
-        }
-        return null;
-    }
 
     public void displayStudentByID() {
         System.out.print("Enter student ID: ");
         int id = Integer.parseInt(scanner.nextLine());
-        Student student = findStudentByID(id);
+        Student student = findById(id);
 
         if (student != null) {
             System.out.println("Student found: " + student);
@@ -58,14 +34,12 @@ public class StudentService {
         }
     }
 
-    public void displayAllStudents() {
-        System.out.println(UniversityData.students);
-    }
+
 
     public void addSubjectToStudent() {
         System.out.print("Enter student ID: ");
         int studentId = Integer.parseInt(scanner.nextLine());
-        Student student = findStudentByID(studentId);
+        Student student = findById(studentId);
 
         if (student == null) {
             System.out.println("Student with ID " + studentId + " not found.");
@@ -87,7 +61,7 @@ public class StudentService {
             }
         }
 
-        Subject subject = subjectService.findSubjectByID(subjectId);
+        Subject subject = subjectService.findById(subjectId);
         if (subject == null) {
             System.out.println("Subject with ID " + subjectId + " not found.");
             return;
@@ -100,7 +74,7 @@ public class StudentService {
     public void deleteSubjectFromStudent() {
         System.out.print("Enter student ID: ");
         int studentId = Integer.parseInt(scanner.nextLine());
-        Student student = findStudentByID(studentId);
+        Student student = findById(studentId);
 
         if (student == null) {
             System.out.println("Student with ID " + studentId + " not found.");
@@ -111,7 +85,7 @@ public class StudentService {
         int subjectId = Integer.parseInt(scanner.nextLine());
 
         // Check if the student is enrolled in the subject
-        Subject subjectToRemove = subjectService.findSubjectByID(subjectId);
+        Subject subjectToRemove = subjectService.findById(subjectId);
 
         if (subjectToRemove == null || !student.getSubjectScores().containsKey(subjectToRemove)) {  // Fix here
             System.out.println("Student is not enrolled in the subject with ID " + subjectId);
@@ -126,7 +100,7 @@ public class StudentService {
     public void inputScore() {
         System.out.print("Enter student ID: ");
         int studentId = Integer.parseInt(scanner.nextLine());
-        Student student = findStudentByID(studentId);
+        Student student = findById(studentId);
         if (student == null) {
             System.out.println("Student with ID " + studentId + " not found.");
             return;
@@ -139,10 +113,10 @@ public class StudentService {
             System.out.println("Entering scores for subject: " + subject.getName());
 
             System.out.print("Enter mid-term score : ");
-            double midScore = Double.parseDouble(scanner.nextLine());
+            double midScore = Validator.inputPositiveInteger(scanner);
 
             System.out.print("Enter final-term score : ");
-            double finalScore = Double.parseDouble(scanner.nextLine());
+            double finalScore = Validator.inputPositiveInteger(scanner);
 
             double overallScore = midScore * 0.4 + finalScore * 0.6;
             System.out.println("Overall score for subject " + subject.getName() + ": " + overallScore);
@@ -161,7 +135,7 @@ public class StudentService {
     public void editScore() {
         System.out.print("Enter student ID: ");
         int studentId = Integer.parseInt(scanner.nextLine());
-        Student student = findStudentByID(studentId);
+        Student student = findById(studentId);
 
         if (student == null) {
             System.out.println("Student with ID " + studentId + " not found.");
@@ -175,7 +149,7 @@ public class StudentService {
 
         System.out.print("Enter subject ID for the score to be edited: ");
         int subjectId = Integer.parseInt(scanner.nextLine());
-        Subject subject = subjectService.findSubjectByID(subjectId);
+        Subject subject = subjectService.findById(subjectId);
 
 
         if (subject == null) {
@@ -214,10 +188,94 @@ public class StudentService {
         System.out.println("New average score for student: " + avgScore);
     }
 
-    public void updateInformationStudent() {
+
+
+    // Helper method to format subjects for a student
+    private String formatSubjects(Student student) {
+        if (student.getSubjectScores().isEmpty()) {
+            return "None";
+        }
+
+        StringBuilder subjectsInfo = new StringBuilder();
+        for (Subject subject : student.getSubjectScores().keySet()) {
+            subjectsInfo.append(subject.getName()).append(", ");
+        }
+
+        // Remove the trailing comma and space
+        if (subjectsInfo.length() > 0) {
+            subjectsInfo.setLength(subjectsInfo.length() - 2);
+        }
+
+        return subjectsInfo.toString();
+    }
+
+
+    @Override
+    public void add() {
+        // Ensure the student name is not empty
+        String name;
+        while (true) {
+            System.out.println("Enter student name:");
+            name = scanner.nextLine().trim();
+            if (name.isEmpty()) {
+                System.out.println("Student name cannot be empty. Please enter a valid name.");
+            } else {
+                break;
+            }
+        }
+
+        // Ensure the student email is not empty
+        String email;
+        while (true) {
+            System.out.println("Enter student email:");
+            email = scanner.nextLine().trim();
+            if (email.isEmpty()) {
+                System.out.println("Student email cannot be empty. Please enter a valid email.");
+            } else {
+                break;
+            }
+        }
+
+        // Ensure the student address is not empty
+        String address;
+        while (true) {
+            System.out.println("Enter student address:");
+            address = scanner.nextLine().trim();
+            if (address.isEmpty()) {
+                System.out.println("Student address cannot be empty. Please enter a valid address.");
+            } else {
+                break;
+            }
+        }
+
+        // Ensure the phone number contains only digits and is not empty
+        String phone;
+        while (true) {
+            System.out.println("Enter student phone:");
+            phone = scanner.nextLine().trim();
+            if (phone.isEmpty()) {
+                System.out.println("Student phone cannot be empty. Please enter a valid phone number.");
+            } else if (!phone.matches("\\d+")) {
+                System.out.println("Phone number must contain only digits. Please try again.");
+            } else {
+                break;
+            }
+        }
+
+        String role = "student";
+        String password = generateRandomPassword();
+        Student student = new Student(null, password, role, name, email, address, phone);
+        String username = student.getId() + "-" + name;
+        student.setUsername(username);
+
+        System.out.println("Student added successfully: " + student);
+    }
+
+    @Override
+    public void update() {
         System.out.print("Enter student ID: ");
         int studentId = Integer.parseInt(scanner.nextLine());
-        Student student = findStudentByID(studentId);
+        Student student = findById(studentId);
 
         if (student == null) {
             System.out.println("Student with ID " + studentId + " not found.");
@@ -267,11 +325,43 @@ public class StudentService {
         System.out.println(student.infoStudent());
     }
 
-    public void deleteStudentById() {
+    @Override
+    public Student findById(int id) {
+        for (Student student : UniversityData.students) {
+            if (student.getId() == id) {
+                return student;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void displayAll() {
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-5s %-15s %-15s %-15s %-10s %-42s %-25s\n", "ID", "Username", "Password", "Name", "Avg Score", "Subjects", "Email");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+        for (Student student : UniversityData.students) {
+            System.out.printf("%-5d %-15s %-15s %-15s %-10.2f %-42s %-25s\n",
+                    student.getId(),
+                    student.getUsername(),
+                    student.getPassword(),  // Display the password
+                    student.getName(),
+                    student.getAvgScore(),
+                    formatSubjects(student),
+                    student.getEmail());
+        }
+
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
+
+    }
+
+    @Override
+    public void delete() {
         System.out.println("Enter student id:");
         try {
             int id = Integer.parseInt(scanner.nextLine());
-            Student student = findStudentByID(id);
+            Student student = findById(id);
             if (student != null) {
                 System.out.println("Are you sure you want to delete the student with ID: " + id + "? (y/n)");
                 String confirmation = scanner.nextLine();

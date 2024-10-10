@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Customer extends User {
     private double balance;
-    private List<Orders> orders;
+    private List<Order> orders;
     private Cart cart;
 
     public Customer(String username, String password, String role, String name, String email, String address, String phone) {
@@ -50,11 +50,11 @@ public class Customer extends User {
         return false;
     }
 
-    public List<Orders> getOrders() {
+    public List<Order> getOrders() {
         return orders;
     }
 
-    public void addOrder(Orders order) {
+    public void addOrder(Order order) {
         this.orders.add(order);
     }
     public boolean payWithEWallet(double amount) {

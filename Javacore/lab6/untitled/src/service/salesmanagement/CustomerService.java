@@ -2,6 +2,7 @@ package service.salesmanagement;
 
 import entities.salesmanagement.*;
 import data.ShopData;
+import service.Edit;
 import utils.Enum;
 import utils.Enum.statusOder;
 import utils.Validator;
@@ -9,25 +10,18 @@ import utils.Validator;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class CustomerService {
+public class CustomerService implements Edit<Customer> {
     Scanner scanner = new Scanner(System.in);
     ProductService productService = new ProductService();
     CartService cartService = new CartService();
 
 
-    public Customer findCustomerById(int id) {
-        for (Customer customer : ShopData.customers) {
-            if (customer.getId() == id) {
-                return customer;
-            }
-        }
-        return null;
-    }
+
 
     public void displayCustomer() {
         System.out.println("Enter Customer ID:");
         int id = Integer.parseInt(scanner.nextLine());
-        Customer customer = findCustomerById(id);
+        Customer customer = findById(id);
         if (customer == null) {
             System.out.println("Customer Not Found");
         } else {
@@ -36,7 +30,7 @@ public class CustomerService {
     }
 
     public void addProductToCartByCustomer(Customer customer, int productId) {
-        Product product = productService.findProduct(productId);
+        Product product = productService.findById(productId);
         System.out.println("Enter quantity:");
         int quantity = Integer.parseInt(scanner.nextLine());
 
@@ -49,7 +43,7 @@ public class CustomerService {
     }
 
     public void showProductsAndBuyImmediately(Customer customer, int productId) {
-        Product product = productService.findProduct(productId);
+        Product product = productService.findById(productId);
 
         if (product == null || product.getStatus() != Enum.statusProduct.In_Stock) {
             System.out.println("Product not found or is out of stock.");
@@ -94,7 +88,7 @@ public class CustomerService {
                 }
 
                 // Create an order after successful payment
-                Orders order = new Orders(customer, Map.of(product, quantity), statusOder.Pending, totalCost, paymentStrategy);
+                Order order = new Order(customer, Map.of(product, quantity), statusOder.Pending, totalCost, paymentStrategy);
                 customer.addOrder(order);
 
                 // Reduce the product's quantity in stock
@@ -160,6 +154,7 @@ public class CustomerService {
             }
         }
     }
+
     public void manageProductInCart(Customer customer, Map<Integer, Product> productMap, Map<Product, Integer> products, Integer choice) {
         while (true) {
             System.out.println("1. Edit quantity");
@@ -256,7 +251,7 @@ public class CustomerService {
 
             if (paymentSuccess) {
                 // Create an order after successful payment
-                Orders order = new Orders(customer, Map.of(selectedProduct, selectedQuantity), statusOder.Pending, totalCost, paymentStrategy);
+                Order order = new Order(customer, Map.of(selectedProduct, selectedQuantity), statusOder.Pending, totalCost, paymentStrategy);
                 customer.addOrder(order);
 
                 // Reduce the product's quantity after purchase
@@ -281,7 +276,7 @@ public class CustomerService {
 
         // Ask the customer to select a product to remove
 
-        Product product = productService.findProduct(productId);
+        Product product = productService.findById(productId);
 
         if (product == null || !customer.getCart().getProducts().containsKey(product)) {
             System.out.println("Product not found in the cart.");
@@ -429,7 +424,7 @@ public class CustomerService {
 
         if (paymentSuccess) {
             // Create order after successful payment
-            Orders order = new Orders(customer, validProducts, statusOder.Pending, totalCost, paymentStrategy);
+            Order order = new Order(customer, validProducts, statusOder.Pending, totalCost, paymentStrategy);
             customer.addOrder(order);
 
             // Update product stock and clear the cart
@@ -480,7 +475,7 @@ public class CustomerService {
 
 
     public void cancelOrderByCustomer(Customer customer) {
-        List<Orders> orders = customer.getOrders();
+        List<Order> orders = customer.getOrders();
 
         if (orders.isEmpty()) {
             System.out.println("You have no orders to cancel.");
@@ -489,10 +484,11 @@ public class CustomerService {
 
         System.out.println("Select a pending order to cancel (0 to exit):");
         int i = 1;
-        List<Orders> pendingOrders = new ArrayList<>();
-        for (Orders order : orders) {
+        List<Order> pendingOrders = new ArrayList<>();
+        for (Order order : orders) {
             if (order.getStatus() == statusOder.Pending) {
-                System.out.println(i + ". Order ID: " + order.getId() + ", Total Cost: " + order.getTotal() + ", Status: " + order.getStatus());
+                System.out.println(i + ". Order ID: " + order.getId() + ", Total Cost: " + order.getTotal()
+                        + ", Status: " + order.getStatus() + ", Payment Method: " + order.getPaymentMethod().getClass().getSimpleName());
                 pendingOrders.add(order);
                 i++;
             }
@@ -505,7 +501,7 @@ public class CustomerService {
 
         int choice = Validator.inputInteger(scanner);
         if (choice == 0) {
-            System.out.println("Cancelation aborted.");
+            System.out.println("Cancellation aborted.");
             return;
         }
 
@@ -514,20 +510,32 @@ public class CustomerService {
             return;
         }
 
-        Orders selectedOrder = pendingOrders.get(choice - 1);
+        Order selectedOrder = pendingOrders.get(choice - 1);
 
-        customer.setBalance(customer.getBalance() + selectedOrder.getTotal());
+        // Case 1: Refund if the payment method is E-Wallet
+        if (selectedOrder.getPaymentMethod() instanceof EWalletPayment) {
+            // Refund the amount to the customer's balance
+            customer.setBalance(customer.getBalance() + selectedOrder.getTotal());
 
-        for (Map.Entry<Product, Integer> entry : selectedOrder.getProducts().entrySet()) {
-            Product product = entry.getKey();
-            int quantity = entry.getValue();
-            product.setQuantity(product.getQuantity() + quantity);
+            // Restore the product quantities to the shop's inventory
+            for (Map.Entry<Product, Integer> entry : selectedOrder.getProducts().entrySet()) {
+                Product product = entry.getKey();
+                int quantity = entry.getValue();
+                product.setQuantity(product.getQuantity() + quantity);
+            }
+
+            System.out.println("Order canceled successfully. Refunded amount: " + selectedOrder.getTotal());
+        }
+        // Case 2: No refund for Cash on Delivery (COD)
+        else if (selectedOrder.getPaymentMethod() instanceof CashOnDeliveryPayment) {
+            System.out.println("Order canceled successfully. No refund required as the order was paid via Cash on Delivery.");
         }
 
+        // Update the order status to Canceled for both cases
         selectedOrder.setStatus(statusOder.Canceled);
-
-        System.out.println("Order canceled successfully. Refunded amount: " + selectedOrder.getTotal());
     }
+
+
 
     public void buyByCustomer(Customer customer) {
         productService.displayInStockProducts();
@@ -573,10 +581,56 @@ public class CustomerService {
     }
 
 
-    public void updateInformationCustomer() {
+
+
+    public void displayOrdersOfCustomerInformation(Customer customer){
+        System.out.println(customer.getOrders());
+        if (customer.getOrders().isEmpty()) {
+            return;
+        }
+        while (true){
+            try {
+                System.out.println("1. Canncel Oder"+
+                        "\n2. Back");
+                int choice = Integer.parseInt(scanner.nextLine());
+
+                switch (choice) {
+                    case 1:
+                        cancelOrderByCustomer(customer);
+                        break;
+                    case 2:
+                        return;
+                }
+            }catch (NumberFormatException e) {
+                System.out.println("Invalid input.");
+            }
+        }
+    }
+
+    public void displayCustomerInfo(Customer customer) {
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        String formattedBalance = df.format(customer.getBalance());
+        System.out.println("User{id=" + customer.getId() +
+                ", username='" + customer.getUsername() + '\'' +
+                ", role='" + customer.getRole() + '\'' +
+                ", name='" + customer.getName() + '\'' +
+                ", email='" + customer.getEmail() + '\'' +
+                ", address='" + customer.getAddress() + '\'' +
+                ", phone='" + customer.getPhone() + '\'' +
+                "}, Balance: " + formattedBalance +
+                ", Orders: " + customer.getOrders().size());
+    }
+
+    @Override
+    public void add() {
+
+    }
+
+    @Override
+    public void update() {
         System.out.print("Enter customer ID: ");
         int customerId = Validator.inputInteger(scanner);
-        Customer customer = findCustomerById(customerId);
+        Customer customer = findById(customerId);
 
         if (customer == null) {
             System.out.println("customer with ID " + customerId + " not found.");
@@ -624,41 +678,47 @@ public class CustomerService {
         System.out.println(customer);
     }
 
-    public void displayOrdersOfCustomerInformation(Customer customer){
-        System.out.println(customer.getOrders());
-        if (customer.getOrders().isEmpty()) {
-            return;
-        }
-        while (true){
-            try {
-                System.out.println("1. Canncel Oder"+
-                        "\n2. Back");
-                int choice = Integer.parseInt(scanner.nextLine());
 
-                switch (choice) {
-                    case 1:
-                        cancelOrderByCustomer(customer);
-                        break;
-                    case 2:
-                        return;
-                }
-            }catch (NumberFormatException e) {
-                System.out.println("Invalid input.");
+    @Override
+    public Customer findById(int id) {
+        for (Customer customer : ShopData.customers) {
+            if (customer.getId() == id) {
+                return customer;
             }
         }
+        return null;
     }
 
-    public void displayCustomerInfo(Customer customer) {
-        DecimalFormat df = new DecimalFormat("#,##0.00");
-        String formattedBalance = df.format(customer.getBalance());
-        System.out.println("User{id=" + customer.getId() +
-                ", username='" + customer.getUsername() + '\'' +
-                ", role='" + customer.getRole() + '\'' +
-                ", name='" + customer.getName() + '\'' +
-                ", email='" + customer.getEmail() + '\'' +
-                ", address='" + customer.getAddress() + '\'' +
-                ", phone='" + customer.getPhone() + '\'' +
-                "}, Balance: " + formattedBalance +
-                ", Orders: " + customer.getOrders().size());
+    @Override
+    public void displayAll() {
+        if (ShopData.customers.isEmpty()) {
+            System.out.println("No customers available.");
+            return;
+        }
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-5s %-20s %-15s %-30s %-15s %-15s %-10s %-10s\n",
+                "ID", "Name", "Username", "Email", "Phone", "Address", "Balance", "Orders");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+
+        for (Customer customer : ShopData.customers) {
+            System.out.printf("%-5d %-20s %-15s %-30s %-15s %-15s %-10.2f %-10d\n",
+                    customer.getId(),
+                    customer.getName(),
+                    customer.getUsername(),
+                    customer.getEmail(),
+                    customer.getPhone(),
+                    customer.getAddress(),
+                    customer.getBalance(),
+                    customer.getOrders().size());
+        }
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+
+    }
+
+    @Override
+    public void delete() {
+
     }
 }

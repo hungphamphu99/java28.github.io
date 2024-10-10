@@ -1,7 +1,7 @@
 package data;
 
 import entities.salesmanagement.Customer;
-import entities.salesmanagement.Orders;
+import entities.salesmanagement.Order;
 import entities.salesmanagement.Product;
 import entities.salesmanagement.Staff;
 import utils.Enum;
@@ -13,7 +13,7 @@ public class ShopData {
     public static  List<Product> products = new ArrayList<>();
     public static  List<Staff> staffs = new ArrayList<>();
     public static  List<Customer> customers = new ArrayList<>();
-    public static  List<Orders> orders = new ArrayList<>();
+    public static  List<Order> orders = new ArrayList<>();
 
     public ShopData() {
 

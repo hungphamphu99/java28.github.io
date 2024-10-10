@@ -2,23 +2,17 @@ package service.salesmanagement;
 
 import entities.salesmanagement.Product;
 import data.ShopData;
+import service.Edit;
 import utils.Enum;
 
 import java.util.Scanner;
 
-public class ProductService {
+public class ProductService implements Edit<Product> {
 
     Scanner scanner = new Scanner(System.in);
-    public Product findProduct(int id){
-        for (Product product : ShopData.products){
-            if (product.getId() == id){
-                return product;
-            }
-        }
-        return null;
-    }
+
     public void displayProduct(int id){
-        Product product = findProduct(id);
+        Product product = findById(id);
         if (product != null){
             System.out.println("Product Name: " + product);
         }else {
@@ -26,7 +20,7 @@ public class ProductService {
         }
     }
     public boolean displayProduct_2(int id) {
-        Product product = findProduct(id);
+        Product product = findById(id);
         if (product != null) {
             // Check if the product's status is In_Stock before displaying
             if (product.getStatus() == Enum.statusProduct.In_Stock) {
@@ -41,12 +35,26 @@ public class ProductService {
             return false;
         }
     }
-    public void displayAllProducts(){
-        for (Product product : ShopData.products){
-            System.out.println(product +"\n");
+
+
+
+    public void displayInStockProducts() {
+        System.out.println("Products In Stock:");
+        boolean found = false;
+        for (Product product : ShopData.products) {
+            if (product.getStatus() == Enum.statusProduct.In_Stock) {
+                System.out.println(product + "\n");
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No products are currently in stock.");
         }
     }
-    public void addProduct() {
+
+
+    @Override
+    public void add() {
         String name = "";
         double price = -1;
         int quantity = -1;
@@ -91,13 +99,15 @@ public class ProductService {
 
         Product product = new Product(name, status, quantity, price, description);
         System.out.println("Product added successfully: " + product);
+
     }
 
-    public void updateProduct() {
+    @Override
+    public void update() {
         System.out.println("Enter Product ID to update:");
         int id = Integer.parseInt(scanner.nextLine());
 
-        Product product = findProduct(id);
+        Product product = findById(id);
 
         if (product != null) {
             System.out.println("Updating product: " + product.getName());
@@ -151,11 +161,46 @@ public class ProductService {
         }
     }
 
-    public void deleteProductById() {
+    @Override
+    public Product findById(int id) {
+        for (Product product : ShopData.products){
+            if (product.getId() == id){
+                return product;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void displayAll() {
+        if (ShopData.products.isEmpty()) {
+            System.out.println("No products available.");
+            return;
+        }
+
+        System.out.println("------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-10s %-20s %-15s %-10s %-10s %-30s\n", "ID", "Name", "Status", "Quantity", "Price", "Description");
+        System.out.println("------------------------------------------------------------------------------------------------------------------");
+
+        for (Product product : ShopData.products) {
+            System.out.printf("%-10d %-20s %-15s %-10d %-10.2f %-30s\n",
+                    product.getId(),
+                    product.getName(),
+                    product.getStatus(),
+                    product.getQuantity(),
+                    product.getPrice(),
+                    product.getDescription());
+        }
+
+        System.out.println("------------------------------------------------------------------------------------------------------------------");
+    }
+
+    @Override
+    public void delete() {
         System.out.println("Enter Product ID to delete:");
         int id = Integer.parseInt(scanner.nextLine());
 
-        Product product = findProduct(id);
+        Product product = findById(id);
 
         if (product != null) {
             System.out.println("Are you sure you want to delete the product: " + product.getName() + "? (yes/no)");
@@ -171,21 +216,4 @@ public class ProductService {
             System.out.println("Product with ID " + id + " not found.");
         }
     }
-
-    public void displayInStockProducts() {
-        System.out.println("Products In Stock:");
-        boolean found = false;
-        for (Product product : ShopData.products) {
-            if (product.getStatus() == Enum.statusProduct.In_Stock) {
-                System.out.println(product + "\n");
-                found = true;
-            }
-        }
-        if (!found) {
-            System.out.println("No products are currently in stock.");
-        }
-    }
-
-
-
 }

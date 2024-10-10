@@ -1,17 +1,16 @@
 package service.universitymanagement;
 
 import data.UniversityData;
+import entities.universitymanagement.*;
 import entities.universitymanagement.Class;
-import entities.universitymanagement.Student;
-import entities.universitymanagement.Subject;
-import entities.universitymanagement.Teacher;
+import service.Edit;
 import utils.Enum;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-public class SubjectService {
+public class SubjectService implements Edit<Subject> {
     Scanner scanner = new Scanner(System.in);
 
     public boolean isSubjectNameExists(String name) {
@@ -23,72 +22,34 @@ public class SubjectService {
         return false;
     }
 
-    public void addSubject() {
-        System.out.print("Enter subject name: ");
-        String name = scanner.nextLine();
 
-        if (isSubjectNameExists(name)) {
-            System.out.println("Subject name already exists. Please enter a different name.");
-            return;
-        }
 
-        System.out.print("Enter number of ECTs: ");
-        int ECTs = Integer.parseInt(scanner.nextLine());
-
-        Enum.Type type = null;
-        while (true) {
-            try {
-                System.out.println("Select subject type:");
-                System.out.println("1. TECH");
-                System.out.println("2. BUSINESS");
-                System.out.println("3. LANGUAGE");
-                int typeChoice = Integer.parseInt(scanner.nextLine());
-
-                switch (typeChoice) {
-                    case 1:
-                        type = Enum.Type.TECH;
-                        break;
-                    case 2:
-                        type = Enum.Type.BUSINESS;
-                        break;
-                    case 3:
-                        type = Enum.Type.LANGUAGE;
-                        break;
-                    default:
-                        System.out.println("Invalid type choice. Please try again.");
-                        continue;
-                }
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-            }
-        }
-
-        Subject subject = new Subject(name, ECTs, type);
-        UniversityData.addSubject(subject);
-        System.out.println("Subject added: " + subject);
-    }
-
-    public Subject findSubjectByID(int id) {
-        for (Subject subject : UniversityData.subjects) {
-            if (subject.getId() == id) {
-                return subject;
-            }
-        }
-        return null;
-    }
-
-    // Fix: Updated to handle Map<Subject, Score> for students
     private void removeSubjectFromStudents(Subject subject) {
         List<Student> students = UniversityData.students;
 
         for (Student student : students) {
             if (student.getSubjectScores().containsKey(subject)) {
-                student.getSubjectScores().remove(subject);  // Fix here
-                System.out.println("Removed subject from student: " + student.getId());
+                Score score = student.getSubjectScores().get(subject);
+
+                // Check if the score is null or if the student has non-zero scores for the subject
+                if (score == null) {
+                    // If the score is null, it means no scores are recorded, so it can be removed
+                    student.getSubjectScores().remove(subject);
+                    System.out.println("Removed subject from student: " + student.getId());
+                } else if (score.getMidScore() > 0 || score.getFinalScore() > 0 || score.getOverallScore() > 0) {
+                    System.out.println("Cannot remove subject from student: " + student.getId() +
+                            " as they have scores recorded for this subject.");
+                } else {
+                    student.getSubjectScores().remove(subject);
+                    System.out.println("Removed subject from student: " + student.getId());
+                }
+
+                // Recalculate the student's average score after removing the subject
+                student.calculateAvgScore();
             }
         }
     }
+
 
     private void removeSubjectFromTeachers(Subject subject) {
         List<Teacher> teachers = UniversityData.teachers;
@@ -114,18 +75,13 @@ public class SubjectService {
         }
     }
 
-    public void deleteSubjectByID() {
+    public void searchSubjectByID() {
         System.out.print("Enter subject ID: ");
         try {
             int id = Integer.parseInt(scanner.nextLine());
-            Subject subject = findSubjectByID(id);
-
+            Subject subject = findById(id);
             if (subject != null) {
-                removeSubjectFromStudents(subject);
-                removeSubjectFromTeachers(subject);
-                removeSubjectFromClasses(subject);
-                UniversityData.removeSubject(subject);
-                System.out.println("Subject removed: " + subject);
+                System.out.println("Subject found: " + subject);
             } else {
                 System.out.println("Subject not found.");
             }
@@ -134,11 +90,82 @@ public class SubjectService {
         }
     }
 
-    public void updateSubjectByID() {
+
+
+    @Override
+    public void add() {
+        // Input subject name and ensure it's not empty
+        String name;
+        while (true) {
+            System.out.print("Enter subject name: ");
+            name = scanner.nextLine().trim();
+            if (name.isEmpty()) {
+                System.out.println("Subject name cannot be empty. Please enter a valid name.");
+            } else if (isSubjectNameExists(name)) {
+                System.out.println("Subject name already exists. Please enter a different name.");
+            } else {
+                break; // Valid subject name entered
+            }
+        }
+
+        // Input and validate ECTs value (must be a positive integer)
+        int ECTs = 0;
+        while (true) {
+            try {
+                System.out.print("Enter number of ECTs: ");
+                ECTs = Integer.parseInt(scanner.nextLine());
+                if (ECTs <= 0) {
+                    System.out.println("Number of ECTs must be greater than 0. Please try again.");
+                } else {
+                    break; // Valid ECTs value entered
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number for ECTs.");
+            }
+        }
+
+        // Select the subject type with validation
+        Enum.Type type = null;
+        while (true) {
+            try {
+                System.out.println("Select subject type:");
+                System.out.println("1. TECH");
+                System.out.println("2. BUSINESS");
+                System.out.println("3. LANGUAGE");
+                int typeChoice = Integer.parseInt(scanner.nextLine());
+
+                switch (typeChoice) {
+                    case 1:
+                        type = Enum.Type.TECH;
+                        break;
+                    case 2:
+                        type = Enum.Type.BUSINESS;
+                        break;
+                    case 3:
+                        type = Enum.Type.LANGUAGE;
+                        break;
+                    default:
+                        System.out.println("Invalid type choice. Please try again.");
+                        continue;
+                }
+                break; // Valid type selected
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number for the type.");
+            }
+        }
+
+        // Create and add the new subject
+        Subject newSubject = new Subject(name, ECTs, type);
+
+        System.out.println("Subject added successfully: " + newSubject);
+    }
+
+    @Override
+    public void update() {
         System.out.print("Enter subject ID: ");
         try {
             int id = Integer.parseInt(scanner.nextLine());
-            Subject subject = findSubjectByID(id);
+            Subject subject = findById(id);
 
             if (subject != null) {
                 System.out.println("Current information: ");
@@ -171,13 +198,46 @@ public class SubjectService {
         }
     }
 
-    public void searchSubjectByID() {
+    @Override
+    public Subject findById(int id) {
+        for (Subject subject : UniversityData.subjects) {
+            if (subject.getId() == id) {
+                return subject;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void displayAll() {
+        System.out.println("-----------------------------------------------------------");
+        System.out.printf("%-10s %-20s %-10s %-15s\n", "ID", "Name", "ECTs", "Type");
+        System.out.println("-----------------------------------------------------------");
+
+        for (Subject subject : UniversityData.subjects) {
+            System.out.printf("%-10d %-20s %-10d %-15s\n",
+                    subject.getId(),
+                    subject.getName(),
+                    subject.getECTs(),
+                    subject.getType());
+        }
+
+        System.out.println("-----------------------------------------------------------");
+    }
+
+    @Override
+    public void delete() {
         System.out.print("Enter subject ID: ");
         try {
             int id = Integer.parseInt(scanner.nextLine());
-            Subject subject = findSubjectByID(id);
+            Subject subject = findById(id);
+
             if (subject != null) {
-                System.out.println("Subject found: " + subject);
+                removeSubjectFromStudents(subject);
+                removeSubjectFromTeachers(subject);
+                removeSubjectFromClasses(subject);
+                UniversityData.removeSubject(subject);
+                System.out.println("Subject removed: " + subject);
             } else {
                 System.out.println("Subject not found.");
             }

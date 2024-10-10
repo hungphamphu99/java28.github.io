@@ -8,7 +8,7 @@ import service.universitymanagement.TeacherService;
 import java.util.Scanner;
 
 public class TeacherMenu {
-     Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
     StudentService studentService = new StudentService();
     TeacherService teacherService = new TeacherService();
 

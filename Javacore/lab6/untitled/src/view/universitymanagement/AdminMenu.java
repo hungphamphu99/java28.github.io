@@ -67,22 +67,22 @@ public class AdminMenu {
 
         while (true){
 
-
-            try {System.out.println("1. Add Student \n" +
-                    "2. Add Subject To Student \n"+
-                    "3. Delete Subject From Student \n"+
-                    "4. Delete Student \n"+
-                    "5. Search Student By Id \n"+
-                    "6. Update Student \n"+
-                    "7. Display All Student \n"+
-                    "8. Back Main Menu"
+            try {System.out.println("""
+                    1. Add Student\s
+                    2. Add Subject To Student\s
+                    3. Delete Subject From Student\s
+                    4. Delete Student\s
+                    5. Search Student By Id\s
+                    6. Update Student\s
+                    7. Display All Student\s
+                    8. Back Main Menu"""
             );
                 System.out.println("Please choose one of the following options:");
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice){
                     case 1:
                         System.out.println("1. Add Student");
-                        studentService.addStudent();
+                        studentService.add();
                         break;
                     case 2:
                         System.out.println("2. Add Subject to Student");
@@ -94,7 +94,7 @@ public class AdminMenu {
                         break;
                     case 4:
                         System.out.println("4. Delete Student");
-                        studentService.deleteStudentById();
+                        studentService.delete();
                         break;
                     case 5:
                         System.out.println("5. Search Student By Id");
@@ -102,11 +102,11 @@ public class AdminMenu {
                         break;
                     case 6:
                         System.out.println("6. Update Student");
-                        studentService.updateInformationStudent();
+                        studentService.update();
                         break;
                     case 7:
                         System.out.println("7. Display All Student ");
-                        System.out.println(UniversityData.students);
+                        studentService.displayAll();
                         break;
 
                     case 8:
@@ -129,34 +129,35 @@ public class AdminMenu {
 
             try {
                 System.out.println(
-                        "1. Add Subject \n" +
-                        "2. Delete Subject \n" +
-                        "3. Update Subject \n" +
-                        "4. Search Subject  \n" +
-                        "5. Display All Subject \n" +
-                        "6. Back Main Menu");
+                        """
+                                1. Add Subject\s
+                                2. Delete Subject\s
+                                3. Update Subject\s
+                                4. Search Subject \s
+                                5. Display All Subject\s
+                                6. Back Main Menu""");
                 System.out.println("Please choose one of the following options:");
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice){
                     case 1:
                         System.out.println("1. Add Subject");
-                        subjectService.addSubject();
+                        subjectService.add();
                         break;
                     case 2:
                         System.out.println("2. Delete Subject");
-                        subjectService.deleteSubjectByID();
+                        subjectService.delete();
                         break;
                     case 3:
                         System.out.println("3. Update Subject");
-                        subjectService.updateSubjectByID();
+                        subjectService.update();
                         break;
                     case 4:
                         System.out.println("4. Search Subject");
                         subjectService.searchSubjectByID();
                         break;
                     case 5:
-                        System.out.println("5. Disaplay All Subject");
-                        System.out.println(UniversityData.subjects);
+                        System.out.println("5. Display All Subject");
+                        subjectService.displayAll();
                     case 6:
                         System.out.println("5. Back Main Menu");
 
@@ -172,20 +173,21 @@ public class AdminMenu {
     private void editTeacher(){
         while (true){
             try {
-                System.out.println("1. Add Teacher \n" +
-                        "2. Add Subject To Teacher \n"+
-                        "3. Delete Subject From Teacher \n"+
-                        "4. Delete Teacher \n"+
-                        "5. Search Teacher By Id \n"+
-                        "6. Update Teacher \n"+
-                        "7. Display All Teacher \n" +
-                        "8. Back Main Menu");
+                System.out.println("""
+                        1. Add Teacher\s
+                        2. Add Subject To Teacher\s
+                        3. Delete Subject From Teacher\s
+                        4. Delete Teacher\s
+                        5. Search Teacher By Id\s
+                        6. Update Teacher\s
+                        7. Display All Teacher\s
+                        8. Back Main Menu""");
 
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice){
                     case 1:
                         System.out.println("1. Add Teacher");
-                        teacherService.addTeacher();
+                        teacherService.add();
                         break;
                     case 2:
                         System.out.println("2. Add Subject to Teacher");
@@ -197,7 +199,7 @@ public class AdminMenu {
                         break;
                     case 4:
                         System.out.println("4. Delete Teacher ");
-                        teacherService.deleteTeacherById();
+                        teacherService.delete();
                         break;
                     case 5:
                         System.out.println("5. Search Teacher By Id");
@@ -205,11 +207,11 @@ public class AdminMenu {
                         break;
                     case 6:
                         System.out.println("6. Update Teacher ");
-                        teacherService.updateTeacherById();
+                        teacherService.update();
                         break;
                     case 7:
                         System.out.println("7. Display All Teacher ");
-                        System.out.println(UniversityData.teachers);
+                        teacherService.displayAll();
                     case 8:
                         System.out.println("7. Back Main Menu");
                         System.out.println("----- Admin Menu -----");
@@ -225,20 +227,21 @@ public class AdminMenu {
     private void editClass(){
         while (true){
             try {
-                System.out.println("1. Add Class \n" +
-                        "2. Add Student To Class \n"+
-                        "3. Delete Student From Class \n"+
-                        "4. Delete Class \n"+
-                        "5. Change Teacher In Class \n"+
-                        "6. Add Student Range By ID \n"+
-                        "7. Display Class \n" +
-                        "8. Back Main Menu");
+                System.out.println("""
+                        1. Add Class\s
+                        2. Add Student To Class\s
+                        3. Delete Student From Class\s
+                        4. Delete Class\s
+                        5. Change Teacher In Class\s
+                        6. Add Student Range By ID\s
+                        7. Display Class\s
+                        8. Back Main Menu""");
 
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice){
                     case 1:
                         System.out.println("1. Add Class");
-                        classService.addClass();
+                        classService.add();
                         break;
                     case 2:
                         System.out.println("2. Add Student to Class");
@@ -250,7 +253,7 @@ public class AdminMenu {
                         break;
                     case 4:
                         System.out.println("4. Delete Class");
-                        classService.deleteClassByID();
+                        classService.delete();
                         break;
                     case 5:
                         System.out.println("5. Change Teacher In Class");
@@ -262,7 +265,7 @@ public class AdminMenu {
                         break;
                     case 7:
                         System.out.println("7. Display Class ");
-                        classService.displayAllClasses();
+                        classService.displayAll();
                         break;
 
                     case 8:
@@ -285,22 +288,26 @@ public class AdminMenu {
                 System.out.println("1. Add Staff");
                 System.out.println("2. Update Staff");
                 System.out.println("3. Delete Staff");
+                System.out.println("4. Display All Staff");
                 System.out.println("4. Back Main Menu");
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice){
                     case 1:
                         System.out.println("1. Add Staff");
-                        staffService.addStaff();
+                        staffService.add();
                         break;
                     case 2:
                         System.out.println("2. Update Staff");
-                        staffService.updateInformationStaff();
+                        staffService.update();
                         break;
                     case 3:
                         System.out.println("3. Delete Staff");
-                        staffService.deleteStaffById();
+                        staffService.delete();
                         break;
                     case 4:
+                        System.out.println("4. Display All Staff");
+                        staffService.displayAll();
+                    case 5:
                         System.out.println("8. Back Main Menu");
                         System.out.println("----- Admin Menu -----");
                         return;

@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Class {
-    private String id;
+    private int id;
+    private static int nextClassId = 0;
     private Teacher teacher;
     private List<Student> students;
     private Subject subject;
 
 
-    public Class(String id, Teacher teacher, Subject subject) {
-        this.id = id;
+    public Class( Teacher teacher, Subject subject) {
+        this.id = ++nextClassId;
         this.teacher = teacher;
         this.subject = subject;
         this.students = new ArrayList<>();
@@ -32,9 +33,7 @@ public class Class {
 
 
 
-
-
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -53,17 +52,13 @@ public class Class {
         return subject;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
 
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
+
 
     public void setSubject(Subject subject) {
         this.subject = subject;

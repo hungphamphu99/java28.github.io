@@ -27,7 +27,7 @@ public class CartService {
     }
 
     // Checkout the customer's cart and create an order
-    public Orders checkout(Customer customer) {
+    public Order checkout(Customer customer) {
         Cart cart = customer.getCart();
         Map<Product, Integer> products = cart.getProducts();
 
@@ -91,7 +91,7 @@ public class CartService {
 
         if (paymentSuccess) {
             // Create an order after successful payment
-            Orders order = new Orders(customer, new HashMap<>(products), statusOder.Pending, totalCost, paymentStrategy);
+            Order order = new Order(customer, new HashMap<>(products), statusOder.Pending, totalCost, paymentStrategy);
             customer.addOrder(order);
 
             // Reduce the product's quantity after purchase

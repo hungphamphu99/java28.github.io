@@ -5,32 +5,17 @@ import entities.universitymanagement.Class;
 import entities.universitymanagement.Student;
 import entities.universitymanagement.Subject;
 import entities.universitymanagement.Teacher;
+import service.Edit;
 import utils.Enum;
 
 import java.util.Random;
 import java.util.Scanner;
 
-public class TeacherService {
+public class TeacherService implements Edit<Teacher> {
     Scanner scanner = new Scanner(System.in);
     SubjectService subjectService = new SubjectService();
 
-    public  void  addTeacher(){
-        System.out.println("Enter teacher name:");
-        String name = scanner.nextLine();
-        System.out.println("Enter teacher email");
-        String email = scanner.nextLine();
-        System.out.println("Enter teacher address");
-        String address = scanner.nextLine();
-        System.out.println("Enter teacher phone");
-        String phone = scanner.nextLine();
-        String role = "teacher";
-        String password = generateRandomPassword();
-        Enum.Type major = chooseMajor();
-        Teacher teacher = new Teacher(null, password, role, name, email, address, phone, major);
-        String username = teacher.getId() + "-" + name +".edu";
-        teacher.setUsername(username);
-        System.out.println("Student added successfully" + teacher);
-    }
+
     private String generateRandomPassword() {
         Random random = new Random();
         int randomPassword = 10000 + random.nextInt(90000);
@@ -63,18 +48,11 @@ public class TeacherService {
 
     }
 
-    public Teacher findTeacherById(int id){
-        for (Teacher teacher : UniversityData.teachers){
-            if (teacher.getId() == id){
-                return teacher;
-            }
-        }
-        return null;
-    }
+
     public void displayTeacherById(){
         System.out.println("Enter teacher id:");
         int id = Integer.parseInt(scanner.nextLine());
-        Teacher teacher = findTeacherById(id);
+        Teacher teacher = findById(id);
         if (teacher != null){
             System.out.println(teacher);
         }else {
@@ -107,12 +85,12 @@ public class TeacherService {
         try {
             System.out.println("Enter teacher id:");
             int id = Integer.parseInt(scanner.nextLine());
-            Teacher teacher = findTeacherById(id);
+            Teacher teacher = findById(id);
 
             if (teacher != null) {
                 System.out.println("Enter subject id:");
                 int subjectId = Integer.parseInt(scanner.nextLine());
-                Subject subject = subjectService.findSubjectByID(subjectId);
+                Subject subject = subjectService.findById(subjectId);
 
                 if (subject != null) {
                     if (canTeacherTeachSubject(teacher, subject)) {
@@ -135,41 +113,19 @@ public class TeacherService {
         }
     }
 
-    public void deleteTeacherById() {
-        System.out.println("Enter teacher id:");
-        try {
-            int id = Integer.parseInt(scanner.nextLine());
-            Teacher teacher = findTeacherById(id);
 
-            if (teacher != null) {
-                System.out.println("Are you sure you want to delete the teacher with ID: " + id + "? (y/n)");
-                String confirmation = scanner.nextLine();
-
-                if (confirmation.equalsIgnoreCase("y")) {
-                    UniversityData.removeTeacher(teacher);
-                    System.out.println("Teacher with ID " + id + " has been successfully deleted.");
-                } else {
-                    System.out.println("Operation cancelled.");
-                }
-            } else {
-                System.out.println("Teacher not found with ID: " + id);
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid number.");
-        }
-    }
 
     public void deleteSubjectFromTeacher() {
         System.out.println("Enter teacher id:");
         int id = Integer.parseInt(scanner.nextLine());
-        Teacher teacher = findTeacherById(id);
+        Teacher teacher = findById(id);
         if (teacher == null) {
             System.out.println("Teacher not found with ID: " + id);
             return;
         }
         System.out.print("Enter subject ID: ");
         int subjectId = Integer.parseInt(scanner.nextLine());
-        Subject subjectToRemove = subjectService.findSubjectByID(subjectId);
+        Subject subjectToRemove = subjectService.findById(subjectId);
         if (subjectToRemove == null) {
             System.out.println("Teacher is not enrolled in the subject with ID " + subjectId);
             return;
@@ -178,10 +134,105 @@ public class TeacherService {
         System.out.println("Subject with ID " + subjectId + " has been successfully deleted.");
     }
 
-    public void updateTeacherById() {
+
+
+    public void displayClassesAndStudents(Teacher teacher) {
+        if (UniversityData.classes.isEmpty()) {
+            System.out.println("No classes available.");
+            return;
+        }
+
+        boolean foundClasses = false;
+
+        for (Class cl : UniversityData.classes) {
+            if (cl.getTeacher() == teacher) {
+                foundClasses = true;
+                System.out.println("Class ID: " + cl.getId() );
+
+                if (cl.getStudents().isEmpty()) {
+                    System.out.println("  No students enrolled in this class.");
+                } else {
+                    System.out.println("  Students:");
+                    for (Student student : cl.getStudents()) {
+                        System.out.println("    Student ID: " + student.getId() + ", Name: " + student.getName());
+                    }
+                }
+            }
+        }
+
+        if (!foundClasses) {
+            System.out.println("The teacher is not assigned to any classes.");
+        }
+    }
+
+    @Override
+    public void add() {
+        // Ensure the teacher name is not empty
+        String name;
+        while (true) {
+            System.out.println("Enter teacher name:");
+            name = scanner.nextLine().trim();
+            if (name.isEmpty()) {
+                System.out.println("Teacher name cannot be empty. Please enter a valid name.");
+            } else {
+                break;
+            }
+        }
+
+        // Ensure the teacher email is not empty
+        String email;
+        while (true) {
+            System.out.println("Enter teacher email:");
+            email = scanner.nextLine().trim();
+            if (email.isEmpty()) {
+                System.out.println("Teacher email cannot be empty. Please enter a valid email.");
+            } else {
+                break;
+            }
+        }
+
+        // Ensure the teacher address is not empty
+        String address;
+        while (true) {
+            System.out.println("Enter teacher address:");
+            address = scanner.nextLine().trim();
+            if (address.isEmpty()) {
+                System.out.println("Teacher address cannot be empty. Please enter a valid address.");
+            } else {
+                break;
+            }
+        }
+
+        // Ensure the phone number contains only digits and is not empty
+        String phone;
+        while (true) {
+            System.out.println("Enter teacher phone:");
+            phone = scanner.nextLine().trim();
+            if (phone.isEmpty()) {
+                System.out.println("Teacher phone cannot be empty. Please enter a valid phone number.");
+            } else if (!phone.matches("\\d+")) {
+                System.out.println("Phone number must contain only digits. Please try again.");
+            } else {
+                break;
+            }
+        }
+
+        String role = "teacher";
+        String password = generateRandomPassword();
+        Enum.Type major = chooseMajor();
+
+        Teacher teacher = new Teacher(null, password, role, name, email, address, phone, major);
+        String username = teacher.getId() + "-" + name + ".edu";
+        teacher.setUsername(username);
+
+        System.out.println("Teacher added successfully: " + teacher);
+    }
+
+    @Override
+    public void update() {
         System.out.println("Enter teacher id:");
         int id = Integer.parseInt(scanner.nextLine());
-        Teacher teacher = findTeacherById(id);
+        Teacher teacher = findById(id);
         if (teacher == null) {
             System.out.println("Teacher with ID " + id + " not found.");
             return;
@@ -232,33 +283,77 @@ public class TeacherService {
         System.out.println(teacher.infoTeacher());
     }
 
-    public void displayClassesAndStudents(Teacher teacher) {
-        if (UniversityData.classes.isEmpty()) {
-            System.out.println("No classes available.");
-            return;
-        }
-
-        boolean foundClasses = false;
-
-        for (Class cl : UniversityData.classes) {
-            if (cl.getTeacher() == teacher) {
-                foundClasses = true;
-                System.out.println("Class ID: " + cl.getId() );
-
-                if (cl.getStudents().isEmpty()) {
-                    System.out.println("  No students enrolled in this class.");
-                } else {
-                    System.out.println("  Students:");
-                    for (Student student : cl.getStudents()) {
-                        System.out.println("    Student ID: " + student.getId() + ", Name: " + student.getName());
-                    }
-                }
+    @Override
+    public Teacher findById(int id) {
+        for (Teacher teacher : UniversityData.teachers){
+            if (teacher.getId() == id){
+                return teacher;
             }
         }
+        return null;
+    }
 
-        if (!foundClasses) {
-            System.out.println("The teacher is not assigned to any classes.");
+    @Override
+    public void displayAll() {
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-5s %-20s %-30s %-20s %-15s %-15s %-40s\n", "ID", "Name", "Email", "Address", "Phone", "Major", "Subjects");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+
+        for (Teacher teacher : UniversityData.teachers) {
+            System.out.printf("%-5d %-20s %-30s %-20s %-15s %-15s %-40s\n",
+                    teacher.getId(),
+                    teacher.getName(),
+                    teacher.getEmail(),
+                    teacher.getAddress(),
+                    teacher.getPhone(),
+                    teacher.getMajor(),
+                    formatSubjects(teacher));
+        }
+
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+
+    }
+
+    @Override
+    public void delete() {
+        System.out.println("Enter teacher id:");
+        try {
+            int id = Integer.parseInt(scanner.nextLine());
+            Teacher teacher = findById(id);
+
+            if (teacher != null) {
+                System.out.println("Are you sure you want to delete the teacher with ID: " + id + "? (y/n)");
+                String confirmation = scanner.nextLine();
+
+                if (confirmation.equalsIgnoreCase("y")) {
+                    UniversityData.removeTeacher(teacher);
+                    System.out.println("Teacher with ID " + id + " has been successfully deleted.");
+                } else {
+                    System.out.println("Operation cancelled.");
+                }
+            } else {
+                System.out.println("Teacher not found with ID: " + id);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid number.");
         }
     }
 
+    private String formatSubjects(Teacher teacher) {
+        if (teacher.getSubjects().isEmpty()) {
+            return "None";
+        }
+
+        StringBuilder subjectsInfo = new StringBuilder();
+        for (Subject subject : teacher.getSubjects()) {
+            subjectsInfo.append(subject.getName()).append(", ");
+        }
+
+        // Remove the trailing comma and space
+        if (subjectsInfo.length() > 0) {
+            subjectsInfo.setLength(subjectsInfo.length() - 2);
+        }
+
+        return subjectsInfo.toString();
+    }
 }

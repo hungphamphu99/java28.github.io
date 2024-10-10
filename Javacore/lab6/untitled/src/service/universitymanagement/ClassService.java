@@ -6,98 +6,44 @@ import entities.universitymanagement.Class;
 import entities.universitymanagement.Student;
 import entities.universitymanagement.Subject;
 import entities.universitymanagement.Teacher;
+import service.Edit;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class ClassService {
+public class ClassService implements Edit<Class> {
     TeacherService teacherService = new TeacherService();
     SubjectService subjectService = new SubjectService();
     StudentService studentService = new StudentService();
 
     Scanner scanner = new Scanner(System.in);
 
-    public void addClass() {
-        System.out.println("Enter Class ID:");
-        String classID = scanner.nextLine();
-        Class existingClass = findClassByID(classID);
-        if (existingClass != null) {
-            System.out.println("Class already exists.");
-            return;
-        }
-        System.out.println("Enter Teacher ID:");
-        int teacherID = Integer.parseInt(scanner.nextLine());
-        Teacher teacher = teacherService.findTeacherById(teacherID);
-        if (teacher == null) {
-            System.out.println("Teacher Not Found.");
-            return;
+
+
+    // Helper method to format student names for a class
+    private String formatStudents(Class cl) {
+        if (cl.getStudents().isEmpty()) {
+            return "No students";
         }
 
-        System.out.println("Enter Subject ID:");
-        int subjectID = Integer.parseInt(scanner.nextLine());
-        Subject subject = subjectService.findSubjectByID(subjectID);
-        if (subject == null) {
-            System.out.println("Subject Not Found.");
-            return;
+        StringBuilder studentsInfo = new StringBuilder();
+        for (Student student : cl.getStudents()) {
+            studentsInfo.append(student.getName()).append(" (ID: ").append(student.getId()).append("), ");
         }
 
-        if (!teacher.getMajor().equals(subject.getType())) {
-            System.out.println("Teacher's major does not match the subject type.");
-            return;
+        // Remove the trailing comma and space
+        if (studentsInfo.length() > 0) {
+            studentsInfo.setLength(studentsInfo.length() - 2);
         }
-        if (teacher.getSubjects().contains(subject)) {
-            System.out.println("Class created successfully with Teacher ID: " + teacherID + " and Subject ID: " + subjectID);
-            new Class(classID, teacher, subject);
-        } else {
-            if (teacher.getSubjects().size() < 2) {
-                teacher.addSubject(subject);
-                new Class(classID, teacher, subject);
-            } else {
-                System.out.println("Teachers can only teach 2 subjects.");
-            }
-        }
+
+        return studentsInfo.toString();
     }
 
-    public Class findClassByID(String classID) {
-        for (Class classes : UniversityData.classes) {
-            if (classes.getId().equals(classID)) {
-                return classes;
-            }
-        }
-        return null;
-    }
-
-    public void displayAllClasses() {
-        if (UniversityData.classes.isEmpty()) {
-            System.out.println("No classes available.");
-            return;
-        }
-
-        for (Class cl : UniversityData.classes) {
-            System.out.println("Class ID: " + cl.getId());
-            Teacher teacher = cl.getTeacher();
-            System.out.println("Teacher: " + teacher.getName() + " (Major: " + teacher.getMajor() + ")");
-            Subject subject = cl.getSubject();
-            System.out.print("Subjects: ");
-            System.out.print(subject.getName() + " (ID: " + subject.getId() + "), ");
-
-            if (!cl.getStudents().isEmpty()) {
-                System.out.println("Students:");
-                for (Student student : cl.getStudents()) {
-                    System.out.println("  - ID: " + student.getId() + ", Name: " + student.getName());
-                }
-            } else {
-                System.out.println("No students enrolled in this class.");
-            }
-
-            System.out.println("-----------------------------------------");
-        }
-    }
 
     public void addStudentClass() {
         System.out.println("Enter Class ID:");
-        String classID = scanner.nextLine();
-        Class existingClass = findClassByID(classID);
+        int classID = Integer.parseInt(scanner.nextLine());
+        Class existingClass = findById(classID);
         if (existingClass == null) {
             System.out.println("Class does not exist.");
             return;
@@ -105,7 +51,7 @@ public class ClassService {
 
         System.out.println("Enter Student ID:");
         int studentID = Integer.parseInt(scanner.nextLine());
-        Student student = studentService.findStudentByID(studentID);
+        Student student = studentService.findById(studentID);
         if (student == null) {
             System.out.println("Student does not exist.");
             return;
@@ -130,15 +76,15 @@ public class ClassService {
 
     public void removeStudentClass() {
         System.out.println("Enter Class ID:");
-        String classID = scanner.nextLine();
-        Class existingClass = findClassByID(classID);
+        int classID = Integer.parseInt(scanner.nextLine());
+        Class existingClass = findById(classID);
         if (existingClass == null) {
             System.out.println("Class does not exist.");
             return;
         }
         System.out.println("Enter Student ID:");
         int studentID = Integer.parseInt(scanner.nextLine());
-        Student student = studentService.findStudentByID(studentID);
+        Student student = studentService.findById(studentID);
         if (student == null) {
             System.out.println("Student does not exist.");
             return;
@@ -151,29 +97,17 @@ public class ClassService {
         }
     }
 
-    public void deleteClassByID() {
-        System.out.println("Enter Class ID:");
-        String classID = scanner.nextLine();
-        Class existingClass = findClassByID(classID);
-        if (existingClass == null) {
-            System.out.println("Class does not exist.");
-            return;
-        }
-        UniversityData.classes.remove(existingClass);
-        System.out.println("Class with ID: " + classID + " has been deleted successfully.");
-    }
-
     public void changeTeacherInClass() {
         System.out.println("Enter Class ID:");
-        String classID = scanner.nextLine();
-        Class existingClass = findClassByID(classID);
+        int classID = Integer.parseInt(scanner.nextLine());
+        Class existingClass = findById(classID);
         if (existingClass == null) {
             System.out.println("Class does not exist.");
             return;
         }
         System.out.println("Enter New Teacher ID:");
         int teacherID = Integer.parseInt(scanner.nextLine());
-        Teacher newTeacher = teacherService.findTeacherById(teacherID);
+        Teacher newTeacher = teacherService.findById(teacherID);
         if (newTeacher == null) {
             System.out.println("Teacher ID not found.");
             return;
@@ -198,8 +132,8 @@ public class ClassService {
 
     public void addStudentRangeByID() {
         System.out.println("Enter Class ID:");
-        String classID = scanner.nextLine();
-        Class existingClass = findClassByID(classID);
+        int classID = Integer.parseInt(scanner.nextLine());
+        Class existingClass = findById(classID);
         if (existingClass == null) {
             System.out.println("Class does not exist.");
             return;
@@ -217,7 +151,7 @@ public class ClassService {
         }
 
         for (int studentID = startID; studentID <= endID; studentID++) {
-            Student student = studentService.findStudentByID(studentID);
+            Student student = studentService.findById(studentID);
             if (student == null) {
                 System.out.println("Student with ID " + studentID + " does not exist.");
                 continue;
@@ -269,5 +203,105 @@ public class ClassService {
         if (!isEnrolled) {
             System.out.println("This student is not enrolled in any classes.");
         }
+    }
+
+    @Override
+    public void add() {
+
+        System.out.println("Enter Teacher ID:");
+        int teacherID = Integer.parseInt(scanner.nextLine());
+        Teacher teacher = teacherService.findById(teacherID);
+        if (teacher == null) {
+            System.out.println("Teacher Not Found.");
+            return;
+        }
+
+        System.out.println("Enter Subject ID:");
+        int subjectID = Integer.parseInt(scanner.nextLine());
+        Subject subject = subjectService.findById(subjectID);
+        if (subject == null) {
+            System.out.println("Subject Not Found.");
+            return;
+        }
+
+        if (!teacher.getMajor().equals(subject.getType())) {
+            System.out.println("Teacher's major does not match the subject type.");
+            return;
+        }
+        if (teacher.getSubjects().contains(subject)) {
+            System.out.println("Class created successfully with Teacher ID: " + teacherID + " and Subject ID: " + subjectID);
+            new Class(teacher, subject);
+        } else {
+            if (teacher.getSubjects().size() < 2) {
+                teacher.addSubject(subject);
+                new Class(teacher, subject);
+            } else {
+                System.out.println("Teachers can only teach 2 subjects.");
+            }
+        }
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public Class findById(int classID) {
+        for (Class classes : UniversityData.classes) {
+            if (classes.getId() == classID) {
+                return classes;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void displayAll() {
+        if (UniversityData.classes.isEmpty()) {
+            System.out.println("No classes available.");
+            return;
+        }
+
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
+        System.out.printf("%-10s %-20s %-15s %-20s %-20s\n", "Class ID", "Teacher", "Major", "Subject", "Students");
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
+
+        for (Class cl : UniversityData.classes) {
+            Teacher teacher = cl.getTeacher();
+            Subject subject = cl.getSubject();
+
+            // Format teacher's name, major, and subject details
+            String teacherInfo = teacher.getName();
+            String majorInfo = teacher.getMajor().toString();
+            String subjectInfo = subject.getName() + " (ID: " + subject.getId() + ")";
+
+            // Format students' information
+            String studentsInfo = formatStudents(cl);
+
+            // Print class details in table format
+            System.out.printf("%-10s %-20s %-15s %-20s %-20s\n",
+                    cl.getId(),
+                    teacherInfo,
+                    majorInfo,
+                    subjectInfo,
+                    studentsInfo);
+        }
+
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
+
+    }
+
+    @Override
+    public void delete() {
+        System.out.println("Enter Class ID:");
+        int classID = Integer.parseInt(scanner.nextLine());
+        Class existingClass = findById(classID);
+        if (existingClass == null) {
+            System.out.println("Class does not exist.");
+            return;
+        }
+        UniversityData.classes.remove(existingClass);
+        System.out.println("Class with ID: " + classID + " has been deleted successfully.");
     }
 }

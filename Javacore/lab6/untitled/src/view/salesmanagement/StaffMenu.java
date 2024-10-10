@@ -33,20 +33,16 @@ public class StaffMenu {
                 switch (choice) {
                     case 1:
                         System.out.println("----- Products Information -----");
-                        if (ShopData.products.isEmpty()) {
-                            System.out.println("No products available.");
-                        } else {
-                            ShopData.products.forEach(System.out::println);
-                        }
+                        productService.displayAll();
                         break;
 
                     case 2:
                         System.out.println("2. Display Orders Information");
-                        ShopData.orders.forEach(System.out::println);
+                        ordersService.displayAllOrders();
                         break;
                     case 3:
                         System.out.println("3. Display Customer Information");
-                        ShopData.orders.forEach(System.out::println);
+                        customerService.displayAll();
                         break;
                     case 4:
                         System.out.println("4. Edit Orders");
@@ -58,7 +54,7 @@ public class StaffMenu {
                         break;
                     case 6:
                         System.out.println("6. Update Customer ");
-                        customerService.updateInformationCustomer();
+                        customerService.update();
                         break;
                     case 7:
                         userService.logout();
@@ -108,23 +104,27 @@ public class StaffMenu {
                 System.out.println("1. Add Product");
                 System.out.println("2. Remove Product");
                 System.out.println("3. Update Product");
-                System.out.println("4. Back to Main Menu");
+                System.out.println("4. Display All Products");
+                System.out.println("5. Back to Main Menu");
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
                     case 1:
                         System.out.println("1. Add Product");
-                        productService.addProduct();
+                        productService.add();
                         break;
                     case 2:
                         System.out.println("2. Delete Product");
-                        productService.deleteProductById();
+                        productService.delete();
                         break;
                     case 3:
                         System.out.println("3. Update Product");
-                        productService.updateProduct();
+                        productService.update();
                         break;
                     case 4:
-                        System.out.println("4. Back to Main Menu");
+                        System.out.println("4. Display All Products");
+                        productService.displayAll();
+                    case 5:
+                        System.out.println("5. Back to Main Menu");
                         return;
                 }
             }catch (NumberFormatException e){
