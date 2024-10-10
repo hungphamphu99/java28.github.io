@@ -1,5 +1,7 @@
 package service.salesmanagement;
 
+import java.math.BigDecimal;
+
 public class PaymentContext {
     private PaymentStrategy paymentStrategy;
 
@@ -7,7 +9,8 @@ public class PaymentContext {
         this.paymentStrategy = paymentStrategy;
     }
 
-    public void executePayment(double amount) {
+    // Updated to use BigDecimal for precise monetary calculations
+    public void executePayment(BigDecimal amount) {
         paymentStrategy.pay(amount);
     }
 }

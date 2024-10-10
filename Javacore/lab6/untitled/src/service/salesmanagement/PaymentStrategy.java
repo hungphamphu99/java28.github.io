@@ -1,6 +1,7 @@
 package service.salesmanagement;
 
-public interface PaymentStrategy {
-    void pay(double amount);
-}
+import java.math.BigDecimal;
 
+public interface PaymentStrategy {
+    void pay(BigDecimal amount);
+}

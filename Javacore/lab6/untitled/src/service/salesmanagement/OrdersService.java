@@ -6,6 +6,7 @@ import entities.salesmanagement.Product;
 import data.ShopData;
 import utils.Enum;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -57,8 +58,9 @@ public class OrdersService {
 
             // Refund the customer if the order was paid using an E-Wallet
             if (order.getPaymentMethod() instanceof EWalletPayment) {
-                customer.setBalance(customer.getBalance() + order.getTotal());
-                System.out.println("Refund of " + order.getTotal() + " has been issued to the customer's E-Wallet.");
+                BigDecimal refundAmount = order.getTotal();
+                customer.setBalance(customer.getBalance().add(refundAmount));
+                System.out.println("Refund of " + refundAmount + " has been issued to the customer's E-Wallet.");
             } else {
                 System.out.println("No refund required as the order was not paid using an E-Wallet.");
             }

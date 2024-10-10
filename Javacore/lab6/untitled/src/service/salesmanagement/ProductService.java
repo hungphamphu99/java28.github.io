@@ -7,6 +7,7 @@ import data.ShopData;
 import service.Edit;
 import utils.Enum;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -60,8 +61,9 @@ public class ProductService implements Edit<Product> {
         // Check if the order was paid using an E-Wallet
         if (order.getPaymentMethod() instanceof EWalletPayment) {
             // Refund the amount to the customer's balance
-            customer.setBalance(customer.getBalance() + order.getTotal());
-            System.out.println("Refund of " + order.getTotal() + " issued to customer " + customer.getName() + "'s E-Wallet.");
+            BigDecimal refundAmount = order.getTotal();
+            customer.setBalance(customer.getBalance().add(refundAmount));
+            System.out.println("Refund of " + refundAmount + " issued to customer " + customer.getName() + "'s E-Wallet.");
         }
 
         // Restore product quantities to the inventory

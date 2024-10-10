@@ -69,7 +69,7 @@ public class CustomerMenu {
                 System.out.println("----- Deposit and Withdraw Balance -----");
                 System.out.println("1. Deposit");
                 System.out.println("2. Withdraw");
-                System.out.println("Back Main Menu");
+                System.out.println("3.Back Main Menu");
                 int option = Integer.parseInt(scanner.nextLine());
                 switch (option) {
                     case 1:

@@ -7,6 +7,8 @@ import utils.Enum;
 import utils.Enum.statusOder;
 import utils.Validator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -54,7 +56,11 @@ public class CustomerService implements Edit<Customer> {
         int quantity = Integer.parseInt(scanner.nextLine());
 
         if (product.getQuantity() >= quantity) {
-            double totalCost = product.getPrice() * quantity;
+            // Calculate the total cost using BigDecimal for precision
+            BigDecimal totalCost = BigDecimal.valueOf(product.getPrice())
+                    .multiply(BigDecimal.valueOf(quantity))
+                    .setScale(2, RoundingMode.HALF_UP);
+
             PaymentStrategy paymentStrategy = null;
 
             while (paymentStrategy == null) {
@@ -63,12 +69,15 @@ public class CustomerService implements Edit<Customer> {
 
                 // Select payment strategy based on user's choice
                 if (paymentChoice == 1) {
-                    if (customer.getBalance() >= totalCost) {
+                    // E-Wallet payment
+                    if (customer.getBalance().compareTo(totalCost) >= 0) {
                         paymentStrategy = new EWalletPayment();
                     } else {
                         System.out.println("Insufficient balance in E-Wallet.");
+                        paymentStrategy = null; // Prompt user again for payment method
                     }
                 } else if (paymentChoice == 2) {
+                    // Cash on Delivery payment
                     paymentStrategy = new CashOnDeliveryPayment();
                 } else {
                     System.out.println("Invalid payment method. Please choose again.");
@@ -81,7 +90,7 @@ public class CustomerService implements Edit<Customer> {
 
                 // Deduct balance if using E-Wallet
                 if (paymentStrategy instanceof EWalletPayment) {
-                    customer.setBalance(customer.getBalance() - totalCost);
+                    customer.setBalance(customer.getBalance().subtract(totalCost));
                     System.out.println("Payment successful via E-Wallet. Remaining balance: " + customer.getBalance());
                 } else {
                     System.out.println("Payment will be processed upon delivery (Cash on Delivery).");
@@ -119,11 +128,11 @@ public class CustomerService implements Edit<Customer> {
 
             // Check if the product is either Deleted or Out of Stock
             if (product.getStatus() == Enum.statusProduct.Deleted) {
-                System.out.println(i + ". " + product.getName() + " - This product has been deleted and cannot be purchased.");
+                System.out.println( product.getName() + " - This product has been deleted and cannot be purchased.");
             } else if (product.getStatus() == Enum.statusProduct.Out_Stock) {
-                System.out.println(i + ". " + product.getName() + " - This product is out of stock and cannot be purchased.");
+                System.out.println(product.getName() + " - This product is out of stock and cannot be purchased.");
             } else {
-                System.out.println(i + ". " + product.getName() + " - Quantity: " + quantity + " - Price: " + product.getPrice());
+                System.out.println( product.getName() + " - Quantity: " + quantity + " - Price: " + product.getPrice());
                 productMap.put(i, product); // Add valid products to the selection map
             }
             i++;
@@ -210,7 +219,11 @@ public class CustomerService implements Edit<Customer> {
         // Get the selected product
         Product selectedProduct = productMap.get(choice);
         int selectedQuantity = products.get(selectedProduct);
-        double totalCost = selectedProduct.getPrice() * selectedQuantity;
+
+        // Calculate total cost using BigDecimal for precision
+        BigDecimal totalCost = BigDecimal.valueOf(selectedProduct.getPrice())
+                .multiply(BigDecimal.valueOf(selectedQuantity))
+                .setScale(2, RoundingMode.HALF_UP);
 
         System.out.println("Proceed to purchase " + selectedProduct.getName() + "? (yes/no)");
         String confirm = scanner.nextLine();
@@ -227,10 +240,10 @@ public class CustomerService implements Edit<Customer> {
 
                 if (paymentChoice == 1) {
                     // E-Wallet payment
-                    if (customer.getBalance() >= totalCost) {
+                    if (customer.getBalance().compareTo(totalCost) >= 0) {
                         paymentStrategy = new EWalletPayment();
                         customer.pay(totalCost, paymentStrategy);
-                        customer.setBalance(customer.getBalance() - totalCost); // Deduct the e-wallet balance
+                        customer.setBalance(customer.getBalance().subtract(totalCost)); // Deduct balance using BigDecimal
                         paymentSuccess = true;
                         validPaymentMethod = true;
                         System.out.println("Payment successful via E-Wallet. Remaining balance: " + customer.getBalance());
@@ -244,24 +257,25 @@ public class CustomerService implements Edit<Customer> {
                     customer.pay(totalCost, paymentStrategy);
                     paymentSuccess = true;
                     validPaymentMethod = true;
+                    System.out.println("Payment will be processed upon delivery (Cash on Delivery).");
                 } else {
                     System.out.println("Invalid payment method. Please choose again.");
                 }
             }
 
             if (paymentSuccess) {
-                // Create an order after successful payment
+                // Create an order after successful payment, using BigDecimal for total cost
                 Order order = new Order(customer, Map.of(selectedProduct, selectedQuantity), statusOder.Pending, totalCost, paymentStrategy);
                 customer.addOrder(order);
 
-                // Reduce the product's quantity after purchase
+                // Reduce the product's quantity in stock
                 selectedProduct.setQuantity(selectedProduct.getQuantity() - selectedQuantity);
 
                 // Remove the product from the cart
                 cartService.removeProductFromCart(customer, selectedProduct);
 
                 System.out.println("Purchase successful. Total cost: " + totalCost);
-            }else {
+            } else {
                 System.out.println("Purchase cancelled.");
             }
 
@@ -269,7 +283,6 @@ public class CustomerService implements Edit<Customer> {
             System.out.println("Purchase cancelled.");
         }
     }
-
 
     public void removeProductFromCartByCustomer(Customer customer, Integer productId) {
 
@@ -352,8 +365,7 @@ public class CustomerService implements Edit<Customer> {
 
 
     public void buyAllProductsToCart(Customer customer) {
-
-        double totalCost = 0.0;
+        BigDecimal totalCost = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
         Map<Product, Integer> validProducts = new HashMap<>();
         List<String> errorMessages = new ArrayList<>();
 
@@ -370,7 +382,10 @@ public class CustomerService implements Edit<Customer> {
                 errorMessages.add("Not enough stock for product: " + product.getName());
             } else {
                 validProducts.put(product, quantity);
-                totalCost += product.getPrice() * quantity;
+                BigDecimal productCost = BigDecimal.valueOf(product.getPrice())
+                        .multiply(BigDecimal.valueOf(quantity))
+                        .setScale(2, RoundingMode.HALF_UP);
+                totalCost = totalCost.add(productCost);
             }
         }
 
@@ -400,25 +415,30 @@ public class CustomerService implements Edit<Customer> {
             int paymentChoice = Integer.parseInt(scanner.nextLine());
 
             if (paymentChoice == 1) {
-                if (customer.getBalance() >= totalCost) {
+                // E-Wallet payment
+                if (customer.getBalance().compareTo(totalCost) >= 0) {
                     paymentStrategy = new EWalletPayment();
                     customer.pay(totalCost, paymentStrategy);
-                    customer.setBalance(customer.getBalance() - totalCost); // Deduct balance
+                    customer.setBalance(customer.getBalance().subtract(totalCost)); // Deduct balance
                     paymentSuccess = true;
                     validPaymentMethod = true;
                     System.out.println("Payment successful via E-Wallet. Remaining balance: " + customer.getBalance());
                 } else {
                     System.out.println("Insufficient balance to complete the purchase.");
-                    validPaymentMethod = true;
+                    validPaymentMethod = true; // Exit the loop since they cannot pay with E-Wallet
                 }
             } else if (paymentChoice == 2) {
+                // Cash on Delivery payment
                 paymentStrategy = new CashOnDeliveryPayment();
                 customer.pay(totalCost, paymentStrategy);
                 paymentSuccess = true;
                 validPaymentMethod = true;
+                System.out.println("Payment will be processed upon delivery (Cash on Delivery).");
+            } else if (paymentChoice == 3) {
+                System.out.println("Purchase cancelled.");
+                return;
             } else {
                 System.out.println("Invalid payment method. Please choose again.");
-                return;
             }
         }
 
@@ -441,33 +461,24 @@ public class CustomerService implements Edit<Customer> {
         }
     }
 
-
     public void depositByCustomer(Customer customer) {
+        System.out.print("Enter the amount you want to deposit: ");
         DecimalFormat df = new DecimalFormat("#,##0.00");
-        while (true) {
-            try {
-                System.out.print("Enter the amount you want to deposit: ");
-                String input = scanner.nextLine();
-                double amount = Double.parseDouble(input);
 
-                if (amount > 0) {
-                    customer.deposit(amount);
-                    System.out.println("You have deposited " + df.format(amount) + " into your account. Current balance: " + df.format(customer.getBalance()));
-                    break;
-                } else {
-                    System.out.println("Invalid amount. Please enter a positive number.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a numeric value.");
-            }
-        }
+        BigDecimal amount = Validator.inputPositiveBigDecimal(scanner);
+
+        customer.deposit(amount);
+        System.out.println("You have deposited " + df.format(amount) + " into your account. Current balance: " + df.format(customer.getBalance()));
     }
 
     public void withdrawByCustomer(Customer customer) {
         System.out.print("Enter the amount you want to withdraw: ");
-        double amount = scanner.nextDouble();
+        BigDecimal amount = Validator.inputPositiveBigDecimal(scanner);
+
+        DecimalFormat df = new DecimalFormat("#,###.00");
+
         if (customer.withdraw(amount)) {
-            System.out.println("You have withdrawn " + amount + " from your account. Remaining balance: " + customer.getBalance());
+            System.out.println("You have withdrawn " + df.format(amount) + " from your account. Remaining balance: " + df.format(customer.getBalance()));
         } else {
             System.out.println("Insufficient balance or invalid amount.");
         }
@@ -514,8 +525,9 @@ public class CustomerService implements Edit<Customer> {
 
         // Case 1: Refund if the payment method is E-Wallet
         if (selectedOrder.getPaymentMethod() instanceof EWalletPayment) {
-            // Refund the amount to the customer's balance
-            customer.setBalance(customer.getBalance() + selectedOrder.getTotal());
+            // Refund the amount to the customer's balance using BigDecimal's add method
+            BigDecimal refundAmount = selectedOrder.getTotal();
+            customer.setBalance(customer.getBalance().add(refundAmount));
 
             // Restore the product quantities to the shop's inventory
             for (Map.Entry<Product, Integer> entry : selectedOrder.getProducts().entrySet()) {
@@ -524,14 +536,14 @@ public class CustomerService implements Edit<Customer> {
                 product.setQuantity(product.getQuantity() + quantity);
             }
 
-            System.out.println("Order canceled successfully. Refunded amount: " + selectedOrder.getTotal());
+            System.out.println("Order canceled successfully. Refunded amount: " + refundAmount);
         }
         // Case 2: No refund for Cash on Delivery (COD)
         else if (selectedOrder.getPaymentMethod() instanceof CashOnDeliveryPayment) {
             System.out.println("Order canceled successfully. No refund required as the order was paid via Cash on Delivery.");
         }
 
-        // Update the order status to Canceled for both cases
+        // Update the order status to Cancel for both cases
         selectedOrder.setStatus(statusOder.Canceled);
     }
 
@@ -590,7 +602,7 @@ public class CustomerService implements Edit<Customer> {
         }
         while (true){
             try {
-                System.out.println("1. Canncel Oder"+
+                System.out.println("1. Cancel Oder"+
                         "\n2. Back");
                 int choice = Integer.parseInt(scanner.nextLine());
 

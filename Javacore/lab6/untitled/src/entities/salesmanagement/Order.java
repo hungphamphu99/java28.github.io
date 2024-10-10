@@ -3,6 +3,8 @@ package entities.salesmanagement;
 import data.ShopData;
 import utils.Enum.statusOder;
 import service.salesmanagement.PaymentStrategy;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,24 +14,24 @@ public class Order {
     private static int nextId = 0;
     private LocalDateTime orderTime;
     private statusOder status;
-    private double total;
+    private BigDecimal total; // Updated to BigDecimal for accuracy
     private Map<Product, Integer> products; // Product, Quantity
     private Customer customer;
-    private PaymentStrategy paymentMethod; // New field for payment method
+    private PaymentStrategy paymentMethod;
 
     // Constructor updated to include payment method
-    public Order(Customer customer, Map<Product, Integer> products, statusOder status, double total, PaymentStrategy paymentMethod) {
+    public Order(Customer customer, Map<Product, Integer> products, statusOder status, BigDecimal total, PaymentStrategy paymentMethod) {
         this.id = ++nextId;
         this.customer = customer;
         this.orderTime = LocalDateTime.now();
         this.status = status;
         this.products = new HashMap<>(products);
-        this.total = total;
-        this.paymentMethod = paymentMethod; // Initialize payment method
+        this.total = total.setScale(2, RoundingMode.HALF_UP); // Ensure total is rounded to two decimal places
+        this.paymentMethod = paymentMethod;
         ShopData.orders.add(this);
     }
 
-    public double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
@@ -73,8 +75,8 @@ public class Order {
         }
         return "Order [ID: " + id + ", Order Time: " + orderTime + ", Status: " + status +
                 ", Total Quantity: " + totalQuantity + ", Total Cost: " + total + "]\n" +
-                "Products: " + productDetails + "\n"+
-                "Customer: " + customer.getName() + ", email: " + customer.getAddress() + ", Phone: " + customer.getPhone() + "\n" +
-                "Payment Method: " + paymentMethod.getClass().getSimpleName() + "\n";  // Include payment method
+                "Products: " + productDetails + "\n" +
+                "Customer: " + customer.getName() + ", Address: " + customer.getAddress() + ", Phone: " + customer.getPhone() + "\n" +
+                "Payment Method: " + paymentMethod.getClass().getSimpleName() + "\n";
     }
 }

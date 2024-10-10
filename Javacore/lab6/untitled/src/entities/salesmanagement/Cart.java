@@ -1,5 +1,7 @@
 package entities.salesmanagement;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +11,6 @@ public class Cart {
     public Cart() {
         this.products = new HashMap<>();
     }
-
 
     public boolean addProduct(Product product, int quantity) {
         if (product.inStock() && product.getQuantity() >= quantity) {
@@ -37,12 +38,15 @@ public class Cart {
         System.out.println("Cart cleared.");
     }
 
-    public double getTotalCost() {
-        double total = 0.0;
+    // Updated to use BigDecimal
+    public BigDecimal getTotalCost() {
+        BigDecimal total = BigDecimal.ZERO;
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-            total += entry.getKey().getPrice() * entry.getValue();
+            BigDecimal productPrice = BigDecimal.valueOf(entry.getKey().getPrice());
+            BigDecimal quantity = BigDecimal.valueOf(entry.getValue());
+            total = total.add(productPrice.multiply(quantity));
         }
-        return total;
+        return total.setScale(2, RoundingMode.HALF_UP);
     }
 
     public Map<Product, Integer> getProducts() {
@@ -51,8 +55,9 @@ public class Cart {
 
     public void showCart() {
         if (products.isEmpty()) {
-            System.out.println();
+            System.out.println("Your cart is empty.");
         } else {
+            System.out.println("Your cart contains:");
             for (Map.Entry<Product, Integer> entry : products.entrySet()) {
                 System.out.println("Product: " + entry.getKey().getName() + ", Quantity: " + entry.getValue());
             }

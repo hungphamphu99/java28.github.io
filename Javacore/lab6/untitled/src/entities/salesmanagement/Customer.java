@@ -5,23 +5,25 @@ import entities.login.User;
 import service.salesmanagement.PaymentContext;
 import service.salesmanagement.PaymentStrategy;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Customer extends User {
-    private double balance;
+    private BigDecimal balance;
     private List<Order> orders;
     private Cart cart;
 
     public Customer(String username, String password, String role, String name, String email, String address, String phone) {
         super(username, password, role, name, email, address, phone);
-        this.balance = 0.0;
+        this.balance = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
         this.orders = new ArrayList<>();
         this.cart = new Cart();
         ShopData.customers.add(this);
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
@@ -32,22 +34,28 @@ public class Customer extends User {
         return this.cart;
     }
 
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public void deposit(double amount) {
-        if (amount > 0) {
-            this.balance += amount;
+    public void deposit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) > 0) {
+            this.balance = this.balance.add(amount.setScale(2, RoundingMode.HALF_UP));
+            System.out.println("You have deposited " + amount + " into your account. Current balance: " + this.balance);
+        } else {
+            System.out.println("Invalid amount. Please enter a positive number.");
         }
     }
 
-    public boolean withdraw(double amount) {
-        if (amount > 0 && this.balance >= amount) {
-            this.balance -= amount;
+    public boolean withdraw(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) > 0 && this.balance.compareTo(amount) >= 0) {
+            this.balance = this.balance.subtract(amount.setScale(2, RoundingMode.HALF_UP));
+            System.out.println("You have withdrawn " + amount + " from your account. Remaining balance: " + this.balance);
             return true;
+        } else {
+            System.out.println("Insufficient balance or invalid amount.");
+            return false;
         }
-        return false;
     }
 
     public List<Order> getOrders() {
@@ -57,9 +65,10 @@ public class Customer extends User {
     public void addOrder(Order order) {
         this.orders.add(order);
     }
-    public boolean payWithEWallet(double amount) {
-        if (this.balance >= amount) {
-            this.balance -= amount;
+
+    public boolean payWithEWallet(BigDecimal amount) {
+        if (this.balance.compareTo(amount) >= 0) {
+            this.balance = this.balance.subtract(amount.setScale(2, RoundingMode.HALF_UP));
             System.out.println("Payment successful. Remaining balance: " + this.balance);
             return true;
         } else {
@@ -74,7 +83,7 @@ public class Customer extends User {
     }
 
     // Method to handle payment with a specific strategy
-    public void pay(double amount, PaymentStrategy paymentStrategy) {
+    public void pay(BigDecimal amount, PaymentStrategy paymentStrategy) {
         PaymentContext paymentContext = new PaymentContext(paymentStrategy);
         paymentContext.executePayment(amount);
     }

@@ -6,6 +6,7 @@ import entities.salesmanagement.Product;
 import entities.salesmanagement.Staff;
 import utils.Enum;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +31,14 @@ public class ShopData {
         Product product1 = new Product("iphone", Enum.statusProduct.In_Stock, 10, 10.0, "Iphone");
         Product product2 = new Product("macbook", Enum.statusProduct.In_Stock, 20, 10.0, "Macbook");
         Product product3 = new Product("android", Enum.statusProduct.In_Stock, 30, 10.0, "Android");
-        Product product4 = new Product("androidv2", Enum.statusProduct.Out_Stock, 30, 10.0, "Android");
+        Product product4 = new Product("android_v2", Enum.statusProduct.Out_Stock, 30, 10.0, "Android");
 
 
 
         Customer customer1 = new Customer("customer1", "customer1", "customer", "customer1", "customer1", "customer1", "customer1");
         Customer customer2 = new Customer("customer2", "customer2", "customer", "customer2", "customer1", "customer1", "customer1");
-        customer1.setBalance(10000.1);
-        customer2.setBalance(10000.1);
+        customer1.setBalance(new BigDecimal("10000.10"));
+        customer2.setBalance(new BigDecimal("10000.10"));
 
 
 

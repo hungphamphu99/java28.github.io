@@ -1,5 +1,7 @@
 package utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Scanner;
 
 public class Validator {
@@ -31,5 +33,21 @@ public class Validator {
         }
     }
 
+
+    public static BigDecimal inputPositiveBigDecimal(Scanner scanner) {
+        while (true) {
+            try {
+                String input = scanner.nextLine();
+                BigDecimal amount = new BigDecimal(input).setScale(2, RoundingMode.HALF_UP);
+                if (amount.compareTo(BigDecimal.ZERO) > 0) {
+                    return amount;
+                } else {
+                    System.out.println("The amount must be greater than zero. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+            }
+        }
+    }
 
 }

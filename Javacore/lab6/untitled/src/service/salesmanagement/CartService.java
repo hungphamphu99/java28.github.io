@@ -4,6 +4,8 @@ import entities.salesmanagement.*;
 import utils.Enum;
 import utils.Enum.statusOder;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -37,7 +39,8 @@ public class CartService {
             return null;
         }
 
-        double totalCost = cart.getTotalCost();
+        // Get the total cost as BigDecimal for better precision
+        BigDecimal totalCost = cart.getTotalCost().setScale(2, RoundingMode.HALF_UP);
 
         // Validate product availability before proceeding
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
@@ -62,30 +65,34 @@ public class CartService {
         boolean paymentSuccess = false;
 
         while (!validPaymentMethod) {
-            System.out.println("Choose payment method: \n1. E-Wallet \n2. Cash on Delivery");
-            int paymentChoice = Integer.parseInt(scanner.nextLine());
+            try {
+                System.out.println("Choose payment method: \n1. E-Wallet \n2. Cash on Delivery");
+                int paymentChoice = Integer.parseInt(scanner.nextLine().trim());
 
-            if (paymentChoice == 1) {
-                // E-Wallet payment
-                if (customer.getBalance() >= totalCost) {
-                    paymentStrategy = new EWalletPayment();
+                if (paymentChoice == 1) {
+                    // E-Wallet payment
+                    if (customer.getBalance().compareTo(totalCost) >= 0) {
+                        paymentStrategy = new EWalletPayment();
+                        customer.pay(totalCost, paymentStrategy); // Pass BigDecimal directly
+                        paymentSuccess = true;
+                        validPaymentMethod = true;
+                        System.out.println("Payment successful via E-Wallet. Remaining balance: " + customer.getBalance());
+                    } else {
+                        System.out.println("Insufficient balance to complete the purchase via E-Wallet.");
+                        validPaymentMethod = true; // Exit loop since they can't pay via E-Wallet
+                    }
+                } else if (paymentChoice == 2) {
+                    // Cash on Delivery payment
+                    paymentStrategy = new CashOnDeliveryPayment();
                     customer.pay(totalCost, paymentStrategy);
-                    customer.setBalance(customer.getBalance() - totalCost); // Deduct balance from e-wallet
                     paymentSuccess = true;
                     validPaymentMethod = true;
-                    System.out.println("Payment successful via E-Wallet. Remaining balance: " + customer.getBalance());
+                    System.out.println("Payment will be completed upon delivery.");
                 } else {
-                    System.out.println("Insufficient balance to complete the purchase via E-Wallet.");
-                    validPaymentMethod = true; // Exit loop since they can't pay via E-Wallet
+                    System.out.println("Invalid payment method. Please choose again.");
                 }
-            } else if (paymentChoice == 2) {
-                // Cash on Delivery payment
-                paymentStrategy = new CashOnDeliveryPayment();
-                customer.pay(totalCost, paymentStrategy);
-                paymentSuccess = true;
-                validPaymentMethod = true;
-            } else {
-                System.out.println("Invalid payment method. Please choose again.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number for payment method.");
             }
         }
 
