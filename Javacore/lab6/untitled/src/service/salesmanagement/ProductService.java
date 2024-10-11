@@ -63,7 +63,6 @@ public class ProductService implements Edit<Product> {
             // Refund the amount to the customer's balance
             BigDecimal refundAmount = order.getTotal();
             customer.setBalance(customer.getBalance().add(refundAmount));
-            System.out.println("Refund of " + refundAmount + " issued to customer " + customer.getName() + "'s E-Wallet.");
         }
 
         // Restore product quantities to the inventory

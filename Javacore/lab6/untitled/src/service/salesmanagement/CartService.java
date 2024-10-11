@@ -19,7 +19,7 @@ public class CartService {
         Cart cart = customer.getCart();
         boolean success = cart.addProduct(product, quantity);
         if (success) {
-            System.out.println(quantity + " " + product.getName() + " added to the cart.");
+            System.out.println("\n");
         }
         return success;
     }

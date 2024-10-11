@@ -35,7 +35,7 @@ public class Cart {
 
     public void clearCart() {
         products.clear();
-        
+
     }
 
     // Updated to use BigDecimal
