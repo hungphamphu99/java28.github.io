@@ -15,7 +15,9 @@ public class CustomerMenu {
     UserService userService = new UserService();
     public void display(User user) {
         Customer customer = (Customer) user;
+
        while (true) {
+
            try {
                System.out.println("----- Customer Menu -----");
                System.out.println("1. Display  Customer Information");
@@ -28,7 +30,7 @@ public class CustomerMenu {
                switch (option) {
                    case 1:
                        System.out.println("1. Display  Customer Information");
-                       customerService.displayCustomerInfo(customer);
+                       customerService.editCustomerInfo(customer);
                        break;
                    case 2:
                        System.out.println("2. Display Orders Of Customer Information");

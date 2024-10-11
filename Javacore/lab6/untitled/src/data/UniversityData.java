@@ -73,11 +73,13 @@ public class UniversityData {
 
 
         student1.getSubjectScores().put(subject1,null);
+        student1.getSubjectScores().put(subject2,null);
+        student1.getSubjectScores().put(subject3,null);
 
         student.getSubjectScores().put(subject1, new Score(7.0,7.0, 5.6));
         student.getSubjectScores().put(subject2, new Score(7.0,8.0, 7.6));
         student.getSubjectScores().put(subject3, new Score(7.0,8.0, 7.6));
-        student.getSubjectScores().put(subject4, new Score(7.0,8.0, 7.6));
+        student.getSubjectScores().put(subject4, null);
 
         student.calculateAvgScore();
 

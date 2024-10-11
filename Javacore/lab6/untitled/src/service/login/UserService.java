@@ -33,7 +33,7 @@ public class UserService {
 
         String password = promptInput("Enter password: ");
         if (!isValidPassword(password)) {
-            System.out.println("Invalid password. Must be 7-15 characters long, contain at least 1 uppercase letter, and 1 special character (. , - _ ;).");
+            System.out.println("Invalid password. Must be 7-15 characters long, contain at least 1 uppercase letter, and 1 special character (! @ # $).");
             return false;
         }
 
@@ -90,18 +90,20 @@ public class UserService {
         }
     }
 
-    public void changePassword(String newPassword) {
-        if (loggedInUser == null) {
+    public void changePassword(User user, String newPassword) {
+        if (user == null) {
             System.out.println("No user is logged in.");
             return;
         }
         if (!isValidPassword(newPassword)) {
-            System.out.println("Invalid password. Must be 7-15 characters long, contain at least 1 uppercase letter, and 1 special character (. , - _ ;).");
+            System.out.println("Invalid password. Must be 7-15 characters long, contain at least 1 uppercase letter, and 1 special character (! @ # $).");
         } else {
-            loggedInUser.setPassword(newPassword);
+            user.setPassword(newPassword);
             System.out.println("Password successfully changed.");
+            logout();
         }
     }
+
 
     public boolean forgotPassword(String username, String email) {
         for (User user : UsersData.getUsers()) {
@@ -112,7 +114,7 @@ public class UserService {
                     System.out.println("Password reset successful. You can log in again.");
                     return true;
                 } else {
-                    System.out.println("Invalid password. Must be 7-15 characters long, contain at least 1 uppercase letter, and 1 special character (. , - _ ;).");
+                    System.out.println("Invalid password. Must be 7-15 characters long, contain at least 1 uppercase letter, and 1 special character (! @ # $).");
                     return false;
                 }
             }
@@ -127,6 +129,7 @@ public class UserService {
             loggedInUser = null;
         } else {
             System.out.println("No user is logged in.");
+
         }
     }
 

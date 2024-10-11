@@ -1,11 +1,14 @@
 package service.salesmanagement;
 
+import entities.login.User;
 import entities.salesmanagement.*;
 import data.ShopData;
 import service.Edit;
+import service.login.UserService;
 import utils.Enum;
 import utils.Enum.statusOder;
 import utils.Validator;
+import view.login.LoginMenu;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,6 +19,8 @@ public class CustomerService implements Edit<Customer> {
     Scanner scanner = new Scanner(System.in);
     ProductService productService = new ProductService();
     CartService cartService = new CartService();
+    UserService userService = new UserService();
+    LoginMenu loginMenu = new LoginMenu();
 
 
 
@@ -338,7 +343,7 @@ public class CustomerService implements Edit<Customer> {
         }
 
         System.out.println("Enter the new quantity:");
-        int newQuantity = Validator.inputInteger(scanner);
+        int newQuantity = Validator.inputIntegerPositive(scanner);
 
         if (newQuantity <= 0) {
             System.out.println("Invalid quantity. It should be greater than 0.");
@@ -633,6 +638,30 @@ public class CustomerService implements Edit<Customer> {
                 ", Orders: " + customer.getOrders().size());
     }
 
+    public void editCustomerInfo(Customer customer) {
+        displayCustomerInfo(customer);
+        System.out.println("1. Update Information");
+        System.out.println("2. Change PWD");
+        System.out.println("3. Back");
+        int choice = Validator.inputIntegerPositive(scanner);
+        switch (choice) {
+            case 1:
+                update();
+                break;
+            case 2:
+                System.out.println("Enter your new password");
+                String newPassword = scanner.nextLine();
+                userService.changePassword(customer,newPassword);
+                if (!userService.isLoggedIn()) {
+                    loginMenu.mainMenu();
+                }
+                break;
+            case 0:
+                return;
+            default:
+                System.out.println("Invalid input. Please enter 1, 2, or 0.");
+        }
+    }
     @Override
     public void add() {
 

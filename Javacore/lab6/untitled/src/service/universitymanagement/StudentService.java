@@ -7,6 +7,7 @@ import entities.universitymanagement.Subject;
 import service.Edit;
 import utils.Validator;
 
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -197,6 +198,49 @@ public class StudentService implements Edit<Student> {
         System.out.println("Scores updated successfully for subject " + subject.getName() + ".");
         System.out.println("New scores - Mid-term: " + newMidScore + ", Final: " + newFinalScore + ", Overall: " + newOverallScore);
         System.out.println("New average score for student: " + avgScore);
+    }
+
+
+    public void displayStudentScores(Student student) {
+        if (student == null) {
+            System.out.println("Student not found.");
+            return;
+        }
+
+        // Check if the student has any subjects
+        Map<Subject, Score> subjectScores = student.getSubjectScores();
+        if (subjectScores.isEmpty()) {
+            System.out.println("No subjects available for student " + student.getName() + ".");
+            return;
+        }
+
+        // Print the score table header
+        System.out.println("Score table for student: " + student.getName());
+        System.out.printf("%-20s %-10s %-10s %-10s%n", "Subject", "Mid-term", "Final", "Overall");
+        System.out.println("-----------------------------------------------------------");
+
+        // Iterate through the subject scores and print each one
+        for (Map.Entry<Subject, Score> entry : subjectScores.entrySet()) {
+            Subject subject = entry.getKey();
+            Score score = entry.getValue();
+
+            // Check if the score is null and display accordingly
+            if (score == null) {
+                System.out.printf("%-20s %-10s %-10s %-10s%n",
+                        subject.getName(),
+                        "null",
+                        "null",
+                        "null");
+            } else {
+                System.out.printf("%-20s %-10.2f %-10.2f %-10.2f%n",
+                        subject.getName(),
+                        score.getMidScore(),
+                        score.getFinalScore(),
+                        score.getOverallScore());
+            }
+        }
+
+        System.out.println("-----------------------------------------------------------");
     }
 
 
