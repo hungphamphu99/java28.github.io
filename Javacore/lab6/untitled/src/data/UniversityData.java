@@ -70,11 +70,15 @@ public class UniversityData {
         Class class3 = new Class( teacher4, subject2);
         Class class4 = new Class( teacher2, subject1);
 
+        Class class5 = new Class( teacher3, subject6);
+
 
 
         student1.getSubjectScores().put(subject1,null);
         student1.getSubjectScores().put(subject2,null);
         student1.getSubjectScores().put(subject3,null);
+        student1.getSubjectScores().put(subject4,null);
+        student1.getSubjectScores().put(subject5,null);
 
         student.getSubjectScores().put(subject1, new Score(7.0,7.0, 5.6));
         student.getSubjectScores().put(subject2, new Score(7.0,8.0, 7.6));

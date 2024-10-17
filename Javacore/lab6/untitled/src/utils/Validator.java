@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Validator {
 
+
     public static int inputInteger(Scanner scanner){
         while(true){
             try {
@@ -64,5 +65,54 @@ public class Validator {
             }
         }
     }
+
+    public static int inputPositiveInteger_v2(Scanner scanner ,String message, int currentValue) {
+        System.out.print(message + " (Press Enter to keep the current value: " + currentValue + "): ");
+        String input = scanner.nextLine();
+
+        if (input.isEmpty()) {
+            System.out.println("Keeping the current value: " + currentValue);
+            return currentValue;
+        }
+
+        try {
+            int number = Integer.parseInt(input);
+            if (number > 0) {
+                System.out.println("Value updated successfully: " + number);
+                return number; // Trả về giá trị mới nếu hợp lệ.
+            } else {
+                System.out.println("The number must be greater than 0. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid positive number.");
+        }
+
+        return inputPositiveInteger_v2(scanner,message, currentValue);
+    }
+
+    public static double inputPositiveDouble_v2(Scanner scanner, String message, double currentValue) {
+        System.out.print(message + " (Press Enter to keep the current value: " + currentValue + "): ");
+        String input = scanner.nextLine();
+
+        if (input.isEmpty()) {
+            System.out.println("Keeping the current value: " + currentValue);
+            return currentValue;
+        }
+
+        try {
+            double number = Double.parseDouble(input);
+            if (number > 0) {
+                System.out.println("Value updated successfully: " + number);
+                return number;
+            } else {
+                System.out.println("The number must be greater than 0. Please try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid positive number.");
+        }
+
+        return inputPositiveDouble_v2(scanner, message, currentValue);
+    }
+
 
 }

@@ -84,12 +84,18 @@ public class StudentService implements Edit<Student> {
 
         System.out.print("Enter subject ID: ");
         int subjectId = Integer.parseInt(scanner.nextLine());
-
-        // Check if the student is enrolled in the subject
         Subject subjectToRemove = subjectService.findById(subjectId);
 
-        if (subjectToRemove == null || !student.getSubjectScores().containsKey(subjectToRemove)) {  // Fix here
+        // Check if the student is enrolled in the subject
+        if (subjectToRemove == null || !student.getSubjectScores().containsKey(subjectToRemove)) {
             System.out.println("Student is not enrolled in the subject with ID " + subjectId);
+            return;
+        }
+
+        // Check if there is a recorded score for the subject
+        Score score = student.getSubjectScores().get(subjectToRemove);
+        if (score != null && score.getOverallScore() > 0) {
+            System.out.println("Cannot remove subject " + subjectToRemove.getName() + " because the student has a score recorded.");
             return;
         }
 
@@ -97,6 +103,7 @@ public class StudentService implements Edit<Student> {
         student.getSubjectScores().remove(subjectToRemove);
         System.out.println("Subject " + subjectToRemove.getName() + " removed from student " + student.getName());
     }
+
 
     public void inputScore() {
         System.out.print("Enter student ID: ");
@@ -107,31 +114,44 @@ public class StudentService implements Edit<Student> {
             return;
         }
 
-        double totalOverallScore = 0;
         int subjectCount = student.getSubjectScores().size();
+        if (subjectCount == 0) {
+            System.out.println("Student " + student.getName() + " (ID: " + student.getId() + ") has not enrolled in any subjects.");
+            return;
+        }
 
+        double totalOverallScore = 0;
+        int subjectsWithScores = 0; // Count the number of subjects to calculate the average score.
+
+        // Iterate through each subject and prompt for scores, allowing updates even if scores exist.
         for (Subject subject : student.getSubjectScores().keySet()) {
             System.out.println("Entering scores for subject: " + subject.getName());
 
-            System.out.print("Enter mid-term score : ");
-            double midScore = Validator.inputPositiveInteger(scanner);
-
-            System.out.print("Enter final-term score : ");
-            double finalScore = Validator.inputPositiveInteger(scanner);
+            // Use Validator.inputPositiveDouble_v2 to input scores.
+            double midScore = Validator.inputPositiveDouble_v2(scanner, "Enter mid-term score", 0);
+            double finalScore = Validator.inputPositiveDouble_v2(scanner, "Enter final-term score", 0);
 
             double overallScore = midScore * 0.4 + finalScore * 0.6;
             System.out.println("Overall score for subject " + subject.getName() + ": " + overallScore);
 
+            // Update or add the score in the student's subject scores map.
             student.getSubjectScores().put(subject, new Score(midScore, finalScore, overallScore));
 
+            // Add to the total score to calculate the average later.
             totalOverallScore += overallScore;
+            subjectsWithScores++;
         }
 
-        double avgScore = totalOverallScore / subjectCount;
-        student.setAvgScore(avgScore);
-
-        System.out.println("Average score for student " + student.getName() + " (ID: " + student.getId() + "): " + avgScore);
+        // Calculate the average score only if there is at least one subject.
+        if (subjectsWithScores > 0) {
+            double avgScore = totalOverallScore / subjectsWithScores;
+            student.setAvgScore(avgScore);
+            System.out.println("Average score for student " + student.getName() + " (ID: " + student.getId() + "): " + avgScore);
+        } else {
+            System.out.println("No scores were updated.");
+        }
     }
+
 
     public void editScore() {
         System.out.print("Enter student ID: ");

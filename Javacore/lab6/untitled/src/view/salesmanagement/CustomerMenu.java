@@ -24,7 +24,7 @@ public class CustomerMenu {
                System.out.println("2. Display Orders Of Customer Information");
                System.out.println("3. Display Products ");
                System.out.println("4. Cart");
-               System.out.println("5. Deposit and Withdraw Balance");
+               System.out.println("5. EWallet");
                System.out.println("0. Logout");
                int option = Integer.parseInt(scanner.nextLine());
                switch (option) {
@@ -46,7 +46,7 @@ public class CustomerMenu {
                        customerService.openCartToBuyByCustomer(customer);
                        break;
                    case 5:
-                       System.out.println("5. Deposit and Withdraw Balance");
+                       System.out.println("5. EWallet");
                        depositAndWithdrawMenu(customer);
                        break;
                    case 0:

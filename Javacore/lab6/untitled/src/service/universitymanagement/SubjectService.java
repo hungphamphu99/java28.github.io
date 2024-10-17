@@ -5,6 +5,7 @@ import entities.universitymanagement.*;
 import entities.universitymanagement.Class;
 import service.Edit;
 import utils.Enum;
+import utils.Validator;
 
 import java.util.Iterator;
 import java.util.List;
@@ -199,17 +200,9 @@ public class SubjectService implements Edit<Subject> {
                     System.out.println("Name updated successfully.");
                 }
 
-                System.out.print("Enter number of ECTs: ");
-                String ectsInput = scanner.nextLine();
-                if (!ectsInput.isEmpty()) {
-                    try {
-                        int ECTs = Integer.parseInt(ectsInput);
-                        subject.setECTs(ECTs);
-                        System.out.println("ECTs updated successfully.");
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid number for ECTs. Update cancelled.");
-                    }
-                }
+                int currentECTs = subject.getECTs();
+                int newECTs = Validator.inputPositiveInteger_v2(scanner, "Enter number of ECTs", currentECTs);
+                subject.setECTs(newECTs);
             } else {
                 System.out.println("Subject not found.");
             }
@@ -217,6 +210,7 @@ public class SubjectService implements Edit<Subject> {
             System.out.println("Invalid subject ID. Please enter a valid number.");
         }
     }
+
 
     @Override
     public Subject findById(int id) {

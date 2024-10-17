@@ -6,6 +6,7 @@ import entities.salesmanagement.Product;
 import data.ShopData;
 import service.Edit;
 import utils.Enum;
+import utils.Validator;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -142,36 +143,16 @@ public class ProductService implements Edit<Product> {
                 product.setName(newName);
             }
 
-            System.out.println("Enter new product price (or press Enter to keep it the same):");
-            String priceInput = scanner.nextLine();
-            if (!priceInput.trim().isEmpty()) {
-                try {
-                    double newPrice = Double.parseDouble(priceInput);
-                    if (newPrice > 0) {
-                        product.setPrice(newPrice);
-                    } else {
-                        System.out.println("Price must be positive.");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid price. Keeping the old price.");
-                }
-            }
+            double currentPrice = product.getPrice();
+            double newPrice = Validator.inputPositiveDouble_v2(scanner, "Enter new product price", currentPrice);
+            product.setPrice(newPrice);
 
-            System.out.println("Enter new product quantity (or press Enter to keep it the same):");
-            String quantityInput = scanner.nextLine();
-            if (!quantityInput.trim().isEmpty()) {
-                try {
-                    int newQuantity = Integer.parseInt(quantityInput);
-                    if (newQuantity >= 0) {
-                        product.setQuantity(newQuantity);
-                        product.setStatus(newQuantity > 0 ? Enum.statusProduct.In_Stock : Enum.statusProduct.Out_Stock);
-                    } else {
-                        System.out.println("Quantity must be non-negative.");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid quantity. Keeping the old quantity.");
-                }
-            }
+            int currentQuantity = product.getQuantity();
+            int newQuantity = Validator.inputPositiveInteger_v2(scanner, "Enter new product quantity", currentQuantity);
+            product.setQuantity(newQuantity);
+
+            product.setStatus(newQuantity > 0 ? Enum.statusProduct.In_Stock : Enum.statusProduct.Out_Stock);
+
 
             System.out.println("Enter new product description (or press Enter to keep it the same):");
             String newDescription = scanner.nextLine();
@@ -185,6 +166,7 @@ public class ProductService implements Edit<Product> {
             System.out.println("Product with ID " + id + " not found.");
         }
     }
+
 
     @Override
     public Product findById(int id) {
