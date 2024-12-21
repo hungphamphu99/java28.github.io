@@ -1,0 +1,11 @@
+CREATE DATABASE IF NOT EXISTS management;
+USE management;
+
+CREATE TABLE Person (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fullname VARCHAR(100) NOT NULL,
+    job VARCHAR(50) NOT NULL,
+    birthday DATE NOT NULL,
+    salary DECIMAL(10, 2) NOT NULL,
+    address VARCHAR(255) NOT NULL
+);
