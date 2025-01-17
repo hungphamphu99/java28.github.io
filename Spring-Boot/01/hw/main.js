@@ -37,7 +37,7 @@ console.log(translate('DE'));
 
 function subString(str) {
     if (str.length > 15) {
-        return str.slice(0, 10) + '...';
+        return str.slice(0, 10) ;
     }
     return str;
 }
