@@ -23,8 +23,8 @@ console.log(reverseString('hello'));
 // Ví dụ: translate(‘VN’) => “Xin chào”
 // translate(‘EN’) => “Hello”
 
-function translate(countryCode) {
-    switch (countryCode) {
+function translate(zipCode) {
+    switch (zipCode) {
         case 'VN':
             return "Xin chào";
         case 'EN':
