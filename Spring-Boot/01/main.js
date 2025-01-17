@@ -15,5 +15,5 @@ console.log(`Xin chào các bạn, mình tên là ${name}. Năm nay ${2025 - yea
 
 function sum(a, b){
     return a+b;
-    
+
 }
