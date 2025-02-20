@@ -1,6 +1,9 @@
 const todoList = document.getElementById("todo-list");
-let todos = [];
-
+let todos = [
+    { title: "Di choi", completed: false },
+    { title: "Hoc bai", completed: true },
+    { title: "Da bong", completed: false }
+];
 function renderTodos() {
     todoList.innerHTML = "";
     if (todos.length === 0) {
