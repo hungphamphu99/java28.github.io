@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="form">
+            <p>https://dog.ceo/api/breed/</p>
+            <select id="breed-list">
+                <!-- Render danh sách breed vào đây -->
+            </select>
+            <p>/images/random</p>
+            <button id="btn" title="Fetch">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            
+        </div>
+
+        <div class="result">
+            <img id="image" src="" alt="dog" />
+        </div>
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="./main.js"></script>
+    </body>
+</html>
