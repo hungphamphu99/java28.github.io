@@ -121,5 +121,4 @@ async function deleteTodo(id) {
     }
 }
 
-// Khởi chạy ứng dụng
 getAllTodos();
