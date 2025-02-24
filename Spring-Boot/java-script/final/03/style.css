@@ -1,0 +1,21 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+  }
+  
+  button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  .active {
+    background-color: red;
+    color: white;
+  }
+  
+  ul {
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+  
