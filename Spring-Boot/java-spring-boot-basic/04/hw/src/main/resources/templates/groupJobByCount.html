@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách nghề nghiệp</title>
+</head>
+<body>
+<h2>Danh sách nghề nghiệp và số lượng người</h2>
+<table border="1">
+    <tr>
+        <th>Nghề nghiệp</th>
+        <th>Số người</th>
+    </tr>
+    <tr th:each="entry : ${jobCounts}">
+        <td th:text="${entry.key}"></td>
+        <td th:text="${entry.value}"></td>
+    </tr>
+</table>
+<a href="/static">Quay lại</a>
+</body>
+</html>

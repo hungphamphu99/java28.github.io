@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách người theo thành phố</title>
+</head>
+<body>
+<h2>Danh sách người theo thành phố</h2>
+
+<p th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></p>
+
+<div th:each="entry : ${peopleByCity}">
+    <h3 th:text="${entry.key}">City Name</h3>
+    <ul>
+        <li th:each="person : ${entry.value}" th:text="${person.name}"></li>
+    </ul>
+</div>
+
+<a href="/static">Quay lại</a>
+</body>
+</html>

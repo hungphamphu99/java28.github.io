@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Người có tên dài nhất</title>
+</head>
+<body>
+<h2>Người có tên dài nhất</h2>
+<p><strong>Họ và tên:</strong> <span th:text="${longestName.name}"></span></p>
+<p><strong>Nghề nghiệp:</strong> <span th:text="${longestName.job}"></span></p>
+<p><strong>Thành phố:</strong> <span th:text="${longestName.city}"></span></p>
+<p><strong>Lương:</strong> <span th:text="${longestName.salary}"></span></p>
+<a href="/static">Quay lại</a>
+</body>
+</html>
