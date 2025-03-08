@@ -1,8 +1,11 @@
 package vn.demo.hw.controller;
 
+import com.github.javafaker.Faker;
+import lombok.Getter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import vn.demo.hw.model.Person;
 
 import java.util.*;
@@ -10,6 +13,16 @@ import java.util.stream.Collectors;
 
 @Controller
 public class WebController {
+    public  WebController(){
+        Faker faker = new Faker();
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            Person person = new Person();
+                i+1,
+                faker.name().fullName()
+        }
+    }
+
     private List<Person> people = new ArrayList<>(List.of(
             new Person(1, "Nguyen Van A", "M", 20, "Developer", "Hanoi", 1000),
             new Person(2, "Tran Van B", "M", 4, "Doctor", "HCM", 3000),
@@ -67,4 +80,16 @@ public class WebController {
         model.addAttribute("longestName", longestNamePerson);
         return "longestName";
     }
+
+    @GetMapping("/person/{id}")
+    public String person(Model model, @PathVariable int id) {
+        Person person = people.get(id);
+        model.addAttribute("person", person);
+        return "person";
+
+    }
+
+
+
+
 }

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Home Page</h1>
+
+<p th:text="${name}"></p>
+<p th:text="${salary}"></p>
+
+<!--<ul>-->
+<!--    <li th:each="person : ${people}">-->
+<!--        <span th:text="${person.name}"></span>-->
+<!--        <span th:text="${person.gender.equals('M') ? 'Nam' : 'Nu'}"></span>-->
+<!--        <span th:if="${person.age >= 18}">Tren 18 tuoi</span>-->
+<!--        <span th:if="${person.age < 18}">Duoi 18 tuoi</span>-->
+<!--    </li>-->
+<!--</ul>-->
+
+<h2>Danh sách User</h2>
+
+<form>
+    <input placeholder="Enter name..." name="keyword"/>
+</form>
+<hr/>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="person : ${pageResponse.getData()}">
+        <td th:text="${person.id}">ID</td>
+        <td th:text="${person.name}">Name</td>
+        <td th:text="${person.gender}">Gender</td>
+        <td th:text="${person.age}">Age</td>
+        <td>
+            <a th:href="'/person/' + ${person.id}">Xem chi tiết</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<hr>
+
+<a th:if="${pageResponse.getCurrentPage() > 1}"
+   th:href="'?page=' + ${pageResponse.getCurrentPage() - 1}">
+    <button>Prev</button>
+</a>
+
+<a th:each="page : ${#numbers.sequence(1, pageResponse.getTotalPages())}"
+   th:href="'?page=' + ${page}"
+   th:classappend="${page == pageResponse.getCurrentPage() ? 'active' : ''}">
+    <button th:text="${page}">1</button>
+</a>
+
+<a th:if="${pageResponse.getCurrentPage() < pageResponse.getTotalPages()}"
+   th:href="'?page=' + ${pageResponse.getCurrentPage() + 1}">
+    <button>Next</button>
+</a>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

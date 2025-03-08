@@ -1,0 +1,33 @@
+<h2 th:if="${person == null}">Person not found!!!!</h2>
+<div th:if="${person != null}">
+    <h2>Chi tiết Person</h2>
+    <p>ID: <span th:text="${person.id}"></span></p>
+    <p>Name: <span th:text="${person.name}"></span></p>
+    <p>Gender: <span th:text="${person.gender.equals('M') ? 'Nam' : 'Nu'}"></span></p>
+    <p th:if="${person.age >= 18}">Trên 18 tuổi</p>
+    <p th:if="${person.age < 18}">Dưới 18 tuổi</p>
+
+    <hr>
+
+    <h3>Người liên quan</h3>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Chi tiết</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="relatedPerson : ${relatedPeople}">
+            <td th:text="${relatedPerson.id}"></td>
+            <td th:text="${relatedPerson.name}"></td>
+            <td th:text="${relatedPerson.gender.equals('M') ? 'Nam' : 'Nu'}"></td>
+            <td th:text="${relatedPerson.age}"></td>
+            <td><a th:href="'/person/' + ${relatedPerson.id}">Xem chi tiết</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
