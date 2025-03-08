@@ -4,10 +4,17 @@
 Dưới đây là một số ảnh chụp màn hình giao diện trang web:
 
 - **Trang danh sách sản phẩm**
+<img width="1401" alt="Screenshot 2025-03-08 at 19 51 40" src="https://github.com/user-attachments/assets/b3e325e6-d899-4c92-a1da-5f4b9addddf4" />
+<img width="1488" alt="Screenshot 2025-03-08 at 19 51 47" src="https://github.com/user-attachments/assets/d81af49d-17e0-4037-bf45-4ae103d2f696" />
+
+
+- **Trang danh sách sản phẩm sau khi lọc**
+  <img width="1355" alt="Screenshot 2025-03-08 at 19 52 20" src="https://github.com/user-attachments/assets/73f2a206-adcb-498e-b388-2033866a903d" />
 
 
 - **Trang chi tiết sản phẩm**
-  
+  <img width="886" alt="Screenshot 2025-03-08 at 19 51 54" src="https://github.com/user-attachments/assets/88e42154-a304-4bb2-be25-29c3474ccf64" />
+
 
 ## 🔥 Giới thiệu
 Đây là một ứng dụng web đơn giản giúp hiển thị danh sách sản phẩm, hỗ trợ tìm kiếm, lọc theo giá, đánh giá và xem chi tiết từng sản phẩm.
