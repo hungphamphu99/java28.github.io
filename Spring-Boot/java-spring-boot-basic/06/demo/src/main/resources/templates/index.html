@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách sản phẩm</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <!-- Font Awesome (for icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<div class="container my-4">
+    <h1 class="mb-4">Danh sách sản phẩm</h1>
+
+    <!-- Search Form -->
+    <form action="/products/search" method="get" class="row g-2 mb-3">
+        <div class="col-auto">
+            <input type="text" name="keyword" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+
+    <!-- Filter Form -->
+    <form action="/products/filter" method="get" class="row g-2 mb-4">
+        <div class="col-auto">
+            <input type="number" name="minPrice" class="form-control" placeholder="Giá thấp nhất" step="1" />
+        </div>
+        <div class="col-auto">
+            <input type="number" name="maxPrice" class="form-control" placeholder="Giá cao nhất" step="1" />
+        </div>
+        <div class="col-auto">
+            <input type="number" step="0.1" name="minRating" class="form-control" placeholder="Đánh giá thấp nhất" />
+        </div>
+        <div class="col-auto">
+            <input type="number" step="0.1" name="maxRating" class="form-control" placeholder="Đánh giá cao nhất" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-secondary">Lọc</button>
+        </div>
+    </form>
+
+    <!-- Nếu không có sản phẩm (danh sách rỗng) -->
+    <div th:if="${#lists.isEmpty(products)}">
+        <p class="text-center text-danger">Không tìm thấy sản phẩm nào.</p>
+    </div>
+
+    <!-- Nếu có sản phẩm, hiển thị grid -->
+    <div th:if="${!#lists.isEmpty(products)}">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="product : ${products}">
+                <div class="card h-100 position-relative">
+                    <!-- Badge Giảm X% (nếu priceDiscount > 0) -->
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2"
+                          th:if="${product.priceDiscount != null and product.priceDiscount > 0}"
+                          th:text="${'Giảm ' + T(java.lang.Math).round((1 - (product.priceDiscount * 1.0 / product.price)) * 100.0) + '%'}">
+            </span>
+
+                    <!-- Ảnh sản phẩm -->
+                    <img th:src="${product.thumbnail}" class="card-img-top" alt="thumbnail" />
+
+                    <div class="card-body">
+                        <!-- Tên sản phẩm -->
+                        <h5 class="card-title" th:text="${product.name}">Tên sản phẩm</h5>
+
+                        <!-- Giá & giảm giá -->
+                        <div>
+                            <div th:if="${product.priceDiscount != null and product.priceDiscount > 0}">
+                                <span class="text-danger fw-bold" th:text="${product.priceDiscount} + 'đ'"></span>
+                                <span class="text-muted text-decoration-line-through ms-2" th:text="${product.price} + 'đ'"></span>
+                            </div>
+                            <div th:if="${product.priceDiscount == null or product.priceDiscount == 0}">
+                                <span class="fw-bold" th:text="${product.price} + 'đ'"></span>
+                            </div>
+                        </div>
+
+                        <!-- Đánh giá (Stars) -->
+                        <div class="my-2">
+                            <span th:text="'Đánh giá: ' + ${product.rating} + '/5'"></span>
+                            <span th:each="i : ${#numbers.sequence(1,5)}">
+                  <i class="fa fa-star"
+                     th:classappend="${i <= product.rating ? 'text-warning' : 'text-secondary'}"></i>
+                </span>
+                        </div>
+
+                        <!-- Nút xem chi tiết -->
+                        <a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-primary btn-sm">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Phân trang (Previous, số trang, Next) -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <!-- Nút Previous -->
+            <li class="page-item" th:classappend="${page == 1} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/(page=${page > 1 ? page - 1 : 1})}"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <!-- Các số trang -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${i == page} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/(page=${i})}"
+                   th:text="${i}">1</a>
+            </li>
+            <!-- Nút Next -->
+            <li class="page-item" th:classappend="${page == totalPages} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/(page=${page + 1})}"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

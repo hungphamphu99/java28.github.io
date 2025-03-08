@@ -1,0 +1,112 @@
+/* Container chính */
+.product-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Tiêu đề sản phẩm */
+.product-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Ảnh sản phẩm */
+.product-image {
+    max-width: 60%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Mô tả sản phẩm */
+.product-description {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Giá gốc */
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+}
+
+/* Giá khuyến mãi */
+.discount-price {
+    font-size: 22px;
+    font-weight: bold;
+    color: #dc3545;
+    margin-left: 5px;
+}
+
+/* Nếu có giảm giá, gạch ngang giá gốc */
+.price-discounted {
+    text-decoration: line-through;
+    color: #777;
+    font-size: 18px;
+}
+
+/* Đánh giá */
+.rating {
+    font-size: 18px;
+    font-weight: bold;
+    color: #f39c12;
+    margin-top: 10px;
+}
+
+/* Nút quay lại */
+.btn-back {
+    display: inline-block;
+    padding: 12px 22px;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-back:hover {
+    background: linear-gradient(45deg, #0056b3, #004080);
+    transform: scale(1.05);
+}
+
+/* Responsive (tối ưu cho mobile) */
+@media (max-width: 768px) {
+    .product-container {
+        padding: 20px;
+    }
+
+    .product-title {
+        font-size: 24px;
+    }
+
+    .product-image {
+        max-width: 80%;
+        max-height: 250px;
+    }
+
+    .price, .discount-price {
+        font-size: 20px;
+    }
+
+    .btn-back {
+        font-size: 16px;
+        padding: 10px 18px;
+    }
+}

@@ -1,0 +1,272 @@
+[
+  {
+    "id": 1,
+    "name": "Samsung Galaxy S24 Ultra",
+    "description": "Flagship Android smartphone with Snapdragon Gen 8.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/d/i/dien-thoai-samsung-galaxy-s25-ultra_2__3.png",
+    "price": 2300,
+    "rating": 4.8,
+    "priceDiscount": 2099
+  },
+  {
+    "id": 2,
+    "name": "MacBook Air M2",
+    "description": "Laptop mỏng nhẹ sử dụng chip Apple M2 cho hiệu suất cao.",
+    "thumbnail": "https://thetekcoffee.com/wp-content/uploads/2022/08/macbook-air-m2-8gb-256gb-sa-a.webp",
+    "price": 1799,
+    "rating": 3.7,
+    "priceDiscount": null
+  },
+  {
+    "id": 3,
+    "name": "Sony WH-1000XM5",
+    "description": "Tai nghe chống ồn hàng đầu từ Sony với âm thanh sống động.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tai-nghe-chup-tai-sony-wh-1000xm5-2-removebg-preview.png",
+    "price": 399,
+    "rating": 4.7,
+    "priceDiscount": 349
+  },
+  {
+    "id": 4,
+    "name": "Google Pixel 8 Pro",
+    "description": "Điện thoại thông minh với camera xuất sắc và giao diện mượt mà.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/g/o/google-pixel-8-pro_7__2.png",
+    "price": 1099,
+    "rating": 4.6,
+    "priceDiscount": null
+  },
+  {
+    "id": 5,
+    "name": "Sony Alpha a7C II",
+    "description": "Máy ảnh mirrorless full-frame nhỏ gọn, chất lượng hình ảnh vượt trội.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/6/0/603.png",
+    "price": 2299,
+    "rating": 4.8,
+    "priceDiscount": null
+  },
+  {
+    "id": 6,
+    "name": "iPad Air",
+    "description": "Máy tính bảng mạnh mẽ, hiệu suất cao từ Apple.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/i/p/ipad-air-6-m2-11-inch_2_1.jpg",
+    "price": 599,
+    "rating": 4.7,
+    "priceDiscount": 549
+  },
+  {
+    "id": 7,
+    "name": "Dell UltraSharp U2723QE",
+    "description": "Màn hình 4K cao cấp dành cho designer với màu sắc trung thực.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/5/4/54_1_20_1.jpg",
+    "price": 699,
+    "rating": 4.5,
+    "priceDiscount": null
+  },
+  {
+    "id": 8,
+    "name": "Kindle Paperwhite",
+    "description": "Máy đọc sách điện tử với màn hình siêu sáng và pin lâu.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/m/a/may-doc-sach-kindle-paperwhite-6-16gb_3.png",
+    "price": 199,
+    "rating": 4.6,
+    "priceDiscount": 179
+  },
+  {
+    "id": 9,
+    "name": "Samsung Galaxy Watch 6",
+    "description": "Smartwatch thời trang, tiện ích và theo dõi sức khỏe chính xác.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/s/m/sm-r960_001_front_silver_1.png",
+    "price": 299,
+    "rating": 4.5,
+    "priceDiscount": null
+  },
+  {
+    "id": 10,
+    "name": "HP Spectre x360",
+    "description": "Laptop 2-in-1 với thiết kế đẹp, hiệu năng mạnh mẽ cho công việc.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/l/a/laptop-hp-spectre-x360-14-ef0030tu-6k773pa-cu-dep-2_5.png",
+    "price": 1699,
+    "rating": 4.5,
+    "priceDiscount": 1599
+  },
+  {
+    "id": 11,
+    "name": "Asus ROG Strix G15",
+    "description": "Laptop gaming với cấu hình mạnh mẽ và hệ thống tản nhiệt hiệu quả.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/_/0/_0000_asus-rog-strix-g15-g513rc-hn038w_2_1_2_1.jpg",
+    "price": 1499,
+    "rating": 4.6,
+    "priceDiscount": 1399
+  },
+  {
+    "id": 12,
+    "name": "Lenovo ThinkPad X1 Carbon",
+    "description": "Laptop doanh nhân bền bỉ với thiết kế tinh tế và hiệu suất ổn định.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/t/e/text_ng_n_1__2_11.png",
+    "price": 1899,
+    "rating": 4.7,
+    "priceDiscount": null
+  },
+  {
+    "id": 13,
+    "name": "Bose QuietComfort Earbuds",
+    "description": "Tai nghe không dây với khả năng khử tiếng ồn tuyệt vời.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/t/a/tai-nghe-bose-quietcomfort-earbuds_9_.png",
+    "price": 249,
+    "rating": 4.5,
+    "priceDiscount": 229
+  },
+  {
+    "id": 14,
+    "name": "Microsoft Surface Pro 9",
+    "description": "Máy tính lai, linh hoạt cho công việc và giải trí di động.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/t/e/text_ng_n_23__7_1_1.png",
+    "price": 1299,
+    "rating": 4.4,
+    "priceDiscount": null
+  },
+  {
+    "id": 15,
+    "name": "Canon EOS R6",
+    "description": "Máy ảnh mirrorless chuyên nghiệp, lý tưởng cho nhiếp ảnh gia đam mê.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/t/e/text_ng_n_9__4_74.png",
+    "price": 2499,
+    "rating": 4.8,
+    "priceDiscount": 2399
+  },
+  {
+    "id": 16,
+    "name": "Nikon Z6 II",
+    "description": "Máy ảnh mirrorless hiệu năng cao cho cả ảnh tĩnh và quay phim.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/1/_/1_693.png",
+    "price": 2199,
+    "rating": 4.7,
+    "priceDiscount": null
+  },
+  {
+    "id": 17,
+    "name": "DJI Mavic Air 2",
+    "description": "Drone với camera 4K, dễ sử dụng, mang lại hình ảnh chất lượng cao.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/f/l/flycam-dji-mavic-2-pro_2_.png",
+    "price": 799,
+    "rating": 4.6,
+    "priceDiscount": 749
+  },
+  {
+    "id": 18,
+    "name": "GoPro HERO11",
+    "description": "Camera hành trình chuyên nghiệp, bền bỉ với khả năng chống nước và sốc.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/c/a/camera-hanh-trinh-gopro-hero-11_3_.png",
+    "price": 499,
+    "rating": 4.7,
+    "priceDiscount": 449
+  },
+  {
+    "id": 19,
+    "name": "Fitbit Charge 5",
+    "description": "Vòng đeo tay thông minh theo dõi sức khỏe và hoạt động hàng ngày.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/3/_/3_58_36.jpg",
+    "price": 149,
+    "rating": 4.3,
+    "priceDiscount": 129
+  },
+  {
+    "id": 20,
+    "name": "Apple AirPods Pro",
+    "description": "Tai nghe không dây với chế độ khử tiếng ồn chủ động tuyệt vời.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/a/p/apple-airpods-pro-2-usb-c_8_.png",
+    "price": 249,
+    "rating": 4.7,
+    "priceDiscount": 229
+  },
+  {
+    "id": 21,
+    "name": "Google Nest Hub",
+    "description": "Thiết bị thông minh cho gia đình với màn hình cảm ứng và trợ lý ảo.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/g/o/google-tivi-coocaa-4k-50-inch-50y73_2__1.png",
+    "price": 99,
+    "rating": 4.4,
+    "priceDiscount": null
+  },
+  {
+    "id": 22,
+    "name": "Amazon Echo Show 10",
+    "description": "Smart display với trợ lý ảo Alexa và màn hình xoay tự động.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/a/m/amazon-kindle-fire-hd-8-1.jpg",
+    "price": 149,
+    "rating": 3.5,
+    "priceDiscount": 129
+  },
+  {
+    "id": 23,
+    "name": "Razer BlackWidow V3",
+    "description": "Bàn phím cơ gaming với độ phản hồi nhanh và đèn nền nổi bật.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/t/e/text_ng_n_19__25.png",
+    "price": 129,
+    "rating": 4.6,
+    "priceDiscount": null
+  },
+  {
+    "id": 24,
+    "name": "Logitech MX Master 3",
+    "description": "Chuột không dây cao cấp, lý tưởng cho công việc và giải trí.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/1/2/12_37_1.jpg",
+    "price": 99,
+    "rating": 4.7,
+    "priceDiscount": 89
+  },
+  {
+    "id": 25,
+    "name": "Samsung QLED 8K TV",
+    "description": "TV 8K với chất lượng hình ảnh vượt trội và công nghệ QLED.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/s/m/smart-tivi-samsung-neo-qled-85qn900d-8k-85-inch-2024_1.png",
+    "price": 3999,
+    "rating": 4.8,
+    "priceDiscount": 3799
+  },
+  {
+    "id": 26,
+    "name": "LG OLED CX Series",
+    "description": "TV OLED với màu sắc sống động và độ tương phản cao.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/i/m/image_1368.png",
+    "price": 2999,
+    "rating": 4.7,
+    "priceDiscount": null
+  },
+  {
+    "id": 27,
+    "name": "Sony Bravia X90J",
+    "description": "TV LED 4K với công nghệ xử lý hình ảnh xuất sắc.",
+    "thumbnail": "https://via.placeholder.com/150",
+    "price": 1999,
+    "rating": 4.6,
+    "priceDiscount": 1899
+  },
+  {
+    "id": 28,
+    "name": "Bose SoundLink Revolve+",
+    "description": "Loa Bluetooth di động với âm thanh sống động và pin lâu.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/1/_/1_4_91_3.jpg",
+    "price": 299,
+    "rating": 4.7,
+    "priceDiscount": 279
+  },
+  {
+    "id": 29,
+    "name": "Anker PowerCore 20000",
+    "description": "Sạc dự phòng dung lượng lớn, phù hợp cho mọi thiết bị di động.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/p/i/pin-du-phong-anker-powercore-iii-sense-2a1c-20w-20000mah-a1365-2.png",
+    "price": 49,
+    "rating": 4.4,
+    "priceDiscount": null
+  },
+  {
+    "id": 30,
+    "name": "JBL Charge 5",
+    "description": "Loa Bluetooth mạnh mẽ, khả năng chống nước và pin bền bỉ.",
+    "thumbnail": "https://cdn2.cellphones.com.vn/x/media/catalog/product/l/o/loa-jbl-charge-5-hong-pink-4.jpg",
+    "price": 179,
+    "rating": 4.5,
+    "priceDiscount": 159
+  }
+]

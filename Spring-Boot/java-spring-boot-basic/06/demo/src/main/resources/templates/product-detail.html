@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/css/product-detail.css}" />
+</head>
+<body>
+<div class="product-container">
+    <h1 class="product-title" th:text="${product.name}"></h1>
+    <img class="product-image" th:src="${product.thumbnail}" alt="Product Image"/>
+    <p class="product-description" th:text="${product.description}"></p>
+    <p>Giá: <span class="price" th:text="${product.price}"></span> VNĐ</p>
+    <p th:if="${product.priceDiscount != null}">
+        Giá khuyến mãi: <span class="discount-price" th:text="${product.priceDiscount}"></span> VNĐ
+    </p>
+    <p class="rating">Đánh giá: <span th:text="${product.rating}"></span>/5</p>
+    <a class="btn-back" href="/">Quay lại</a>
+</div>
+</body>
+</html>
