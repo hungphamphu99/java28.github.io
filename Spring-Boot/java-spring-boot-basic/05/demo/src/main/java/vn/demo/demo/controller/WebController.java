@@ -64,9 +64,9 @@ public class WebController {
 
         if (person != null) {
             List<Person> relatedPeople = people.stream()
-                    .filter(p -> p.getId() != person.getId() && p.getGender().equals(person.getGender())) // Sửa lỗi ở đây
+                    .filter(p -> p.getId() != person.getId() && p.getGender().equals(person.getGender()))
                     .sorted((p1, p2) -> Integer.compare(p2.getId(), p1.getId())) // Sắp xếp giảm dần theo ID
-                    .limit(4) // Giới hạn 4 kết quả
+                    .limit(4) // Giới hạn 4
                     .toList();
 
             model.addAttribute("relatedPeople", relatedPeople);
