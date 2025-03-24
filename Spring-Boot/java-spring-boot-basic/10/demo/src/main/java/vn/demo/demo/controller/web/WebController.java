@@ -1,8 +1,6 @@
 package vn.demo.demo.controller.web;
 
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import vn.demo.demo.entity.Movie;
 import vn.demo.demo.model.enums.MovieType;
 import vn.demo.demo.service.MovieService;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,11 +31,6 @@ public class WebController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", moviePage.getTotalPages());
         return "phim-bo";
-    }
-
-    @GetMapping("/phim/{id}/{slug}")
-    public String getMovieDetailsPage(@PathVariable Integer id, @PathVariable String slug) {
-        return "chi-tiet-phim";
     }
 
     @GetMapping("/phim-le")
@@ -61,4 +55,18 @@ public class WebController {
         return "phim-chieu-rap";
     }
 
+    @GetMapping("/phim/{id}/{slug}")
+    public String getMovieDetailsPage(@PathVariable Integer id,
+                                      @PathVariable String slug,
+                                      Model model) {
+        Movie movie = movieService.findById(id);
+        if (movie == null) {
+            return "404"; // or an error page
+        }
+        // Retrieve 6 related movies (same type, status true, exclude the current movie)
+        List<Movie> relatedMovies = movieService.findRelatedMovies(movie.getType(), id, 6);
+        model.addAttribute("movie", movie);
+        model.addAttribute("relatedMovies", relatedMovies);
+        return "chi-tiet-phim";
+    }
 }

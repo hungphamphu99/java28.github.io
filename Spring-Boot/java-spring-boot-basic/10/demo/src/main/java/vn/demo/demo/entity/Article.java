@@ -2,8 +2,6 @@ package vn.demo.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import vn.demo.demo.model.enums.MovieType;
-
 import java.time.LocalDateTime;
 
 @ToString
@@ -13,33 +11,22 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "movies")
-public class Movie {
+@Table(name = "articles")
+public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private String name;
+    private String title;
 
     private String slug;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
+    private String content;
 
-    private String thumbnail;
-
-
-    private Integer releaseYear;
-
+    // Chỉ hiển thị bài viết có status = true
     private Boolean status;
-    private String trailer;
-
-    @Column(columnDefinition = "double default 5.0")
-    private Double rating;
-
-    @Enumerated(EnumType.STRING)
-    private MovieType type;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

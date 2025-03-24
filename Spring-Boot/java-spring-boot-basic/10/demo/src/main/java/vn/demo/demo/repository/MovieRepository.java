@@ -14,7 +14,7 @@ import vn.demo.demo.model.enums.MovieType;
 
 import java.util.List;
 
-public interface MovieRepository extends JpaRepository<Movie, Long> {
+public interface MovieRepository extends JpaRepository<Movie, Integer> {
     Movie findByName(String name);
 
     List<Movie> findByNameContaining(String name);
@@ -53,4 +53,9 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByStatusTrue();
 
     Page<Movie> findByTypeAndStatus(MovieType type, Boolean status, Pageable pageable);
+    @Query("select m from Movie m where m.type = :type and m.status = true and m.id <> :movieId order by m.rating desc")
+    List<Movie> findRelatedMovies(@Param("type") MovieType type,
+                                  @Param("movieId") Integer movieId,
+                                  Pageable pageable);
+
 }
