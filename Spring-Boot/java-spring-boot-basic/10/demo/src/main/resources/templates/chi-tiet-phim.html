@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -9,7 +8,6 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-
 <body>
 <header>
     <nav class="navbar navbar-expand-lg bg-dark">
@@ -46,29 +44,35 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>
-                <li class="breadcrumb-item">
-                    <a th:href="@{/phim-bo}" th:if="${movie.type} == 'PHIM_BO'">Phim bộ</a>
-                    <a th:href="@{/phim-le}" th:if="${movie.type} == 'PHIM_LE'">Phim lẻ</a>
-                    <a th:href="@{/phim-chieu-rap}" th:if="${movie.type} == 'PHIM_CHIEU_RAP'">Phim chiếu rạp</a>
+
+                <!-- Kiểm tra loại phim và hiển thị đúng breadcrumb -->
+                <li class="breadcrumb-item" th:if="${movie.type} == 'PHIM_BO'">
+                    <a th:href="@{/phim-bo}">Phim bộ</a>
                 </li>
+                <li class="breadcrumb-item" th:if="${movie.type} == 'PHIM_LE'">
+                    <a th:href="@{/phim-le}">Phim lẻ</a>
+                </li>
+                <li class="breadcrumb-item" th:if="${movie.type} == 'PHIM_CHIEU_RAP'">
+                    <a th:href="@{/phim-chieu-rap}">Phim chiếu rạp</a>
+                </li>
+
                 <li class="breadcrumb-item active" aria-current="page" th:text="${movie.name}">Movie Name</li>
             </ol>
         </nav>
 
+
         <div class="row">
             <div class="col-4">
-                <!-- Movie Poster (clickable to open trailer modal) -->
+                <!-- Movie Poster -->
                 <a href="#" data-bs-toggle="modal" data-bs-target="#trailerModal">
                     <img class="img-fluid" th:src="${movie.thumbnail}" th:alt="${movie.name}">
                 </a>
             </div>
-
             <div class="col-8">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h4 th:text="${movie.name}">Movie Name</h4>
                     <h5 th:text="${movie.rating} + ' ⭐️'">Rating</h5>
                 </div>
-
                 <div class="bg-body-tertiary p-3">
                     <div class="row mb-2">
                         <div class="col-2">
@@ -95,14 +99,38 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="mt-3">
                     <button class="btn btn-danger px-5" data-bs-toggle="modal" data-bs-target="#trailerModal">
-                        Xem trailer
+                        Xem Phim
                     </button>
                 </div>
             </div>
         </div>
+
+        <!-- Tập phim (nếu là phim bộ) -->
+        <div class="row mt-4" th:if="${movie.type.name() == 'PHIM_BO'}">
+            <h4 class="mb-3">Tập phim</h4>
+            <div class="d-flex flex-wrap gap-2">
+                <a th:each="ep : ${episodes}"
+                   th:href="@{'/watch/' + ${movie.id} + '/tap-' + ${ep.displayOrder}}"
+                   class="btn btn-dark"
+                   th:text="'Tập ' + ${ep.displayOrder}">
+                    Tập
+                </a>
+            </div>
+        </div>
+
+
+
+        <!-- Nếu là phim lẻ hoặc phim chiếu rạp, hiển thị 1 nút -->
+        <div class="row mt-4"
+             th:if="${movie.type == 'PHIM_LE' or movie.type == 'PHIM_CHIEU_RAP'}">
+            <h4>Tập phim</h4>
+            <div>
+                <button class="btn btn-dark">Xem phim</button>
+            </div>
+        </div>
+
 
         <!-- Related Movies Section -->
         <section class="py-4 bg-body-tertiary mt-4">
@@ -114,7 +142,6 @@
                     <div class="col-2" th:each="related : ${relatedMovies}">
                         <div class="movie-item">
                             <div class="movie-poster rounded overflow-hidden">
-                                <!-- Link to detail page for each related movie -->
                                 <a th:href="@{'/phim/' + ${related.id} + '/' + ${related.slug}}">
                                     <img class="img-fluid" th:src="${related.thumbnail}" th:alt="${related.name}">
                                 </a>
@@ -128,32 +155,60 @@
             </div>
         </section>
 
-        <!-- Reviews (Bình luận) Section with Pagination -->
+        <!-- Favorites Section -->
+        <section class="py-4 bg-light mt-4">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4>Phim yêu thích của bạn</h4>
+                </div>
+                <div class="row">
+                    <div class="col-2" th:each="fav : ${favorites}">
+                        <div class="movie-item">
+                            <div class="movie-poster rounded overflow-hidden">
+                                <a th:href="@{'/phim/' + ${fav.movie.id} + '/' + ${fav.movie.slug}}">
+                                    <img class="img-fluid" th:src="${fav.movie.thumbnail}" th:alt="${fav.movie.name}">
+                                </a>
+                            </div>
+                            <div class="movie-info">
+                                <p class="mt-3 mb-0" th:text="${fav.movie.name}">Favorite Movie</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Reviews Section -->
+        <!-- Reviews Section -->
+        <!-- Reviews Section -->
         <section class="py-4">
             <div class="container">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h4>Bình luận</h4>
+                    <!-- Nút mở modal viết bình luận -->
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-review">
+                        Viết bình luận
+                    </button>
                 </div>
+
                 <div class="review-list">
-                    <!-- Lặp qua danh sách bình luận của trang hiện tại (được truyền qua reviewsPage.content) -->
                     <div class="review-item border p-3 mb-3" th:each="review : ${reviewsPage.content}">
                         <p th:text="${review.content}">Nội dung bình luận</p>
                         <p>
                             <strong>Đánh giá: </strong>
                             <span th:text="${review.rating}">Rating</span>
                         </p>
-                        <!-- Nếu bình luận thuộc về người dùng hiện tại -->
-                        <div th:if="${currentUser.id} == ${review.user.id}">
-                            <!-- Nút cập nhật: Mở modal cập nhật bình luận -->
+                        <!-- Nút cập nhật, xóa (hiển thị tùy ý) -->
+                        <div>
                             <button class="btn btn-sm btn-primary"
                                     data-bs-toggle="modal"
                                     data-bs-target="#updateReviewModal"
                                     th:attr="data-review-id=${review.id},
-                                             data-review-content=${review.content},
-                                             data-review-rating=${review.rating}">
+                                     data-review-content=${review.content},
+                                     data-review-rating=${review.rating}">
                                 Cập nhật
                             </button>
-                            <!-- Form xóa bình luận -->
                             <form th:action="@{/api/reviews/{id}(id=${review.id})}" method="post" class="d-inline"
                                   onsubmit="return confirm('Bạn có chắc muốn xóa bình luận này?');">
                                 <input type="hidden" name="_method" value="delete" />
@@ -162,30 +217,53 @@
                         </div>
                     </div>
                 </div>
-                <!-- Phân trang cho bình luận -->
+
+                <!-- Phân trang (nếu cần) -->
                 <nav class="mt-4" aria-label="Review pagination">
-                    <ul class="pagination justify-content-center">
-                        <!-- Nút "Trước" -->
-                        <li class="page-item" th:classappend="${reviewsPage.first} ? 'disabled'">
-                            <a class="page-link" th:href="@{${#request.requestURI}(page=${reviewsPage.number - 1})}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <!-- Hiển thị số trang -->
-                        <li class="page-item" th:each="i : ${#numbers.sequence(0, reviewsPage.totalPages - 1)}"
-                            th:classappend="${i == reviewsPage.number} ? 'active'">
-                            <a class="page-link" th:href="@{${#request.requestURI}(page=${i})}" th:text="${i + 1}"></a>
-                        </li>
-                        <!-- Nút "Sau" -->
-                        <li class="page-item" th:classappend="${reviewsPage.last} ? 'disabled'">
-                            <a class="page-link" th:href="@{${#request.requestURI}(page=${reviewsPage.number + 1})}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <!-- ... pagination ... -->
                 </nav>
             </div>
         </section>
+
+        <!-- Modal tạo review -->
+        <div class="modal fade" id="modal-review" tabindex="-1" aria-labelledby="modal-review-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-review-label">Viết bình luận</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="review-form">
+                            <!-- Phần chọn số sao (rating) -->
+                            <div class="mb-3">
+                                <label class="form-label">Đánh giá (số sao)</label>
+                                <div>
+                                    <!-- 5 ngôi sao, data-rating tương ứng 1-5 -->
+                                    <span class="star" data-rating="1">&#9733;</span>
+                                    <span class="star" data-rating="2">&#9733;</span>
+                                    <span class="star" data-rating="3">&#9733;</span>
+                                    <span class="star" data-rating="4">&#9733;</span>
+                                    <span class="star" data-rating="5">&#9733;</span>
+                                </div>
+                                <div id="rating-value" class="text-muted mt-1"></div>
+                            </div>
+                            <!-- Nội dung bình luận -->
+                            <div class="mb-3">
+                                <label for="review-content" class="form-label">Nội dung bình luận</label>
+                                <textarea class="form-control" id="review-content" rows="3"></textarea>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </section>
 
@@ -206,7 +284,7 @@
     </div>
 </div>
 
-<!-- Update Review Modal (nếu cần cập nhật bình luận) -->
+<!-- Update Review Modal -->
 <div class="modal fade" id="updateReviewModal" tabindex="-1" aria-labelledby="updateReviewModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -233,29 +311,16 @@
     </div>
 </div>
 
-<!-- JavaScript để truyền dữ liệu vào modal cập nhật -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var updateModal = document.getElementById('updateReviewModal');
-        updateModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var reviewId = button.getAttribute('data-review-id');
-            var reviewContent = button.getAttribute('data-review-content');
-            var reviewRating = button.getAttribute('data-review-rating');
-
-            var form = document.getElementById('updateReviewForm');
-            form.action = '/api/reviews/' + reviewId;
-
-            document.getElementById('reviewId').value = reviewId;
-            document.getElementById('content').value = reviewContent;
-            document.getElementById('rating').value = reviewRating;
-        });
-    });
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-</body>
+        crossorigin="anonymous">
 
+</script>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:inline="javascript">
+    let movie = [[${movie}]];
+</script>
+<script th:src="@{/js/movie-detail.js}"></script>
+</body>
 </html>
