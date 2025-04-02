@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="'Xem phim - ' + ${movie.name}">Xem phim</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<!-- Header -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img src="https://movie.techmaster.vn/assets/logo-C2IIl7EL.png" alt="Logo" height="40">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Trang Chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/phim-bo}">Phim Bộ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/phim-le}">Phim Lẻ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/phim-chieu-rap}">Phim Chiếu Rạp</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Main Content -->
+<main class="container my-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Tiêu đề phim -->
+            <h2 class="mb-3" th:text="${movie.name}">Tên phim</h2>
+
+            <!-- Video Player -->
+            <div class="ratio ratio-16x9 mb-4">
+                <!-- Nếu phim là tập của phim bộ hoặc phim lẻ/chiếu rạp, URL video có thể khác nhau -->
+                <video controls class="w-100" th:src="${episode.videoUrl}">
+                    Trình duyệt của bạn không hỗ trợ thẻ video.
+                </video>
+
+                <!-- Nếu bạn dùng YouTube hay một nguồn nhúng khác, thay thế bằng iframe:
+                <iframe class="w-100" th:src="${movie.trailer}" frameborder="0" allowfullscreen></iframe>
+                -->
+            </div>
+
+            <!-- Danh sách tập phim (chỉ hiển thị nếu phim là phim bộ) -->
+            <div th:if="${movie.type.name() == 'PHIM_BO'}">
+                <h4>Danh sách tập</h4>
+                <div class="list-group">
+                    <a th:each="episode : ${episodes}"
+                       th:href="@{'/xem-phim/' + ${movie.id} + '/' + ${episode.displayOrder}}"
+                       class="list-group-item list-group-item-action"
+                       th:text="'Tập ' + ${episode.displayOrder}">
+                        Tập
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mô tả phim -->
+            <div class="mt-4">
+                <h4>Mô tả phim</h4>
+                <p th:text="${movie.description}">Mô tả phim...</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-3">
+    <div class="container text-center">
+        <p>&copy; 2025 MovieApp. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<!-- Nếu cần truyền biến movie vào JS -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script th:inline="javascript">
+    let movie = [[${movie}]];
+</script>
+<script th:src="@{/js/movie-detail.js}"></script>
+</body>
+</html>

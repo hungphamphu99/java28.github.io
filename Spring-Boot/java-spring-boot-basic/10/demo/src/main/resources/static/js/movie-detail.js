@@ -8,6 +8,16 @@ const initPage = () => {
     // Xử lý rating, form submit, ...
     initReviewForm();
 };
+async function addFavorite(movieId) {
+    try {
+        // Gọi API thêm phim vào favorites (giả sử userId được fix trong backend)
+        const response = await axios.post('/api/favorites/add', { movieId: movieId });
+        alert("Phim đã được thêm vào danh sách yêu thích!");
+    } catch (error) {
+        console.error(error);
+        alert("Có lỗi xảy ra khi thêm phim vào danh sách yêu thích.");
+    }
+}
 
 // Hàm xử lý form tạo review (gần giống như bạn đã có)
 const initReviewForm = () => {
