@@ -1,21 +1,21 @@
 package vn.demo.demo.controller.web;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import vn.demo.demo.entity.Episode;
 import vn.demo.demo.entity.Favorite;
 import vn.demo.demo.entity.Movie;
 import vn.demo.demo.entity.Review;
 import vn.demo.demo.model.enums.MovieType;
-import vn.demo.demo.service.EpisodeService;
-import vn.demo.demo.service.FavoriteService;
-import vn.demo.demo.service.MovieService;
-import vn.demo.demo.service.ReviewService;
+import vn.demo.demo.model.request.LoginRequest;
+import vn.demo.demo.service.*;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class WebController {
     private final ReviewService reviewService;
     private final EpisodeService episodeService;
     private final FavoriteService favoriteService;
-
+    private final AuthService authService;
 
     @GetMapping("/")
     public String getHomePage() {
@@ -144,5 +144,24 @@ public class WebController {
         return "web/xem-phim";
     }
 
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "web/login";
+    }
+
+    @PostMapping("/login")
+    public String processLogin(@RequestParam String email,
+                               @RequestParam String password,
+                               HttpSession session,
+                               Model model) {
+        try {
+            LoginRequest request = new LoginRequest(email, password);
+            authService.login(request);
+            return "redirect:/"; // Đăng nhập thành công chuyển về trang chủ
+        } catch (Exception e) {
+            model.addAttribute("error", "Email hoặc mật khẩu sai!");
+            return "web/login";
+        }
+    }
 
 }

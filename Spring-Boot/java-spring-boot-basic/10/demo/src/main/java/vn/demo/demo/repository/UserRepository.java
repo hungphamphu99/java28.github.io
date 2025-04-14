@@ -6,7 +6,10 @@ import vn.demo.demo.entity.User;
 import vn.demo.demo.model.enums.UserRole;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByRole(UserRole userRole);
+    Optional<User> findByEmail(String email);
+
 }
