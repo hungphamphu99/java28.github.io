@@ -1,0 +1,11 @@
+<!-- templates/movie.html -->
+<div th:fragment="movieItem(movie)">
+    <div class="movie-item">
+        <div class="movie-poster rounded overflow-hidden">
+            <img th:src="${movie.thumbnail}" th:alt="${movie.name}" class="img-fluid" />
+        </div>
+        <div class="movie-info mt-2">
+            <p class="mb-0" th:text="${movie.name}">Tên phim</p>
+        </div>
+    </div>
+</div>

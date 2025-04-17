@@ -1,17 +1,15 @@
 package vn.demo.demo.service;
 
-
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import vn.demo.demo.entity.Movie;
 import vn.demo.demo.entity.Review;
 import vn.demo.demo.entity.User;
 import vn.demo.demo.exception.BadRequestException;
 import vn.demo.demo.exception.NotFoundException;
+import vn.demo.demo.model.dto.UserDTO;
 import vn.demo.demo.model.request.CreateReviewRequest;
 import vn.demo.demo.model.request.UpdateReviewRequest;
 import vn.demo.demo.repository.MovieRepository;
@@ -26,6 +24,14 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
+    private final HttpSession session;
+
+    private User getCurrentUser() {
+        UserDTO dto = (UserDTO) session.getAttribute("currentUser");
+        if (dto == null) throw new BadRequestException("Bạn chưa đăng nhập");
+        return userRepository.findById(dto.getId())
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy người dùng"));
+    }
 
     public Page<Review> getReviewsByMovie(Integer movieId, Integer page, Integer pageSize) {
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("createdAt").descending());
@@ -33,10 +39,7 @@ public class ReviewService {
     }
 
     public Review createReview(CreateReviewRequest request) {
-        // TODO: Fix login user
-        Integer userId = 1;
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy user có id = " + userId));
+        User user = getCurrentUser();
 
         Movie movie = movieRepository.findByIdAndStatusTrue(request.getMovieId())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy phim có id = " + request.getMovieId()));
@@ -53,37 +56,31 @@ public class ReviewService {
     }
 
     public Review updateReview(Integer id, UpdateReviewRequest request) {
-        // TODO: Fix login user
-        Integer userId = 1;
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy user có id = " + userId));
+        User user = getCurrentUser();
 
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy review có id = " + id));
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy review"));
 
-        // Check user is owner of review
         if (!review.getUser().getId().equals(user.getId())) {
             throw new BadRequestException("Không có quyền cập nhật review");
         }
 
         review.setContent(request.getContent());
         review.setRating(request.getRating());
+        review.setUpdatedAt(LocalDateTime.now());
         return reviewRepository.save(review);
     }
 
     public void deleteReview(Integer id) {
-        // TODO: Fix login user
-        Integer userId = 1;
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy user có id = " + userId));
+        User user = getCurrentUser();
 
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy review có id = " + id));
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy review"));
 
-        // Check user is owner of review
         if (!review.getUser().getId().equals(user.getId())) {
-            throw new BadRequestException("Không có quyền xóa review");
+            throw new BadRequestException("Không có quyền xoá review");
         }
+
         reviewRepository.delete(review);
     }
 }

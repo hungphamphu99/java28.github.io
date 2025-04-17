@@ -1,0 +1,43 @@
+<!--web/favorite.html-->
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Phim yêu thích</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/header :: headerFragment"></div>
+
+<section class="py-4">
+    <div class="container">
+        <h3 class="mb-4">Phim bạn yêu thích</h3>
+
+        <!-- Có danh sách -->
+        <div class="row" th:if="${favorites != null and !favorites.isEmpty()}">
+            <div class="col-md-3 mb-4" th:each="f : ${favorites}">
+                <a th:href="'/phim/' + ${f.movie.id} + '/' + ${f.movie.slug}" class="text-decoration-none text-dark">
+                    <div class="movie-item">
+                        <div class="movie-poster rounded overflow-hidden">
+                            <img class="img-fluid" th:src="${f.movie.thumbnail}" th:alt="${f.movie.name}">
+                        </div>
+                        <div class="movie-info mt-2">
+                            <p class="mb-0" th:text="${f.movie.name}"></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Nếu không có phim -->
+        <p th:if="${favorites == null or favorites.isEmpty()}">
+            Bạn chưa có phim yêu thích nào.
+        </p>
+    </div>
+</section>
+
+</body>
+</html>

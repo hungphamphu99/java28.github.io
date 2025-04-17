@@ -19,30 +19,27 @@ public class ReviewApi {
 
     private final ReviewService reviewService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> getReviews(@RequestParam(defaultValue = "1") Integer page,
                                         @RequestParam(defaultValue = "5") Integer pageSize,
                                         @RequestParam Integer movieId) {
-        Page<Review> reviewPage = reviewService.getReviewsByMovie(movieId, page, pageSize);
-        return ResponseEntity.ok(reviewPage);
+        return ResponseEntity.ok(reviewService.getReviewsByMovie(movieId, page, pageSize));
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> createReview(@Valid @RequestBody CreateReviewRequest request) {
-        Review review = reviewService.createReview(request);
-        return ResponseEntity.ok(review);
+        return ResponseEntity.ok(reviewService.createReview(request));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateReview(@PathVariable Integer id,
                                           @Valid @RequestBody UpdateReviewRequest request) {
-        Review review = reviewService.updateReview(id, request);
-        return ResponseEntity.ok(review);
+        return ResponseEntity.ok(reviewService.updateReview(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteReview(@PathVariable Integer id) {
         reviewService.deleteReview(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Đã xóa review thành công");
     }
 }

@@ -1,5 +1,6 @@
 package vn.demo.demo.service;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import vn.demo.demo.entity.Favorite;
 import vn.demo.demo.entity.Movie;
 import vn.demo.demo.entity.User;
+import vn.demo.demo.mapper.UserMapper;
+import vn.demo.demo.model.dto.UserDTO;
 import vn.demo.demo.repository.FavoriteRepository;
 import vn.demo.demo.repository.MovieRepository;
 import vn.demo.demo.repository.UserRepository;
@@ -23,6 +26,8 @@ public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
+    private final UserMapper userMapper;
+
 
 
     public Page<Favorite> getFavorites(int userId, int page, int pageSize) {
@@ -73,10 +78,26 @@ public class FavoriteService {
         List<Favorite> favorites = favoriteRepository.findAllByUser(user);
         favoriteRepository.deleteAll(favorites);
     }
-    public List<Favorite> getFavoritesByUserId(int userId) {
-        User user = userRepository.findById(userId)
+
+
+    public List<Favorite> getFavoritesBySession(HttpSession session) {
+        UserDTO dto = (UserDTO) session.getAttribute("currentUser");
+        if (dto == null) throw new RuntimeException("User chưa đăng nhập");
+
+        // Dùng ID để truy vấn lại User entity
+        User user = userRepository.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return favoriteRepository.findAllByUser(user);
+        System.out.println("DEBUG: session.getAttribute(\"currentUser\") = " + session.getAttribute("currentUser"));
+        System.out.println("DEBUG: Kiểu của session object: " + session.getAttribute("currentUser").getClass().getName());
+
+        return favoriteRepository.findByUser(user);
     }
+
+
+
+
+
+
+
 
 }

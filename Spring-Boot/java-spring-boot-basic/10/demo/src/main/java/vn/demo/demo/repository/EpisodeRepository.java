@@ -10,4 +10,9 @@ import java.util.List;
 public interface EpisodeRepository extends JpaRepository<Episode, Integer> {
     // Lấy các tập có movie_id bằng movieId, status = true và sắp xếp theo displayOrder tăng dần
     List<Episode> findByMovie_IdAndStatusTrueOrderByDisplayOrderAsc(Integer movieId);
+
+    List<Episode> findByMovie_IdOrderByDisplayOrderAsc(Integer movieId);
+
+
+
 }

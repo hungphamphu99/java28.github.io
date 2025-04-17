@@ -11,34 +11,8 @@
 </head>
 
 <body>
-<header>
-  <nav class="navbar navbar-expand-lg bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">
-        <img src="https://movie.techmaster.vn/assets/logo-C2IIl7EL.png" alt="logo"/>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-              data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
-              aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link text-white" href="#">Trang chủ</a>
-          <a class="nav-link text-white" th:href="@{/phim-bo}">Phim bộ</a>
-          <a class="nav-link text-white" th:href="@{/phim-chieu-rap}">Phim chiếu rạp</a>
-          <a class="nav-link text-white" th:href="@{/phim-le}">Phim lẻ</a>
-          <a class="nav-link text-white" href="#">Quốc gia</a>
-          <a class="nav-link text-white" href="#">Thể loại</a>
-          <a class="nav-link text-white" href="#">Mua phim</a>
-        </div>
-        <div>
-          <a class="nav-link text-white" href="#">Đăng nhập</a>
-        </div>
-      </div>
-    </div>
-  </nav>
-</header>
+<div th:replace="~{fragments/header :: headerFragment}"></div>
+
 
 <section class="py-4 bg-body-tertiary">
   <div class="container">
@@ -46,7 +20,7 @@
       <h4>Phim bộ</h4>
     </div>
     <div class="row row-gap-3">
-      <div class="col-2" th:each="movie : ${moviePage}">
+      <div class="col-2" th:each="movie : ${moviePage.content}">
         <a th:href="'/phim/' + ${movie.id} + '/' + ${movie.slug}">
           <div class="movie-item">
             <div class="movie-poster rounded overflow-hidden">

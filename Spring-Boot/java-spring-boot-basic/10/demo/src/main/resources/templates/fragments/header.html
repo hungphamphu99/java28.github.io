@@ -1,0 +1,50 @@
+<!-- templates/fragments/header.html -->
+<div th:fragment="headerFragment">
+    <header>
+        <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="https://movie.techmaster.vn/assets/logo-C2IIl7EL.png" alt="logo"/>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link text-white" href="/">Trang chủ</a>
+                        <a class="nav-link text-white" href="/phim-bo">Phim bộ</a>
+                        <a class="nav-link text-white" href="/phim-chieu-rap">Phim chiếu rạp</a>
+                        <a class="nav-link text-white" href="/phim-le">Phim lẻ</a>
+                        <a class="nav-link text-white" href="#">Quốc gia</a>
+                        <a class="nav-link text-white" href="#">Thể loại</a>
+                        <a class="nav-link text-white" href="#">Mua phim</a>
+                    </div>
+
+                    <div>
+                        <!-- Nếu chưa đăng nhập -->
+                        <a th:if="${session.currentUser == null}" class="nav-link text-white" href="/login">Đăng nhập</a>
+
+                        <!-- Nếu đã đăng nhập -->
+                        <div class="dropdown" th:if="${session.currentUser != null}">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    th:text="${session.currentUser.displayName}">
+                                Người dùng
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li th:if="${session.currentUser?.role?.name() == 'ADMIN'}">
+                                    <a class="dropdown-item" href="/admin">Trang quản trị</a>
+                                </li>
+                                <li><a class="dropdown-item" href="/my-profile">Hồ sơ cá nhân</a></li>
+                                <li><a class="dropdown-item" href="/phim-yeu-thich">Phim yêu thích</a></li>
+                                <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+</div>
